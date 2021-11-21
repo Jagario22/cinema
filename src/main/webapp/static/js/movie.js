@@ -8,7 +8,6 @@ function toggleClass(elem, className) {
     return elem;
 }
 
-
 function toggleMenuDisplay(e) {
     const dropdown = e.currentTarget.parentNode;
     const menu = dropdown.querySelector('.menu');
@@ -21,95 +20,88 @@ function handleOptionSelected(e) {
     toggleClass(e.target.parentNode, 'hide');
 
     const id = e.target.id;
-    const newValue = e.target.textContent + ' ';
+    const newValue = e.target.textContent;
     const titleElem = document.querySelector('.dropdown .title');
 
     titleElem.textContent = newValue;
-    //trigger custom event
+    titleElem.id = id
     document.querySelector('.dropdown .title').dispatchEvent(new Event('change'));
-    //setTimeout is used so transition is properly shown
 }
 
 function handleTitleChange(e) {
+    if (sessions.length === 0) {
+        return;
+    }
     const result = document.getElementById('result');
-    result.innerHTML = 'The result is: ' + e.target.textContent;
+    $(".time").remove();
+    let sessionId = document.querySelector('.dropdown .title').id.match(/\d+/g);
+    const timeArr = sessions[sessionId - 1].timeList;
+    let timeList = document.createElement("ul");
+    timeList.className = "time";
+    timeArr.forEach(function (timeElement, index) {
+        let timeLi= document.createElement("li");
+        const timeLink = document.createElement("a");
+        const hour = timeElement.hour;
+        let minute = timeElement.minute;
+        if (minute < 10) {
+            minute = "0" + minute;
+        }
+        timeLink.textContent = hour + ":" + minute;
+        timeLink.id = "time" + (index + 1);
+        timeLink.href = getTicketUrl(sessionId);
+        timeLi.append(timeLink);
+        timeList.append(timeLi);
+    });
+    result.append(timeList);
+}
+
+function getTicketUrl(sessionId) {
+    return getUrl() + "?filmId=" + getUrlParameter("id") + "&sessionId=" + sessionId;
 }
 
 function getUrlParameter(sParam) {
-    var sPageURL = window.location.search.substring(1);
-    var sURLVariables = sPageURL.split('&');
+    const url = new URL(document.URL);
+    return url.searchParams.get(sParam);
+}
 
-    for (var i = 0; i < sURLVariables.length; i++) {
-        var sParameterName = sURLVariables[i].split('=');
 
-        if (sParameterName[0] === sParam) {
-            return sParameterName[1];
-        }
-    }
+function getUrl() {
+    return location.protocol + '//' + location.host + location.pathname;
 }
 
 function fillDropDown(data) {
+    const url = new URL(document.URL);
+    let lang = url.searchParams.get("lang");
+    if (lang === null)
+        lang = "ru"
+    const options = {weekday: 'long', month: 'long', day: 'numeric'};
+
+    $(".option").remove();
+    sessions = [];
     data.forEach(function (item, index) {
-        const idValue = index
-        var dropdownMenu = document.getElementById('dropdown_menu')
-        var option = document.createElement("div");
+        sessions.push(item);
+        const dropdownMenu = document.getElementById('dropdown_menu');
+        const option = document.createElement("div");
         option.className = "option";
-        option.innerText = item.date.day;
-        option.setAttribute("id", "option" + index
-        )
-        dropdownMenu.append(option)
+        const sessionDate =new Date(item.date.year, item.date.month, item.date.day)
+            .toLocaleDateString(lang, options);
+        const titleElem = document.querySelector('.dropdown .title').textContent;
+        if (titleElem !== sessionDate) {
+            option.innerText = sessionDate
+            option.setAttribute("id", "option" + (index + 1));
+            option.addEventListener('click', handleOptionSelected)
+            dropdownMenu.append(option);
+        }
     });
 
 
 }
 
-
-/*function fillMovieInfo(data) {
-    const url = location.protocol + "//" + location.host + "/" + "cinema/";
-    $("#film_image").attr("src", url + data.film.img);
-    $(".movie-title").innerText = data.film.title
-}*/
+let sessions = []
 
 $(document).ready(function () {
-    /*  $.ajax({
-          url: '/cinema/movie',
-          method: 'get',
-          dataType: 'json',
-          headers: {'Access-Control-Allow-Origin': 'http://The web site allowed to access'},
-          data: {
-              command: getUrlParameter("command"),
-              id: getUrlParameter("id")
-          },
-          cache: false,
-          success: function (data) {
-              fillMovieInfo(data)
-          },
-          error: function (jqXHR, exception) {
-              if (jqXHR.status === 0) {
-                  alert('Not connect. Verify Network.');
-              } else if (jqXHR.status === 404) {
-                  alert('Requested page not found (404).');
-              } else if (jqXHR.status === 500) {
-                  alert('Internal Server Error (500).');
-              } else if (exception === 'parsererror') {
-                  alert('Requested JSON parse failed.');
-              } else if (exception === 'timeout') {
-                  alert('Time out error.');
-              } else if (exception === 'abort') {
-                  alert('Ajax request aborted.');
-              } else {
-                  alert('Uncaught Error. ' + jqXHR.responseText);
-              }
-          }
-      });*/
-    /*  const dropdownTitle = document.querySelector('.dropdown .title');
-      const dropdownOptions = document.querySelectorAll('.dropdown .option');
-
-      dropdownTitle.addEventListener('click', toggleMenuDisplay);
-      dropdownOptions.forEach(option => option.addEventListener('click', handleOptionSelected));
-      document.querySelector('.dropdown .title').addEventListener('change', handleTitleChange);*/
-
-    $(document).on("click", ".dropdown .title", function () {  // When HTML DOM "click" event is invoked on element with ID "somebutton", execute the following function...
+    document.querySelector('.dropdown .title').addEventListener('change', handleTitleChange);
+    $(document).on("click", ".dropdown .title", function (e) {
         $.ajax({
             url: '/cinema/movie',
             method: 'get',
@@ -122,6 +114,7 @@ $(document).ready(function () {
             cache: false,
             success: function (data) {
                 fillDropDown(data)
+                toggleMenuDisplay(e);
             },
             error: function (jqXHR, exception) {
                 if (jqXHR.status === 0) {

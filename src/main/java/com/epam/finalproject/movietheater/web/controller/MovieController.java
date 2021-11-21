@@ -3,6 +3,8 @@ package com.epam.finalproject.movietheater.web.controller;
 import com.epam.finalproject.movietheater.domain.exception.DBException;
 import com.epam.finalproject.movietheater.web.command.json.JsonCommand;
 import com.epam.finalproject.movietheater.web.command.json.JsonCommandContainer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,9 +17,10 @@ import static com.epam.finalproject.movietheater.web.constants.CommandNames.SHOW
 
 @WebServlet(name = "movie-page", value = "/movie")
 public class MovieController extends HttpServlet {
-
+    private final static Logger log = LogManager.getLogger(MovieController.class);
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        log.debug("doGet#");
         try {
             processCommand(req, resp);
         } catch (DBException e) {

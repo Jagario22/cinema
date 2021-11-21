@@ -72,14 +72,12 @@
                     <div class="schedule-info pl-4">
                         <p class="schedule-title">Расписание</p>
                         <div class="dropdown">
-                            <div class="title pointerCursor">Select an option &#x21A7</div>
+                            <div class="title pointerCursor">Select an option</div>
                             <div id="dropdown_menu" class="menu pointerCursor hide">
 
                             </div>
                         </div>
-                        <div>
-                            <p>Время:</p>
-
+                        <div id="result">
                         </div>
                     </div>
                 </div>

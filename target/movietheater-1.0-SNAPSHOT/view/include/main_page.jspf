@@ -19,8 +19,20 @@
                             <h3 class="card-title">${movie.title}</h3>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
-                                    <a href="${pageContext.request.contextPath}?id=${movie.id}&command=showMovies"
-                                       type="button" class="btn btn-sm btn-outline-secondary">View</a>
+                                    <c:choose>
+                                        <c:when test="${param.lang != null}">
+                                            <a href="${pageContext.request.contextPath}?id=${movie.id}&command=showMovies&lang=${param.lang}"
+                                               type="button" class="btn btn-sm btn-outline-secondary">View</a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <a href="${pageContext.request.contextPath}?id=${movie.id}&command=showMovies"
+                                               type="button" class="btn btn-sm btn-outline-secondary">View</a>
+                                        </c:otherwise>
+                                    </c:choose>
+
+
+
+
                                 </div>
                                 <small class="text-muted">${movie.year}</small>
                             </div>

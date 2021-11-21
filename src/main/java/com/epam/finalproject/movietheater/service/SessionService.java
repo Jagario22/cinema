@@ -44,24 +44,28 @@ public class SessionService {
     }
 
     private List<SessionDTO> groupSessionsBySessionDate(List<Session> sessions) {
+        int removeIndex = 0;
         List<SessionDTO> sessionDTOList = new ArrayList<>();
         for (int i = 0; i < sessions.size() - 1; i++) {
             Session session = sessions.get(i);
             SessionDTO sessionDTO = new SessionDTO(session.getLocaleDateTime().toLocalDate(), session.getId(),
                     session.getLang());
             sessionDTO.setTimeList(new ArrayList<>());
+            sessionDTO.getTimeList().add(session.getLocaleDateTime().toLocalTime());
             for (int j = i + 1; j < sessions.size(); j++) {
                 Session innerSession = sessions.get(j);
 
                 if (isSessionsWithEqualDate(session, innerSession)) {
                     sessionDTO.getTimeList().add(innerSession.
                             getLocaleDateTime().toLocalTime());
+                    removeIndex = j;
                 }
             }
+            sessions.remove(removeIndex);
             sessionDTOList.add(sessionDTO);
         }
 
-        return distinctSessionDTOList(sessionDTOList);
+        return sessionDTOList;
     }
 
     private boolean isSessionsWithEqualDate(Session sessionA, Session sessionB) {
@@ -72,7 +76,7 @@ public class SessionService {
     }
 
 
-    private List<SessionDTO> distinctSessionDTOList(List<SessionDTO> sessionDTOList) {
+    /*private List<SessionDTO> distinctSessionDTOList(List<SessionDTO> sessionDTOList) {
         for (int i = 0; i < sessionDTOList.size(); i++) {
             for (int j = i; j < sessionDTOList.size(); j++) {
                 if (sessionDTOList.get(i).getDate()
@@ -82,5 +86,5 @@ public class SessionService {
             }
         }
         return sessionDTOList;
-    }
+    }*/
 }

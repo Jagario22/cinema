@@ -50,6 +50,7 @@ public class SessionDao {
                 Session session = readSession(resultSet);
                 currentSessions.add(session);
             }
+            connection.commit();
         } finally {
             CloseUtil.close(connection, ps, resultSet);
         }

@@ -132,7 +132,7 @@ h3 {
 .dropdown {
     margin-bottom: 1em;
     font-size: 1.3em;
-    text-align:center;
+    text-align: center;
 }
 
 .dropdown .title {
@@ -170,4 +170,23 @@ h3 {
 
 .rotate-90 {
     transform: rotate(90deg);
+}
+
+ul.time {
+    list-style: none;
+}
+
+ul.time li {
+    margin-bottom: 1rem;
+}
+
+ul.time li a {
+    border-bottom: 1px solid transparent;
+    transition: 250ms;
+    display: inline-block;
+    letter-spacing: -1.5px;
+    color: white;
+    font-size: 18px;
+    margin-bottom: 8px;
+    font-weight: 500;
 }
