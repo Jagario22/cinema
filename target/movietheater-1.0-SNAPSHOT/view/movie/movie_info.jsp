@@ -57,7 +57,7 @@
                             <c:if test="${filmDTO.genres.size() != 0}">
                                 <li><b>Жанры:</b>
                                     <c:forEach var="genre" items="${filmDTO.genres}">
-                                        ${genre.name}
+                                        "${genre.name}"
                                     </c:forEach>
                                 </li>
                             </c:if>

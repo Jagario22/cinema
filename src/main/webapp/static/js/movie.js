@@ -30,6 +30,14 @@ function handleOptionSelected(e) {
 
 function handleTitleChange(e) {
     if (sessions.length === 0) {
+        const titleElem = document.querySelector('.dropdown .title');
+        const lang = getLang();
+        if (lang === "ru") {
+            titleElem.textContent = ' \u0410\u043a\u0442\u0438\u0432\u043d\u044b\u0435 \u0441\u0435\u0430\u043d\u0441\u044b \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u044b'
+        } else if (lang === "en") {
+            titleElem.textContent = "No active movie sessions found"
+        }
+
         return;
     }
     const result = document.getElementById('result');
@@ -65,17 +73,24 @@ function getUrlParameter(sParam) {
 }
 
 
+function getLang() {
+    let lang = getUrlParameter("lang");
+    if (lang === null)
+        lang = "ru"
+    return lang;
+}
+
 function getUrl() {
     return location.protocol + '//' + location.host + location.pathname;
 }
 
 function fillDropDown(data) {
-    const url = new URL(document.URL);
-    let lang = url.searchParams.get("lang");
-    if (lang === null)
-        lang = "ru"
+    if (data.length === 0) {
+        document.querySelector('.dropdown .title').dispatchEvent(new Event('change'));
+        return;
+    }
+    const lang = getLang();
     const options = {weekday: 'long', month: 'long', day: 'numeric'};
-
     $(".option").remove();
     sessions = [];
     data.forEach(function (item, index) {
