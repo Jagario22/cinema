@@ -1,7 +1,5 @@
-package com.epam.finalproject.movietheater.web.command;
+package com.epam.finalproject.movietheater.web.command.json;
 
-import com.epam.finalproject.movietheater.web.command.json.ShowAllSessions;
-import com.epam.finalproject.movietheater.web.command.json.ShowAvailableTickets;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

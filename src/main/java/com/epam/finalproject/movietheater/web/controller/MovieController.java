@@ -1,8 +1,8 @@
 package com.epam.finalproject.movietheater.web.controller;
 
 import com.epam.finalproject.movietheater.domain.exception.DBException;
-import com.epam.finalproject.movietheater.web.command.Command;
-import com.epam.finalproject.movietheater.web.command.CommandContainer;
+import com.epam.finalproject.movietheater.web.command.json.Command;
+import com.epam.finalproject.movietheater.web.command.json.CommandContainer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

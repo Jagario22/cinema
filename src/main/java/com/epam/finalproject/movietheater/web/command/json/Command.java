@@ -1,4 +1,4 @@
-package com.epam.finalproject.movietheater.web.command;
+package com.epam.finalproject.movietheater.web.command.json;
 
 import com.epam.finalproject.movietheater.domain.exception.DBException;
 

@@ -2,7 +2,6 @@ package com.epam.finalproject.movietheater.web.command.json;
 
 import com.epam.finalproject.movietheater.domain.exception.DBException;
 import com.epam.finalproject.movietheater.service.SessionService;
-import com.epam.finalproject.movietheater.web.command.Command;
 import com.epam.finalproject.movietheater.web.model.FilmSessionsDTO;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;

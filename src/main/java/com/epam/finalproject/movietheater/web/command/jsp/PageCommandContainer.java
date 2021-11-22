@@ -19,7 +19,8 @@ public class PageCommandContainer {
         commands.put(LOGIN, new LoginCommand());
         commands.put(REGISTER, new RegisterCommand());
         commands.put(WELCOME_PAGE_COMMAND, new WelcomeCommand());
-        commands.put(SHOW_MOVIE_COMMAND, new ShowMovieCommand());
+        commands.put(SHOW_MOVIE_INFO, new ShowMovieCommand());
+        commands.put(SHOW_SESSION_INFO, new ShowSessionInfo());
     }
 
     public static PageCommand getCommand(String commandName) {

@@ -1,3 +1,0 @@
-<c:set var="currentLocale" value="${sessionScope.lang}" scope="session"/>
-<fmt:setLocale value="${currentLocale}" scope="session"/>
-<fmt:setBundle basename="locale"/>
