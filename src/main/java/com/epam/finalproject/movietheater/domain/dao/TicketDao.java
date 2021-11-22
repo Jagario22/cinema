@@ -92,6 +92,7 @@ public class TicketDao {
     }
 
 
+
     private Ticket readTicket(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt(1);
         short num = resultSet.getShort(2);

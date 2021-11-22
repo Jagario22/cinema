@@ -1,14 +1,14 @@
 <%@ page contentType="text/html" pageEncoding="utf-8" %>
-<%@ include file="/view/include/libs.jspf" %>
-<%@ include file="/view/include/session_locale.jspf" %>
+<%@ include file="/view/include/head/libs.jspf" %>
+<%@ include file="/view/include/head/session_locale.jspf" %>
 
 <!DOCTYPE html>
 <html lang="${currentLocale}">
 <fmt:message key="login.signin.title" var="value"/>
-<%@ include file="/view/include/head.jspf" %>
+<%@ include file="/view/include/head/head.jspf" %>
 <body>
 <div class="nav-color d-flex flex-column flex-md-row align-items-center p-3 px-md-4 box-shadow">
-    <%@ include file="/view/include/nav.jspf" %>
+    <%@ include file="/view/include/head/nav.jspf" %>
 </div>
 <section class="vh-100">
     <div class="container-fluid">
@@ -19,7 +19,7 @@
                         <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;"><fmt:message
                                 key="login.signin.title"/></h3>
                         <div class="form-outline mb-4">
-                            <input type="hidden" name="pageCommand" value="login">
+                            <input type="hidden" name="command" value="login">
                             <c:if test="${sessionScope.successRegistration == true}">
                                 <p class="error text-success">
                                     <fmt:message key="login.message.success.signup"/></p>

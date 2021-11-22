@@ -1,9 +1,9 @@
 package com.epam.finalproject.movietheater.web.command.jsp;
 
 import com.epam.finalproject.movietheater.domain.entity.Film;
+import com.epam.finalproject.movietheater.domain.entity.User;
 import com.epam.finalproject.movietheater.domain.exception.DBException;
 import com.epam.finalproject.movietheater.service.FilmService;
-import com.epam.finalproject.movietheater.web.command.ShowMoviesCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,7 +18,7 @@ import static com.epam.finalproject.movietheater.web.constants.SessionAttributes
 
 public class WelcomeCommand implements PageCommand {
     private final static FilmService filmService = FilmService.getInstance();
-    private final static Logger log = LogManager.getLogger(ShowMoviesCommand.class);
+    private final static Logger log = LogManager.getLogger(ShowMovieCommand.class);
 
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException {
@@ -26,6 +26,17 @@ public class WelcomeCommand implements PageCommand {
         List<Film> films = filmService.getAllCurrentFilms();
         if (films.size() != 0) {
             session.setAttribute(MOVIE_LIST, films);
+        }
+
+
+        if (session.getAttribute("user") == null) {
+            User user = new User();
+            user.setId(1);
+            user.setLogin("user1");
+            user.setEmail("user@gmail.com");
+            user.setPassword("Password1&");
+            user.setRole(User.ROLE.USER);
+            session.setAttribute("user", user);
         }
         return WELCOME_PAGE;
     }

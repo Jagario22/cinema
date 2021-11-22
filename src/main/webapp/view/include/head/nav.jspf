@@ -1,4 +1,4 @@
-<a href="${pageContext.request.contextPath}" class="my-0 mr-md-auto font-weight-normal text-white h5">Cinema</a>
+<a href="${pageContext.request.contextPath}" class="nav-title mr-md-auto font-weight-normal text-white h5">Cinema</a>
 <nav class="my-md-0 mr-md-3">
 </nav>
 <a class="locale-btn btn btn-outline-light ml-2" href="?lang=en">En</a>

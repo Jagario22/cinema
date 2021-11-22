@@ -8,7 +8,9 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import java.io.IOException;
 
-@WebFilter(filterName = "EncodingFilter", urlPatterns = {"/*"})
+import static com.epam.finalproject.movietheater.web.constants.FilterPath.ALL_PAGES;
+
+@WebFilter(filterName = "EncodingFilter", urlPatterns = {ALL_PAGES})
 public class EncodingFilter implements Filter {
     private final static Logger log = LogManager.getLogger(EncodingFilter.class);
     private String encoding = "UTF-8";

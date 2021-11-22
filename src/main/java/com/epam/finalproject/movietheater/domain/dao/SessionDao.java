@@ -13,9 +13,12 @@ import javax.naming.NamingException;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.epam.finalproject.movietheater.domain.constants.PostgresQuery.SELECT_CURRENT_SESSIONS_OF_FILM;
+import static com.epam.finalproject.movietheater.domain.constants.PostgresQuery.SELECT_TICKET_COUNT_OF_FILM_WHERE_USER_IS_NULL_GROUP_BY_SESSION_ID;
 
 public class SessionDao {
     private final ConnectionPool connectionPool;
@@ -35,13 +38,11 @@ public class SessionDao {
     }
 
 
-    public  List<Session > findCurrentFilmSessionsByFilmId(int filmId) throws SQLException, NamingException {
+    public  List<Session > findCurrentFilmSessionsByFilmId(int filmId, Connection connection) throws SQLException, NamingException {
         List<Session> currentSessions = new ArrayList<>();
         PreparedStatement ps = null;
         ResultSet resultSet = null;
-        Connection connection = null;
         try {
-            connection = connectionPool.getConnection();
             ps = connection.prepareStatement(SELECT_CURRENT_SESSIONS_OF_FILM);
             ps.setInt(1, filmId);
             resultSet = ps.executeQuery();
@@ -51,10 +52,31 @@ public class SessionDao {
             }
             connection.commit();
         } finally {
-            CloseUtil.close(connection, ps, resultSet);
+            CloseUtil.close(ps, resultSet);
         }
 
         return currentSessions;
+    }
+
+    public Map<Integer, Integer> findTicketIdCountOfFilmGroupBySessionId(int filmId, Connection connection) throws SQLException {
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        Map<Integer, Integer> countTicketOfSession = new HashMap<>();
+        try {
+            ps = connection.prepareStatement(SELECT_TICKET_COUNT_OF_FILM_WHERE_USER_IS_NULL_GROUP_BY_SESSION_ID);
+            ps.setInt(1, filmId);
+
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int sessionId = rs.getInt(1);
+                int ticketCount = rs.getInt(2);
+                countTicketOfSession.put(sessionId, ticketCount);
+            }
+        } finally {
+            CloseUtil.close(ps, rs);
+        }
+        return countTicketOfSession;
     }
 
     public Session findCurrentSessionById(int id, Connection connection) throws SQLException {

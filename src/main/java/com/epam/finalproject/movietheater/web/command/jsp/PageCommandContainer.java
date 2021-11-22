@@ -19,9 +19,11 @@ public class PageCommandContainer {
         commands.put(LOGIN, new LoginCommand());
         commands.put(REGISTER, new RegisterCommand());
         commands.put(WELCOME_PAGE_COMMAND, new WelcomeCommand());
+        commands.put(SHOW_MOVIE_COMMAND, new ShowMovieCommand());
     }
 
     public static PageCommand getCommand(String commandName) {
+        log.debug(commandName);
         if (commandName != null && !commands.containsKey(commandName)) {
             log.debug("no such command, command ->" + commandName);
             throw new IllegalArgumentException("No such command");

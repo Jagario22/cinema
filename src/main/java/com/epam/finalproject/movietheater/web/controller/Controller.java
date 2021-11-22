@@ -19,7 +19,6 @@ import static com.epam.finalproject.movietheater.web.constants.SessionAttributes
 public class Controller extends HttpServlet {
     private final static Logger log = LogManager.getLogger(Controller.class);
 
-
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         log.debug("doGet#");
         try {
@@ -34,6 +33,7 @@ public class Controller extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        log.debug("doPost");
         try {
             String address = getAddress(request, response);
             checkSessionAttributes(request.getSession(), address);
@@ -47,6 +47,7 @@ public class Controller extends HttpServlet {
     private String getAddress(HttpServletRequest request, HttpServletResponse response) throws
             IOException, DBException {
         String commandName = request.getParameter("command");
+
         if (commandName == null || commandName.isEmpty()) {
             commandName = WELCOME_PAGE_COMMAND;
         }

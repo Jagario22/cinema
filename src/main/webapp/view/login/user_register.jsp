@@ -1,11 +1,11 @@
 <%@ page contentType="text/html" pageEncoding="utf-8" %>
-<%@ include file="/view/include/libs.jspf" %>
-<%@ include file="/view/include/session_locale.jspf" %>
+<%@ include file="/view/include/head/libs.jspf" %>
+<%@ include file="/view/include/head/session_locale.jspf" %>
 
 <!DOCTYPE html>
 <html lang="${currentLocale}">
 <fmt:message key="login.signin.title" var="value"/>
-<%@ include file="/view/include/head.jspf" %>
+<%@ include file="/view/include/head/head.jspf" %>
 <body>
 <div class="nav-color d-flex flex-column flex-md-row align-items-center p-3 px-md-4 box-shadow">
     <h5 class="my-0 mr-md-auto font-weight-normal text-white">Cinema</h5>
@@ -25,7 +25,7 @@
                 <div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
                     <form style="width: 23rem;" method="post" action="${pageContext.request.contextPath}">
                         <div class="form-outline mb-4">
-                            <input type="hidden" name="pageCommand" value="register">
+                            <input type="hidden" name="command" value="register">
                             <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;"><fmt:message
                                     key="login.signup.title"/></h3>
                             <label class="form-label" for="inputLoginSignUpForm"><fmt:message

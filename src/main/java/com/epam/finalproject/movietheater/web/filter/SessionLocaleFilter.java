@@ -1,7 +1,9 @@
 package com.epam.finalproject.movietheater.web.filter;
 
+import static com.epam.finalproject.movietheater.web.constants.FilterPath.ALL_PAGES;
 import static com.epam.finalproject.movietheater.web.constants.Locale.ATTRIBUTE_NAME;
 
+import com.epam.finalproject.movietheater.web.constants.FilterPath;
 import com.epam.finalproject.movietheater.web.constants.Locale;
 import com.epam.finalproject.movietheater.web.controller.Controller;
 import org.apache.logging.log4j.LogManager;
@@ -12,7 +14,7 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-@WebFilter(filterName = "SessionLocaleFilter", urlPatterns = {"/*"})
+@WebFilter(filterName = "SessionLocaleFilter", urlPatterns = {ALL_PAGES})
 public class SessionLocaleFilter implements Filter {
     private final static Logger log = LogManager.getLogger(Controller.class);
 

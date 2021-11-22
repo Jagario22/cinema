@@ -5,11 +5,12 @@ import com.epam.finalproject.movietheater.domain.entity.Session;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class FilmSessionsDTO {
     private LocalDate date;
-    private List<LocalTime> timeList;
+    private List<Map<LocalTime, Integer>> freeTicketsOfTime;
     private int filmId;
     private Session.Lang lang;
 
@@ -27,12 +28,12 @@ public class FilmSessionsDTO {
         this.date = date;
     }
 
-    public List<LocalTime> getTimeList() {
-        return timeList;
+    public List<Map<LocalTime, Integer>> getTimeList() {
+        return freeTicketsOfTime;
     }
 
-    public void setTimeList(List<LocalTime> timeList) {
-        this.timeList = timeList;
+    public void setTimeList(List<Map<LocalTime, Integer>> timeList) {
+        this.freeTicketsOfTime = timeList;
     }
 
     public Integer getFilmId() {
@@ -68,7 +69,7 @@ public class FilmSessionsDTO {
     public String toString() {
         return "SessionDTO{" +
                 "date=" + date +
-                ", timeList=" + timeList +
+                ", timeList=" + freeTicketsOfTime +
                 ", filmId=" + filmId +
                 ", lang=" + lang +
                 '}';

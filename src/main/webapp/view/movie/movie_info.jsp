@@ -1,12 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="utf-8" %>
-<%@ include file="/view/include/libs.jspf" %>
+<%@ include file="/view/include/head/libs.jspf" %>
 <%@ taglib prefix="localeDate" tagdir="/WEB-INF/tags" %>
-<%@ include file="/view/include/session_locale.jspf" %>
+<%@ include file="/view/include/head/session_locale.jspf" %>
 <c:set var="filmDTO" value="${requestScope.filmInfo}"/>
 
 <!DOCTYPE html>
 <html lang="${currentLocale}">
-<%@ include file="/view/include/head.jspf" %>
+<%@ include file="/view/include/head/head.jspf" %>
 <body style="background-color: #221f1f">
 <div class="nav-color d-flex flex-column flex-md-row align-items-center p-3 px-md-4 box-shadow">
     <a href="${pageContext.request.contextPath}" class="my-0 mr-md-auto font-weight-normal text-white h5">Cinema</a>
@@ -15,9 +15,9 @@
     <c:choose>
         <c:when test="${filmDTO != null}">
             <a class="locale-btn btn btn-outline-light ml-2"
-               href="?pageCommand=${param.pageCommand}&id=${param.id}&lang=en">En</a>
+               href="?command=${param.command}&id=${param.id}&lang=en">En</a>
             <a class="locale-btn btn btn-outline-light ml-2"
-               href="?pageCommand=${param.pageCommand}&id=${param.id}&lang=ru">Ru</a>
+               href="?command=${param.command}&id=${param.id}&lang=ru">Ru</a>
         </c:when>
         <c:otherwise>
             <a class="locale-btn btn btn-outline-light ml-2"

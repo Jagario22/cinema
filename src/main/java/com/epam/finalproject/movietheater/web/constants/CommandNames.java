@@ -6,4 +6,5 @@ public class CommandNames {
     public final static String REGISTER = "register";
     public final static String SHOW_SESSIONS = "showSessions";
     public final static String SHOW_AVAILABLE_TICKETS = "showTickets";
+    public final static String SHOW_MOVIE_COMMAND="showMovie";
 }

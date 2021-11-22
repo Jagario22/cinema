@@ -101,18 +101,18 @@ values ('The French Dispatch', 168, '2021', 16,
         'Plot: in the center of the plot is a branch of the american newspaper "french herald", located in a fictional french town of the 20th century. ' ||
         'Cast: Bnicio del Toro ("avengers: infinity war"),Tilda Swinton ("doctor strange"), Francis Mcdormand ("land of the nomads"), Timothy Shalame ("dune"), Aries Wilson (trilogy "night at the museum") , Adrian Brody, Lea Seydou and others. ' ||
         'Countries: Germany, USA. Director: Weight Anderson',
-        7.5, 'static/image/french_dispatch.png', date '24-12-2021'),
+        7.5, 'static/image/french_dispatch.png', date '24-01-2022'),
        ('The Eternals', 158, '2021', 12,
         'Plot: superhero action "eternal" from marvel studios presents a new incredible team of superheroes of the marvel movie universe. an epic story that unfolds over several millennia, and immortal heroes who are forced to come out of the shadows to protect humanity from its oldest enemies, the deviants. ' ||
         'Cast: Angelina Jolie ("the witch: mistress of darkness"), Richard Madden ("1917"), Salma Hayek ("the killer''s wife''s bodyguard"), Kumail Nanjiani ("doolittle", "teacher''s wave"), Gemma Chan ("captain marvel") , Keith Herrington (game of thrones series) and others. ' ||
         'Countries: USA. Director: Chloe Zhao',
-        6.9, 'static/image/eternals.png', date '28-12-2021');
+        6.9, 'static/image/eternals.png', date '28-01-2022');
 insert into films (title, len, year_prod, category, descr, img, last_showing_date)
 values ('Ghostbusters: afterlife', 120, '2021', 18,
         'Plot: a new part of fantastic adventures from the original universe of ghostbusters! Having inherited an old abandoned house, the family moves to a small town. their appearance coincides in time with the extraordinary activity of paranormal forces, which turn the usual life upside down. the time has come! the new generation of ghost hunters needs to find out the nature of the mysterious legacy and eliminate the consequences on an unprecedented scale! ' ||
         'Cast: Paul Rudd, Bill Murray, Sigourney Weaver, Finn Woolford. ' ||
         'Countries: USA, Canada. Director: Jason Wsrightman', 'static/image/ghostbusters_afterlife.png',
-        date '15-12-2021');
+        date '15-01-2022');
 
 insert into genres_films
 values (1, 6),
@@ -150,12 +150,12 @@ VALUES (1, 300),
        (8, 123.50);
 
 insert into sessions(film_id, date_time, lang)
-values (1, timestamp '2021-11-22 9:00', 'ukrainian'),
-       (2, timestamp '2021-11-22 11:05', 'ukrainian'),
-       (1, timestamp '2021-11-12 14:00', 'ukrainian'),
-       (2, timestamp '2021-11-22 16:05', 'ukrainian'),
-       (1, timestamp '2021-11-22 19:00', 'ukrainian'),
-       (2, timestamp '2021-11-22 21:05', 'ukrainian'),
+values (1, timestamp '2021-12-22 9:00', 'ukrainian'),
+       (2, timestamp '2021-12-22 11:05', 'ukrainian'),
+       (1, timestamp '2021-12-12 14:00', 'ukrainian'),
+       (2, timestamp '2021-12-22 16:05', 'ukrainian'),
+       (1, timestamp '2021-12-22 19:00', 'ukrainian'),
+       (2, timestamp '2021-12-22 21:05', 'ukrainian'),
 
        (1, timestamp '2021-11-23 9:00', 'ukrainian'),
        (1, timestamp '2021-11-23 11:05', 'ukrainian'),
@@ -213,7 +213,11 @@ VALUES (1, 1, 1),
        (2, 1, 1),
        (3, 1, 1),
        (62, 2, 1),
-       (61, 2, 1);
+       (61, 2, 1),
+       (1, 1, 3),
+       (2, 1,3),
+       (3, 1, 3),
+       (62, 2, 3);
 
 insert into tickets(number, ticket_type_id, session_id, user_id)
 VALUES (4, 1, 1, 3);

@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-import static com.epam.finalproject.movietheater.web.constants.PagePath.WELCOME_PAGE_PATH;
+import static com.epam.finalproject.movietheater.web.constants.FilterPath.WELCOME_PAGE_PATH;
 import static com.epam.finalproject.movietheater.web.constants.SessionAttributes.MOVIE_LIST;
 
 @WebFilter(filterName = "MovieFilter", urlPatterns = {WELCOME_PAGE_PATH})
