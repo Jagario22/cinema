@@ -24,7 +24,9 @@ public class WelcomeCommand implements PageCommand {
     public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException {
         HttpSession session = req.getSession();
         List<Film> films = filmService.getAllCurrentFilms();
-        session.setAttribute(MOVIE_LIST, films);
+        if (films.size() != 0) {
+            session.setAttribute(MOVIE_LIST, films);
+        }
         return WELCOME_PAGE;
     }
 }

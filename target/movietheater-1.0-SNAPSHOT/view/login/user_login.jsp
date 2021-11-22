@@ -17,7 +17,7 @@
                 <div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0">
                     <form style="width: 23rem;" method="post" action="${pageContext.request.contextPath}/">
                         <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;"><fmt:message
-                                key="login.signin.title"/></h3> 
+                                key="login.signin.title"/></h3>
                         <div class="form-outline mb-4">
                             <input type="hidden" name="pageCommand" value="login">
                             <c:if test="${sessionScope.successRegistration == true}">

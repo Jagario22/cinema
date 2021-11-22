@@ -10,7 +10,7 @@ import java.io.IOException;
 
 @WebFilter(filterName = "EncodingFilter", urlPatterns = {"/*"})
 public class EncodingFilter implements Filter {
-    private final static Logger log = LogManager.getLogger(Controller.class);
+    private final static Logger log = LogManager.getLogger(EncodingFilter.class);
     private String encoding = "UTF-8";
 
 

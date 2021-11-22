@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
+import static com.epam.finalproject.movietheater.web.constants.PagePath.WELCOME_PAGE;
 import static com.epam.finalproject.movietheater.web.constants.SessionAttributes.MOVIE_LIST;
 
 public class LoginCommand implements PageCommand {
@@ -43,9 +44,7 @@ public class LoginCommand implements PageCommand {
         if (user != null) {
             session.setAttribute("user", user);
             log.debug("success login, user: " + user);
-            List<Film> films = filmService.getAllCurrentFilms();
-            session.setAttribute(MOVIE_LIST, films);
-            forward ="";
+            forward = WELCOME_PAGE;
         } else {
             req.getSession().setAttribute(SessionAttributes.SIGN_UP_ERROR, true);
         }
