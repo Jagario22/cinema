@@ -2,6 +2,7 @@ package com.epam.finalproject.movietheater.domain.dao;
 
 import com.epam.finalproject.movietheater.domain.connection.ConnectionPool;
 import com.epam.finalproject.movietheater.domain.connection.PostgresConnectionPool;
+import com.epam.finalproject.movietheater.domain.constants.PostgresQuery;
 import com.epam.finalproject.movietheater.domain.entity.Session;
 import com.epam.finalproject.movietheater.domain.entity.Session.Lang;
 import com.epam.finalproject.movietheater.domain.util.CloseUtil;
@@ -13,9 +14,8 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-import static com.epam.finalproject.movietheater.domain.constants.PostgresQuery.SELECT_ALL_CURRENT_SESSION_OF_FILM;
+import static com.epam.finalproject.movietheater.domain.constants.PostgresQuery.SELECT_CURRENT_SESSIONS_OF_FILM;
 
 public class SessionDao {
     private final ConnectionPool connectionPool;
@@ -23,7 +23,6 @@ public class SessionDao {
 
     private SessionDao() {
         connectionPool = PostgresConnectionPool.getInstance();
-        System.out.println();
     }
 
     private static SessionDao instance = null;
@@ -43,7 +42,7 @@ public class SessionDao {
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
-            ps = connection.prepareStatement(SELECT_ALL_CURRENT_SESSION_OF_FILM);
+            ps = connection.prepareStatement(SELECT_CURRENT_SESSIONS_OF_FILM);
             ps.setInt(1, filmId);
             resultSet = ps.executeQuery();
             while (resultSet.next()) {
@@ -58,6 +57,23 @@ public class SessionDao {
         return currentSessions;
     }
 
+    public Session findCurrentSessionById(int id, Connection connection) throws SQLException {
+        Session session = null;
+        PreparedStatement ps = null;
+        ResultSet resultSet = null;
+        try {
+            ps = connection.prepareStatement(PostgresQuery.SELECT_CURRENT_SESSION_BY_ID);
+            ps.setInt(1, id);
+            resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                session = readSession(resultSet);
+            }
+        } finally {
+            CloseUtil.close(ps, resultSet);
+        }
+        return session;
+    }
+
     private Session readSession(ResultSet rs) throws SQLException {
         int id = rs.getInt(1);
         int filmId = rs.getInt(2);
@@ -65,4 +81,7 @@ public class SessionDao {
         Lang lang = Lang.valueOf(rs.getString(4).toUpperCase());
         return new Session(id, filmId, date, lang);
     }
+
+
+
 }

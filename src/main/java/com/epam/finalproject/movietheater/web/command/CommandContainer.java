@@ -1,5 +1,7 @@
-package com.epam.finalproject.movietheater.web.command.json;
+package com.epam.finalproject.movietheater.web.command;
 
+import com.epam.finalproject.movietheater.web.command.json.ShowAllSessions;
+import com.epam.finalproject.movietheater.web.command.json.ShowAvailableTickets;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -8,16 +10,17 @@ import java.util.Map;
 
 import static com.epam.finalproject.movietheater.web.constants.CommandNames.*;
 
-public class JsonCommandContainer {
-    private static final Map<String, JsonCommand> commands;
-    private final static Logger log = LogManager.getLogger(JsonCommandContainer.class);
+public class CommandContainer {
+    private static final Map<String, Command> commands;
+    private final static Logger log = LogManager.getLogger(CommandContainer.class);
 
     static {
         commands = new HashMap<>();
         commands.put(SHOW_SESSIONS, new ShowAllSessions());
+        commands.put(SHOW_AVAILABLE_TICKETS, new ShowAvailableTickets());
     }
 
-    public static JsonCommand getCommand(String commandName) {
+    public static Command getCommand(String commandName) {
         if (commandName != null && !commands.containsKey(commandName)) {
             log.debug("no such command, command ->" + commandName);
             throw new IllegalArgumentException("No such command");
@@ -26,5 +29,5 @@ public class JsonCommandContainer {
         return commands.get(commandName);
     }
 
-    private JsonCommandContainer() {}
+    private CommandContainer() {}
 }

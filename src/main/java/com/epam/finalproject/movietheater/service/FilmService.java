@@ -4,13 +4,10 @@ import com.epam.finalproject.movietheater.domain.connection.ConnectionPool;
 import com.epam.finalproject.movietheater.domain.connection.PostgresConnectionPool;
 import com.epam.finalproject.movietheater.domain.dao.FilmDao;
 import com.epam.finalproject.movietheater.domain.dao.GenreDao;
-import com.epam.finalproject.movietheater.domain.dao.SessionDao;
 import com.epam.finalproject.movietheater.domain.entity.Film;
 import com.epam.finalproject.movietheater.domain.entity.Genre;
-import com.epam.finalproject.movietheater.domain.entity.Session;
 import com.epam.finalproject.movietheater.domain.exception.DBException;
 import com.epam.finalproject.movietheater.web.model.FilmDTO;
-import com.epam.finalproject.movietheater.web.model.SessionDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,8 +15,6 @@ import javax.naming.NamingException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class FilmService {
@@ -61,7 +56,7 @@ public class FilmService {
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
-            film = filmDao.get(id, connection);
+            film = filmDao.findFilmById(id, connection);
             genres = genreDao.findGenresByFilmId(film.getId(), connection);
             connection.commit();
 

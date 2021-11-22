@@ -11,10 +11,10 @@ public class Ticket implements Serializable {
     private Integer sessionId;
     private Integer userId;
 
-    public Ticket(Short number, Integer ticketTypeId, Integer sessionId) {
+    public Ticket(int id, Short number, Integer ticketTypeId) {
+        this.id = id;
         this.number = number;
         this.ticketTypeId = ticketTypeId;
-        this.sessionId = sessionId;
     }
 
     public Ticket(Short number, Integer ticketTypeId, Integer sessionId, Integer userId) {

@@ -1,4 +1,4 @@
-/*----------------------------------------films--------------------------------------------------*/
+/*/*----------------------------------------films--------------------------------------------------*/
 SELECT pg_terminate_backend(pg_stat_activity.pid)
 FROM pg_stat_activity
 WHERE pg_stat_activity.datname = 'cinema'
@@ -77,7 +77,7 @@ create table sessions
     film_id integer,
     date_time timestamp not null unique check (date_time::time between '9:00' and '23:59'),
     lang    lang not null,
-    foreign key (film_id) references films (id) on delete cascade,
+    foreign key (film_id) references films (id) on delete cascade)
 );
 
 
@@ -101,3 +101,4 @@ create table tickets
     unique (number, session_id)
 );
 
+*/

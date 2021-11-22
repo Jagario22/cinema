@@ -21,11 +21,11 @@
                                 <div class="btn-group">
                                     <c:choose>
                                         <c:when test="${param.lang != null}">
-                                            <a href="${pageContext.request.contextPath}?id=${movie.id}&command=showMovies&lang=${param.lang}"
+                                            <a href="${pageContext.request.contextPath}?id=${movie.id}&pageCommand=showMovies&lang=${param.lang}"
                                                type="button" class="btn btn-sm btn-outline-secondary">View</a>
                                         </c:when>
                                         <c:otherwise>
-                                            <a href="${pageContext.request.contextPath}?id=${movie.id}&command=showMovies"
+                                            <a href="${pageContext.request.contextPath}?id=${movie.id}&pageCommand=showMovies"
                                                type="button" class="btn btn-sm btn-outline-secondary">View</a>
                                         </c:otherwise>
                                     </c:choose>

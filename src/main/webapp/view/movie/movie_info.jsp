@@ -15,9 +15,9 @@
     <c:choose>
         <c:when test="${filmDTO != null}">
             <a class="locale-btn btn btn-outline-light ml-2"
-               href="?command=${param.command}&id=${param.id}&lang=en">En</a>
+               href="?pageCommand=${param.pageCommand}&id=${param.id}&lang=en">En</a>
             <a class="locale-btn btn btn-outline-light ml-2"
-               href="?command=${param.command}&id=${param.id}&lang=ru">Ru</a>
+               href="?pageCommand=${param.pageCommand}&id=${param.id}&lang=ru">Ru</a>
         </c:when>
         <c:otherwise>
             <a class="locale-btn btn btn-outline-light ml-2"

@@ -33,14 +33,12 @@ public class UserDao {
         return instance;
     }
 
-    public int insertUser(User user) throws DBException {
-        Connection connection = null;
+    public int insertUser(User user, Connection connection) throws SQLException {
         ResultSet resultSet = null;
         PreparedStatement ps = null;
         int generatedKey;
-        try {
-            connection = connectionPool.getConnection();
 
+        try {
             ps = connection.prepareStatement(PostgresQuery.INSERT_USER,
                     Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, user.getEmail());
@@ -54,33 +52,24 @@ public class UserDao {
             if (resultSet.next()) {
                 generatedKey = resultSet.getInt(1);
             } else {
-                String exMsg = "don't have result";
                 String msg = "Inserting new user: " + user + " failed";
-                log.error(msg + "\n" + exMsg);
-                throw new DBException(msg, new SQLException(exMsg));
+                log.error(msg);
+                throw new SQLException(msg);
             }
-        } catch (SQLException | NamingException e) {
-            String msg = "Inserting new user: " + user + " failed";
-            log.error(msg + "\n" + e.getMessage());
-            throw new DBException(msg, e);
         } finally {
-            try {
-                CloseUtil.close(connection, ps, resultSet);
-            } catch (SQLException e) {
-                log.error("Closing connections failed" + "\n" + e.getMessage());
-            }
+            CloseUtil.close(ps, resultSet);
         }
+
         return generatedKey;
     }
 
-    public List<User> findUsersWithEqualLoginOrEmail(String login, String email) throws DBException {
+    public List<User> findUsersWithEqualLoginOrEmail(String login, String email) throws SQLException, NamingException {
         Connection connection = null;
         ResultSet resultSet = null;
         PreparedStatement ps = null;
         List<User> users = new ArrayList<>();
         try {
             connection = connectionPool.getConnection();
-
             ps = connection.prepareStatement(PostgresQuery.SELECT_CASE_EQUAL_LOGIN_OR_EMAIL);
             ps.setString(1, login);
             ps.setString(2, email);
@@ -111,27 +100,19 @@ public class UserDao {
                 }
                 connection.commit();
             } else {
-                String exMsg = "don't have result";
-                String msg = "Getting user with login:" + login + " and email: " + email + " failed";
-                log.error(msg + "\n" + exMsg);
-                throw new DBException(msg, new SQLException(exMsg));
+                String exMsg = "Getting user failed. Don't have result";
+                log.error("Getting user with login:" + login + "failed" + "\n" + exMsg);
+                throw new SQLException(exMsg);
             }
-        } catch (SQLException | NamingException e) {
-            String msg = "Getting user with login:" + login + " and email: " + email + " failed";
-            log.error(msg + "\n" + e.getMessage());
-            throw new DBException(msg, e);
+
         } finally {
-            try {
-                CloseUtil.close(connection, ps, resultSet);
-            } catch (SQLException e) {
-                log.error("Closing connections failed" + "\n" + e.getMessage());
-            }
+            CloseUtil.close(connection, ps, resultSet);
         }
         return users;
     }
 
 
-    public User findUserByLoginAndPassword(String login, String password) throws DBException {
+    public User findUserByLoginAndPassword(String login, String password) throws SQLException, NamingException {
         Connection connection = null;
         ResultSet resultSet = null;
         PreparedStatement preparedStatement = null;
@@ -152,16 +133,8 @@ public class UserDao {
                 user = new User(id, email, login, role);
             }
             connection.commit();
-        } catch (SQLException | NamingException e) {
-            String msg = "Getting user with login:" + login + " and password: " + password + " failed";
-            log.error(msg + "\n" + e.getMessage());
-            throw new DBException(msg, e);
         } finally {
-            try {
-                CloseUtil.close(connection, preparedStatement, resultSet);
-            } catch (SQLException e) {
-                log.error("Closing connections failed" + "\n" + e.getMessage());
-            }
+            CloseUtil.close(connection, preparedStatement, resultSet);
         }
         return user;
     }

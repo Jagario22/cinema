@@ -1,47 +1,45 @@
 package com.epam.finalproject.movietheater.web.model;
 
+import com.epam.finalproject.movietheater.domain.entity.Film;
 import com.epam.finalproject.movietheater.domain.entity.Session;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.List;
-import java.util.Objects;
+import java.time.LocalDateTime;
 
 public class SessionDTO {
-    private LocalDate date;
-    private List<LocalTime> timeList;
     private int id;
+    private Film film;
+    private LocalDateTime dateTime;
     private Session.Lang lang;
 
-    public SessionDTO(LocalDate localDate, int id, Session.Lang lang) {
-        this.date = localDate;
+    public SessionDTO(int id, Film film, LocalDateTime dateTime, Session.Lang lang) {
         this.id = id;
+        this.film = film;
+        this.dateTime = dateTime;
         this.lang = lang;
     }
 
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public List<LocalTime> getTimeList() {
-        return timeList;
-    }
-
-    public void setTimeList(List<LocalTime> timeList) {
-        this.timeList = timeList;
-    }
-
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
+    }
+
+    public Film getFilm() {
+        return film;
+    }
+
+    public void setFilm(Film film) {
+        this.film = film;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     public Session.Lang getLang() {
@@ -53,24 +51,11 @@ public class SessionDTO {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SessionDTO that = (SessionDTO) o;
-        return id == that.id && Objects.equals(date, that.date) && lang == that.lang;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(date, id, lang);
-    }
-
-    @Override
     public String toString() {
         return "SessionDTO{" +
-                "date=" + date +
-                ", timeList=" + timeList +
-                ", id=" + id +
+                "id=" + id +
+                ", film=" + film +
+                ", dateTime=" + dateTime +
                 ", lang=" + lang +
                 '}';
     }

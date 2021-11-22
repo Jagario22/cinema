@@ -3,7 +3,6 @@ package com.epam.finalproject.movietheater.domain.dao;
 import com.epam.finalproject.movietheater.domain.connection.ConnectionPool;
 import com.epam.finalproject.movietheater.domain.connection.PostgresConnectionPool;
 import com.epam.finalproject.movietheater.domain.entity.Genre;
-import com.epam.finalproject.movietheater.domain.entity.Session;
 import com.epam.finalproject.movietheater.domain.util.CloseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,7 +12,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.epam.finalproject.movietheater.domain.constants.PostgresQuery.SELECT_ALL_CURRENT_SESSION_OF_FILM;
 import static com.epam.finalproject.movietheater.domain.constants.PostgresQuery.SELECT_ALL_GENRES_OF_FILM;
 
 public class GenreDao {
@@ -22,7 +20,6 @@ public class GenreDao {
 
     private GenreDao() {
         connectionPool = PostgresConnectionPool.getInstance();
-        System.out.println();
     }
 
     private static GenreDao instance = null;

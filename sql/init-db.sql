@@ -1,4 +1,4 @@
-set  time zone 'GMT-2';
+set time zone 'GMT-2';
 
 create table genres
 (
@@ -74,7 +74,7 @@ create table ticket_types
 create table tickets
 (
     id             serial primary key,
-    number         int2 check (number > 0 AND number <= 75) not null,
+    number         smallint check (number > 0 AND number <= 75) not null,
     ticket_type_id integer                                  not null,
     session_id     integer                                  not null,
     user_id        integer,
@@ -134,7 +134,6 @@ VALUES ('user@gmail.com', 'Password1&', 'user1', 'user'),
        ('user7@gmail.com', 'Password1&', 'user7', 'user'),
        ('user8@gmail.com', 'Password1&', 'user8', 'user'),
        ('user9@gmail.com', 'Password1&', 'user9', 'user'),
-       ('user4@gmail.com', 'Password1&', 'user4', 'user'),
        ('admin@gmail.com', 'Admin11&', 'admin1', 'admin'),
        ('admin2@gmail.com', 'Admin12&', 'admin2', 'admin');
 
@@ -151,68 +150,70 @@ VALUES (1, 300),
        (8, 123.50);
 
 insert into sessions(film_id, date_time, lang)
-values (1, timestamp '2021-11-15 9:00', 'ukrainian'),
-       (2, timestamp '2021-11-15 11:05', 'ukrainian'),
-       (1, timestamp '2021-11-15 14:00', 'ukrainian'),
-       (2, timestamp '2021-11-15 16:05', 'ukrainian'),
-       (1, timestamp '2021-11-15 19:00', 'ukrainian'),
-       (2, timestamp '2021-11-15 21:05', 'ukrainian'),
-
-       (1, timestamp '2021-11-16 9:00', 'ukrainian'),
-       (1, timestamp '2021-11-16 11:05', 'ukrainian'),
-       (2, timestamp '2021-11-16 13:10', 'ukrainian'),
-       (1, timestamp '2021-11-16 16:05', 'ukrainian'),
-       (2, timestamp '2021-11-16 18:10', 'ukrainian'),
-       (1, timestamp '2021-11-16 21:05', 'ukrainian'),
-       (3, timestamp '2021-11-16 23:10', 'ukrainian'),
-
-       (1, timestamp '2021-11-17 9:00', 'ukrainian'),
-       (2, timestamp '2021-11-17 11:05', 'ukrainian'),
-       (2, timestamp '2021-11-17 14:00', 'ukrainian'),
-       (2, timestamp '2021-11-17 16:05', 'ukrainian'),
-       (1, timestamp '2021-11-17 19:00', 'ukrainian'),
-       (1, timestamp '2021-11-17 21:05', 'ukrainian'),
-       (3, timestamp '2021-11-17 23:10', 'ukrainian'),
-
-       (1, timestamp '2021-11-18 9:00', 'ukrainian'),
-       (3, timestamp '2021-11-18 11:00', 'ukrainian'),
-       (1, timestamp '2021-11-18 13:10', 'ukrainian'),
-       (2, timestamp '2021-11-18 15:10', 'ukrainian'),
-       (2, timestamp '2021-11-18 18:00', 'ukrainian'),
-       (1, timestamp '2021-11-18 22:00', 'ukrainian'),
-
-       (1, timestamp '2021-11-19 9:00', 'ukrainian'),
-       (1, timestamp '2021-11-19 11:05', 'ukrainian'),
-       (1, timestamp '2021-11-19 13:10', 'ukrainian'),
-       (2, timestamp '2021-11-19 15:15', 'ukrainian'),
-       (1, timestamp '2021-11-19 18:10', 'ukrainian'),
-       (2, timestamp '2021-11-19 20:15', 'ukrainian'),
-       (1, timestamp '2021-11-19 23:10', 'ukrainian'),
-
-       (1, timestamp '2021-11-21 9:00', 'ukrainian'),
-       (1, timestamp '2021-11-21 11:05', 'ukrainian'),
-       (2, timestamp '2021-11-21 13:10', 'ukrainian'),
-       (1, timestamp '2021-11-21 16:05', 'ukrainian'),
-       (2, timestamp '2021-11-21 18:10', 'ukrainian'),
-       (1, timestamp '2021-11-21 21:05', 'ukrainian'),
-       (3, timestamp '2021-11-21 23:10', 'ukrainian'),
-
-       (1, timestamp '2021-11-22 9:00', 'ukrainian'),
+values (1, timestamp '2021-11-22 9:00', 'ukrainian'),
        (2, timestamp '2021-11-22 11:05', 'ukrainian'),
-       (1, timestamp '2021-11-22 14:00', 'ukrainian'),
+       (1, timestamp '2021-11-12 14:00', 'ukrainian'),
        (2, timestamp '2021-11-22 16:05', 'ukrainian'),
        (1, timestamp '2021-11-22 19:00', 'ukrainian'),
-       (2, timestamp '2021-11-22 21:05', 'ukrainian');
+       (2, timestamp '2021-11-22 21:05', 'ukrainian'),
+
+       (1, timestamp '2021-11-23 9:00', 'ukrainian'),
+       (1, timestamp '2021-11-23 11:05', 'ukrainian'),
+       (2, timestamp '2021-11-23 13:10', 'ukrainian'),
+       (1, timestamp '2021-11-23 16:05', 'ukrainian'),
+       (2, timestamp '2021-11-23 18:10', 'ukrainian'),
+       (1, timestamp '2021-11-23 21:05', 'ukrainian'),
+       (3, timestamp '2021-11-23 23:10', 'ukrainian'),
+
+       (1, timestamp '2021-11-24 9:00', 'ukrainian'),
+       (2, timestamp '2021-11-24 11:05', 'ukrainian'),
+       (2, timestamp '2021-11-24 14:00', 'ukrainian'),
+       (2, timestamp '2021-11-24 16:05', 'ukrainian'),
+       (1, timestamp '2021-11-24 19:00', 'ukrainian'),
+       (1, timestamp '2021-11-24 21:05', 'ukrainian'),
+       (3, timestamp '2021-11-24 23:10', 'ukrainian'),
+
+       (1, timestamp '2021-11-25 9:00', 'ukrainian'),
+       (3, timestamp '2021-11-25 11:00', 'ukrainian'),
+       (1, timestamp '2021-11-25 13:10', 'ukrainian'),
+       (2, timestamp '2021-11-25 15:10', 'ukrainian'),
+       (2, timestamp '2021-11-25 18:00', 'ukrainian'),
+       (1, timestamp '2021-11-25 22:00', 'ukrainian'),
+
+       (1, timestamp '2021-11-26 9:00', 'ukrainian'),
+       (1, timestamp '2021-11-26 11:05', 'ukrainian'),
+       (1, timestamp '2021-11-26 13:10', 'ukrainian'),
+       (2, timestamp '2021-11-26 15:15', 'ukrainian'),
+       (1, timestamp '2021-11-26 18:10', 'ukrainian'),
+       (2, timestamp '2021-11-26 20:15', 'ukrainian'),
+       (1, timestamp '2021-11-26 23:10', 'ukrainian'),
+
+       (1, timestamp '2021-11-27 9:00', 'ukrainian'),
+       (1, timestamp '2021-11-27 11:05', 'ukrainian'),
+       (2, timestamp '2021-11-27 13:10', 'ukrainian'),
+       (1, timestamp '2021-11-27 16:05', 'ukrainian'),
+       (2, timestamp '2021-11-27 18:10', 'ukrainian'),
+       (1, timestamp '2021-11-27 21:05', 'ukrainian'),
+       (3, timestamp '2021-11-27 23:10', 'ukrainian'),
+
+       (1, timestamp '2021-11-28 9:00', 'ukrainian'),
+       (2, timestamp '2021-11-28 11:05', 'ukrainian'),
+       (1, timestamp '2021-11-28 14:00', 'ukrainian'),
+       (2, timestamp '2021-11-28 16:05', 'ukrainian'),
+       (1, timestamp '2021-11-28 19:00', 'ukrainian'),
+       (2, timestamp '2021-11-28 21:05', 'ukrainian');
 
 
 insert into ticket_types(name, price)
 VALUES ('simple', 120),
        ('vip', 200);
 
+insert into tickets(number, ticket_type_id, session_id)
+VALUES (1, 1, 1),
+       (2, 1, 1),
+       (3, 1, 1),
+       (62, 2, 1),
+       (61, 2, 1);
+
 insert into tickets(number, ticket_type_id, session_id, user_id)
-VALUES (1, 1, 1, 1),
-       (2, 1, 1, 1),
-       (3, 1, 1, 2),
-       (4, 1, 1, 3),
-       (62, 2, 1, 4),
-       (61, 2, 1, 5);
+VALUES (4, 1, 1, 3);
