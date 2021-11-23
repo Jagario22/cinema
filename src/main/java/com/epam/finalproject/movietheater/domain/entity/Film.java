@@ -53,6 +53,10 @@ public class Film implements Serializable, Comparable<Film> {
         this.lastShowingDate = lastShowingDate;
     }
 
+    public Film(int filmId) {
+        this.id = filmId;
+    }
+
 
     public void setId(int id) {
         this.id = id;

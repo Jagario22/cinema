@@ -2,7 +2,7 @@ package com.epam.finalproject.movietheater.web.command.json;
 
 import com.epam.finalproject.movietheater.domain.exception.DBException;
 import com.epam.finalproject.movietheater.service.SessionService;
-import com.epam.finalproject.movietheater.web.model.FilmSessionsDTO;
+import com.epam.finalproject.movietheater.web.model.session.FilmSessionsInfo;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +22,7 @@ public class ShowAllSessions implements Command {
         String filmIdParam = req.getParameter("id");
         if (filmIdParam != null) {
 
-            List<FilmSessionsDTO> sessions = sessionService.getAllSessionsOfFilm(Integer.parseInt(filmIdParam));
+            List<FilmSessionsInfo> sessions = sessionService.getAllSessionsOfFilm(Integer.parseInt(filmIdParam));
             resp.getWriter().write(new Gson().toJson(sessions));
         }
     }

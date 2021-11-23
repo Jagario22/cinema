@@ -1,17 +1,17 @@
-package com.epam.finalproject.movietheater.web.model;
+package com.epam.finalproject.movietheater.web.model.session;
 
 import com.epam.finalproject.movietheater.domain.entity.Film;
 import com.epam.finalproject.movietheater.domain.entity.Session;
 
 import java.time.LocalDateTime;
 
-public class SessionDTO {
+public class SessionInfo {
     private int id;
     private Film film;
     private LocalDateTime dateTime;
     private Session.Lang lang;
 
-    public SessionDTO(int id, Film film, LocalDateTime dateTime, Session.Lang lang) {
+    public SessionInfo(int id, Film film, LocalDateTime dateTime, Session.Lang lang) {
         this.id = id;
         this.film = film;
         this.dateTime = dateTime;

@@ -13,40 +13,104 @@
     <nav class="my-md-0 mr-md-3">
     </nav>
 </div>
-<c:choose>
-    <c:when test="${sessionInfo != null}">
-        <section class="vh-100">
-            <div class="container-fluid">
+<form class="h-100" id="ticket" action="${pageContext.request.contextPath}" method="get">
+    <input type="hidden" name="command" value="buyTicket" form="ticket">
+    <div class="row h-100 mr-0">
+        <div class="col-md-8">
+            <div class="session-info">
                 <div class="row">
-                    <div class="col-sm-6 text-black">
-                        <div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0">
-                            <form style="width: 23rem;" method="post" action="${pageContext.request.contextPath}/">
-                                <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">
-                                        ${sessionInfo.film.title}
-                                </h3>
-                                <input type="hidden" name="command" value="buyTicket">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="card mb-4 box-shadow mt-2">
-                                            <img class="card-img-top session-info movie-img"
-                                                 src="${sessionInfo.film.img}" alt="default">
+                    <div class="col-md-3">
+                        <img class="card-img-top session-info movie-img"
+                             src="${sessionInfo.film.img}" alt="default">
+                    </div>
+                    <div class="col-md-8 mt-3">
+                        <h2 class="session-info movie-title">
+                            ${sessionInfo.film.title}
+                        </h2>
+                        <div class="row">
+                            <div class="col-md-6 ml-4">
+                                <div class="card time-card mb-3 mt-5" style="max-width: 250px">
+                                    <div class="row no-gutters">
+                                        <div class="col-md-4 text-center pb-2 pt-3 pr-3 pl-3 calendar-icon">
+                                            <i class="fa fa-calendar" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="p-2 card-body text-center text-dark">
+                                                <p class="mb-0 card-text">${sessionInfo.dateTime.toLocalDate()}</p>
+                                                <p class="mb-0 week-title card-title font-weight-bold">
+                                                    <localeDate:format
+                                                            date="${sessionInfo.dateTime.toLocalDate()}"
+                                                            pattern="EEEE"/></p>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-5">
-                                        ${sessionInfo.film.year}
+                                </div>
+                            </div>
+                            <div class="col-md-5 ml-4">
+                                <div class="card time-card mb-3 mt-5" style="max-width: 250px">
+                                    <div class="row no-gutters">
+                                        <div class="col-md-4 text-center pb-2 pt-3 pr-3 pl-3 calendar-icon">
+                                            <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="p-2 card-body text-center text-dark">
+                                                <p class="mb-0 card-text">Time</p>
+                                                <p class="mb-0 week-title card-title font-weight-bold">
+                                                    <c:set var="min" value="${sessionInfo.film.len}"/>
+                                                    ${sessionInfo.dateTime.toLocalTime()} -
+                                                    ${sessionInfo.dateTime.toLocalTime().plusMinutes(min)}
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
+                            <div class="places-info">
+                                <h2 class="places-title">Places</h2>
+                                <label for="rowSelect" class="mr-2 mt-2">Row</label><br/>
+                                <select name="rowSelect" id="rowSelect" class="ticket-select form-control"
+                                        onfocus='this.size=5;' onblur='this.size=1;'
+                                        onchange='this.size=1; this.blur();'>
+                                    <c:forEach var="index" begin="1" end="${sessionScope.countOfRows}">
+                                        <option value="${index}">${index}</option>
+                                    </c:forEach>
+                                </select>
+                                <br/>
+                                <label for="placeSelect" class="mt-2">Place</label><br/>
+                                <select name="ticketId" id="placeSelect" form="ticket"
+                                        class="ticket-select form-control"
+                                        onfocus='this.size=5;' onblur='this.size=1;'
+                                        onchange='this.size=1; this.blur();' required>
+                                    <option value="">Select something</option>
+                                    <c:forEach var="index" begin="1" end="${sessionScope.countOfRowSeats}">
+                                        <option class="text-danger" value="${index}" disabled>${index}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-sm-6 px-0 d-none d-sm-block">
-                        <img src="https://pyxis.nymag.com/v1/imgs/978/4d0/4b4779e1dcb86984abe55c08366f9babe7-13-empty-theater.rsquare.w700.jpg"
-                             alt="Login image" class="w-100 vh-100" style="object-fit: cover; object-position: left;">
                     </div>
                 </div>
             </div>
-        </section>
-    </c:when>
-</c:choose>
+            <div class="pb-3">
+            </div>
+        </div>
+        <div class="col-md-4 ticket-info p-3">
+            <div class="ticket-title">
+                Tickets
+                <p class="float-right text-secondary mr-3">Price: <span id="price"></span></p>
+            </div>
+            <div class="ticket-icon">
+                <i class="fa fa-ticket" aria-hidden="true"></i>
+            </div>
+            <p class="ticket-title">Ticket info</p>
+            <input type="hidden" name="sessionId" value="${sessionInfo.id}" form="ticket">
+            <input type="hidden" name="userId" value="${sessionScope.user.id}" form="ticket">
+            <p>Row: <span id="selected_row_info"></span></p>
+            <p>Place: <span id="selected_place_info"></span></p>
+            <p>Ticket type: <span id="ticket_type_info"></span></p>
+            <button id="ticket_btn" class="btn ticket-button cinema-button btn-lg btn-block btn-dark" type="submit" form="ticket">Buy</button>
+        </div>
+    </div>
+</form>
 </body>
 </html>

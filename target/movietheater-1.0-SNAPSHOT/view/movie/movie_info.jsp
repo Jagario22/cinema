@@ -41,7 +41,7 @@
                     </div>
                 </div>
                 <div class="movie-info col-md-5 pl-3 pr-3 pt-2 ml-3 mr-3">
-                    <h2 class="movie-title">${filmDTO.film.title}</h2>
+                    <h2>${filmDTO.film.title}</h2>
                     <div>
                         <ul class="movie-credentials">
                             <c:if test="${filmDTO.film.category != null}">

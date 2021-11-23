@@ -1,20 +1,19 @@
-package com.epam.finalproject.movietheater.web.model;
+package com.epam.finalproject.movietheater.web.model.session;
 
 import com.epam.finalproject.movietheater.domain.entity.Session;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
-public class FilmSessionsDTO {
+public class FilmSessionsInfo {
     private LocalDate date;
-    private List<Map<LocalTime, Integer>> freeTicketsOfTime;
+    private List<SessionPlacesInfo> sessionsPlacesInfo;
     private int filmId;
     private Session.Lang lang;
 
-    public FilmSessionsDTO(LocalDate localDate, int filmId, Session.Lang lang) {
+    public FilmSessionsInfo(LocalDate localDate, int filmId, Session.Lang lang) {
         this.date = localDate;
         this.filmId = filmId;
         this.lang = lang;
@@ -28,19 +27,22 @@ public class FilmSessionsDTO {
         this.date = date;
     }
 
-    public List<Map<LocalTime, Integer>> getTimeList() {
-        return freeTicketsOfTime;
+    public List<SessionPlacesInfo> getSessionsPlacesInfo() {
+        if (sessionsPlacesInfo == null) {
+            setSessionsPlacesInfo(new ArrayList<>());
+        }
+        return sessionsPlacesInfo;
     }
 
-    public void setTimeList(List<Map<LocalTime, Integer>> timeList) {
-        this.freeTicketsOfTime = timeList;
+    public void setSessionsPlacesInfo(List<SessionPlacesInfo> sessionsPlacesInfo) {
+        this.sessionsPlacesInfo = sessionsPlacesInfo;
     }
 
-    public Integer getFilmId() {
+    public int getFilmId() {
         return filmId;
     }
 
-    public void setFilmId(Integer filmId) {
+    public void setFilmId(int filmId) {
         this.filmId = filmId;
     }
 
@@ -56,7 +58,7 @@ public class FilmSessionsDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        FilmSessionsDTO that = (FilmSessionsDTO) o;
+        FilmSessionsInfo that = (FilmSessionsInfo) o;
         return filmId == that.filmId && Objects.equals(date, that.date) && lang == that.lang;
     }
 
@@ -69,7 +71,7 @@ public class FilmSessionsDTO {
     public String toString() {
         return "SessionDTO{" +
                 "date=" + date +
-                ", timeList=" + freeTicketsOfTime +
+                ", sessionsPlacesInfo=" + sessionsPlacesInfo +
                 ", filmId=" + filmId +
                 ", lang=" + lang +
                 '}';

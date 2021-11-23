@@ -44,7 +44,7 @@
                             </div>
                         </c:if>
                         <div class="pt-1 mb-4">
-                            <button class="btn btn-login btn-lg btn-block btn-dark" type="submit"><fmt:message
+                            <button class="btn cinema-button btn-lg btn-block btn-dark" type="submit"><fmt:message
                                     key="login.btn.value"/></button>
                         </div>
                         <p class="small mb-5 pb-lg-2"><a class="text-muted" href="#!"><fmt:message

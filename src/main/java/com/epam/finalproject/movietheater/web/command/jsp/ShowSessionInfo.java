@@ -1,10 +1,9 @@
 package com.epam.finalproject.movietheater.web.command.jsp;
 
 import com.epam.finalproject.movietheater.domain.exception.DBException;
-import com.epam.finalproject.movietheater.service.FilmService;
 import com.epam.finalproject.movietheater.service.SessionService;
-import com.epam.finalproject.movietheater.web.constants.PagePath;
-import com.epam.finalproject.movietheater.web.model.SessionDTO;
+import com.epam.finalproject.movietheater.web.constants.CinemaConstants;
+import com.epam.finalproject.movietheater.web.model.session.SessionInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,8 +26,10 @@ public class ShowSessionInfo implements PageCommand {
         } else {
             String sessionId = req.getParameter("sessionId");
             if (sessionId != null) {
-                SessionDTO sessionInfo = sessionService.getSessionById(Integer.parseInt(sessionId));
+                SessionInfo sessionInfo = sessionService.getSessionById(Integer.parseInt(sessionId));
                 req.getSession().setAttribute("sessionInfo", sessionInfo);
+                req.getSession().setAttribute("countOfRows", CinemaConstants.COUNT_OF_ROWS);
+                req.getSession().setAttribute("countOfRowSeats", CinemaConstants.COUNT_OF_ROW_SEAT);
             } else {
                 throw new IOException("sessionId can't be null");
             }
