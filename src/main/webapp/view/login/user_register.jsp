@@ -8,26 +8,18 @@
 <%@ include file="/view/include/head/head.jspf" %>
 <body>
 <div class="nav-color d-flex flex-column flex-md-row align-items-center p-3 px-md-4 box-shadow">
-    <h5 class="my-0 mr-md-auto font-weight-normal text-white">Cinema</h5>
-    <a class="btn btn-outline-light mr-md-3" href="${pageContext.request.contextPath}">
-        <fmt:message key="link.homepage"/>
-    </a>
-    <a class="btn btn-outline-light mr-md-3" href="${pageContext.request.contextPath}/view/login/user_login.jsp">
-        <fmt:message key="link.login"/>
-    </a>
-    <a class="locale-btn btn btn-outline-light mr-md-2" href="?lang=en">En</a>
-    <a class="locale-btn btn btn-outline-light" href="?lang=ru">Ru</a>
+    <%@ include file="/view/include/head/nav.jspf" %>
 </div>
 <section class="vh-100">
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-6 text-black">
-                <div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0 mt-xl-n5">
-                    <form style="width: 23rem;" method="post" action="${pageContext.request.contextPath}">
+                <div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-5 pt-5 pt-xl-0">
+                    <form style="width: 23rem;" method="post" action="${pageContext.request.contextPath}/">
+                        <input type="hidden" name="command" value="register">
+                        <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;"><fmt:message
+                                key="login.signup.title"/></h3>
                         <div class="form-outline mb-4">
-                            <input type="hidden" name="command" value="register">
-                            <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;"><fmt:message
-                                    key="login.signup.title"/></h3>
                             <label class="form-label" for="inputLoginSignUpForm"><fmt:message
                                     key="login.login.lbl"/></label>
                             <input type="text" id="inputLoginSignUpForm"
@@ -64,7 +56,6 @@
                                         key="login.signin.notunique.email.lbl"/></label>
                             </c:if>
                         </div>
-
                         <c:if test="${sessionScope.successRegistration == false}">
                             <div class="form-outline mb-4">
                             <span class="error text-danger">

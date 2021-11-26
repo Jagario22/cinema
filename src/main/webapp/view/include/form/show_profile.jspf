@@ -1,0 +1,6 @@
+<form action="${pageContext.request.contextPath}" method="get">
+    <input type="hidden" name="command" value="showProfile">
+    <button class="btn btn-outline-light ml-2" type="submit">
+        ${user.login}
+    </button>
+</form>

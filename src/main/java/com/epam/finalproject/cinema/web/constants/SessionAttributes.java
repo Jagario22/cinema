@@ -1,0 +1,13 @@
+package com.epam.finalproject.cinema.web.constants;
+
+public class SessionAttributes {
+    public static final String UNIQUE_EMAIL_VALIDATION_CLASS = "uniqueEmailValidationClass";
+    public static final String UNIQUE_LOGIN_VALIDATION_CLASS = "uniqueLoginValidationClass";
+    public static final String SUCCESS_REGISTRATION = "successRegistration";
+    public static final String VALIDATING_STATUS = "validatingStatus";
+    public static final String SIGN_UP_ERROR = "signUpError";
+    public static final String MOVIE_LIST = "movies";
+    public static final String USER_TICKETS = "userTickets";
+    public static final String TICKET_PURCHASE_ERROR = "ticketPurchaseError";
+    public static final String SUCCESS_TICKET_PURCHASE = "successTicketPurchase";
+}

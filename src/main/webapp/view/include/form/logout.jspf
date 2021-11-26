@@ -1,0 +1,4 @@
+<form action="${pageContext.request.contextPath}" method="get">
+    <input type="hidden" name="command" value="logout">
+    <button class="btn btn-outline-light ml-2" type="submit">Logout</button>
+</form>

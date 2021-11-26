@@ -12,8 +12,12 @@
     <a href="${pageContext.request.contextPath}" class="my-0 mr-md-auto font-weight-normal text-white h5">Cinema</a>
     <nav class="my-md-0 mr-md-3">
     </nav>
+    <a class="locale-btn btn btn-outline-light ml-2" href="?command=${param
+    .command}&filmId=${param.filmId}&sessionId=${param.sessionId}&lang=en">En</a>
+    <a class="locale-btn btn btn-outline-light ml-2" href="?command=${param
+    .command}&filmId=${param.filmId}&sessionId=${param.sessionId}&lang=ru">Ru</a>
 </div>
-<form class="h-100" id="ticket" action="${pageContext.request.contextPath}" method="get">
+<form class="h-100" id="ticket" action="${pageContext.request.contextPath}/" method="post">
     <input type="hidden" name="command" value="buyTicket" form="ticket">
     <div class="row h-100 mr-0">
         <div class="col-md-8">
@@ -36,10 +40,10 @@
                                         </div>
                                         <div class="col-md-8">
                                             <div class="p-2 card-body text-center text-dark">
-                                                <p class="mb-0 card-text">${sessionInfo.dateTime.toLocalDate()}</p>
-                                                <p class="mb-0 week-title card-title font-weight-bold">
+                                                <p class="mb-0 card-text">${sessionInfo.date}</p>
+                                                <p class="mb-0 cinema-color card-title font-weight-bold">
                                                     <localeDate:format
-                                                            date="${sessionInfo.dateTime.toLocalDate()}"
+                                                            date="${sessionInfo.date}"
                                                             pattern="EEEE"/></p>
                                             </div>
                                         </div>
@@ -55,10 +59,10 @@
                                         <div class="col-md-8">
                                             <div class="p-2 card-body text-center text-dark">
                                                 <p class="mb-0 card-text">Time</p>
-                                                <p class="mb-0 week-title card-title font-weight-bold">
+                                                <p class="mb-0 cinema-color card-title font-weight-bold">
                                                     <c:set var="min" value="${sessionInfo.film.len}"/>
-                                                    ${sessionInfo.dateTime.toLocalTime()} -
-                                                    ${sessionInfo.dateTime.toLocalTime().plusMinutes(min)}
+                                                    ${sessionInfo.time} -
+                                                    ${sessionInfo.time.plusMinutes(min)}
                                                 </p>
                                             </div>
                                         </div>
@@ -99,6 +103,8 @@
                 Tickets
                 <p class="float-right text-secondary mr-3">Price: <span id="price"></span></p>
             </div>
+            <p class="float-right text-secondary mr-3">Your balance: <span
+                    id="balance">${sessionScope.user.wallet.balance}</span></p>
             <div class="ticket-icon">
                 <i class="fa fa-ticket" aria-hidden="true"></i>
             </div>
@@ -108,7 +114,9 @@
             <p>Row: <span id="selected_row_info"></span></p>
             <p>Place: <span id="selected_place_info"></span></p>
             <p>Ticket type: <span id="ticket_type_info"></span></p>
-            <button id="ticket_btn" class="btn ticket-button cinema-button btn-lg btn-block btn-dark" type="submit" form="ticket">Buy</button>
+            <button id="ticket_btn" class="btn ticket-button cinema-button btn-lg btn-block btn-dark" type="submit"
+                    form="ticket">Buy
+            </button>
         </div>
     </div>
 </form>

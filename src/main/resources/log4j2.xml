@@ -12,7 +12,7 @@
 		</File>
 	</Appenders>
 	<Loggers>
-		<Logger name="com.epam.finalproject.movietheater" level="trace">
+		<Logger name="com.epam.finalproject.cinema" level="trace">
 			<AppenderRef ref="Console" />
 		</Logger>
 		<Root level="debug">

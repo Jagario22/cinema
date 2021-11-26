@@ -2,7 +2,6 @@
 <%@ include file="view/include/head/libs.jspf" %>
 <%@ include file="view/include/head/session_locale.jspf" %>
 
-
 <!DOCTYPE html>
 <html lang="${currentLocale}">
 <c:set var="movies" value="${sessionScope.movies}"/>

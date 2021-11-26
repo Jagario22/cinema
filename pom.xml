@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.epam.finalproject</groupId>
-    <artifactId>movietheater</artifactId>
+    <artifactId>cinema</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>movietheater</name>
+    <name>cinema</name>
     <packaging>war</packaging>
 
     <properties>
