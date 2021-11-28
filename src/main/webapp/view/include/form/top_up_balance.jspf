@@ -1,0 +1,27 @@
+<button type="button" class="btn btn-primary col-sm-12 my-auto cinema-button" data-toggle="modal" data-target="#topUpModal">
+    Top up balance
+</button>
+
+<div class="modal fade" id="topUpModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="${pageContext.request.contextPath}/" method="get">
+                <input name="command" value="topUpBalance" type="hidden"/>
+                <div class="modal-header">
+                    <h5 class="modal-title">Top up balance</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label for="amount">Enter the replenishment amount</label>
+                    <input id="amount" type="number" name="amount" required/>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

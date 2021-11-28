@@ -6,6 +6,7 @@ import com.epam.finalproject.cinema.domain.dao.*;
 import com.epam.finalproject.cinema.domain.entity.User;
 import com.epam.finalproject.cinema.domain.entity.Wallet;
 import com.epam.finalproject.cinema.exception.DBException;
+import com.epam.finalproject.cinema.web.constants.Params;
 import com.epam.finalproject.cinema.web.model.user.UserProfileInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,6 +48,15 @@ public class UserProfileService {
             walletDao.insertWallet(wallet, connection);
             connection.commit();
         } catch (SQLException | NamingException e) {
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                }
+            } catch (SQLException ex) {
+                String msg = "Creating the user failed";
+                log.debug(msg + "\n" + e.getMessage());
+                throw new DBException(msg, e);
+            }
             String msg = "Creating the user failed";
             log.debug(msg + "\n" + e.getMessage());
             throw new DBException(msg, e);
@@ -74,6 +84,15 @@ public class UserProfileService {
             userInfo = convertToUserProfileInfo(user, wallet);
             connection.commit();
         } catch (SQLException | NamingException e) {
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                }
+            } catch (SQLException ex) {
+                log.error("Getting user with login:" + login + " and password: " + password + " failed"
+                        + "\n" + e.getMessage());
+                throw new DBException("Getting user failed.", e);
+            }
             log.error("Getting user with login:" + login + " and password: " + password + " failed"
                     + "\n" + e.getMessage());
             throw new DBException("Getting user failed.", e);
@@ -89,8 +108,17 @@ public class UserProfileService {
         BigDecimal balance = null;
         try {
             connection = connectionPool.getConnection();
-             balance = walletDao.findBalanceByUserId(userId, connection);
+            balance = walletDao.findBalanceByUserId(userId, connection);
         } catch (SQLException | NamingException e) {
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                }
+            } catch (SQLException ex) {
+                log.error("Getting user balance failed"
+                        + "\n" + e.getMessage());
+                throw new DBException("Getting user balance failed", e);
+            }
             log.error("Getting user balance failed"
                     + "\n" + e.getMessage());
             throw new DBException("Getting user balance failed", e);
@@ -123,10 +151,35 @@ public class UserProfileService {
     }
 
 
-
     private UserProfileInfo convertToUserProfileInfo(User user, Wallet wallet) {
         return new UserProfileInfo(user.getId(), user.getLogin(), user.getEmail(), wallet, user.getRole());
     }
 
 
+    public void topUpBalanceByUserId(Integer userId, BigDecimal amount) throws DBException {
+        Connection connection = null;
+
+        try {
+            connection = connectionPool.getConnection();
+            BigDecimal balance = walletDao.findBalanceByUserId(userId, connection);
+            BigDecimal newBalance = balance.add(amount);
+            walletDao.updateOnBalanceByUserId(userId, newBalance, connection);
+            connection.commit();
+        } catch (SQLException | NamingException e) {
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                }
+            } catch (SQLException ex) {
+                log.error("Updating user: " + userId + " balance failed\n" +
+                        e.getMessage());
+                throw new DBException("Updating user balance failed", e);
+            }
+            log.error("Updating user: " + userId + " balance failed\n" +
+                    e.getMessage());
+            throw new DBException("Updating user balance failed", e);
+        } finally {
+            closeConnection(connection, "Updating user balance failed");
+        }
+    }
 }

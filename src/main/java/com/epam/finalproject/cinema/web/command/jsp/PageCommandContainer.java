@@ -3,7 +3,6 @@ package com.epam.finalproject.cinema.web.command.jsp;
 import com.epam.finalproject.cinema.web.command.login.LoginCommand;
 import com.epam.finalproject.cinema.web.command.login.LogoutCommand;
 import com.epam.finalproject.cinema.web.command.login.RegisterCommand;
-import com.epam.finalproject.cinema.web.constants.CommandNames;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,6 +25,7 @@ public class PageCommandContainer {
         commands.put(SHOW_PROFILE, new ShowUserProfile());
         commands.put(BUY_TICKET, new BuyTicketCommand());
         commands.put(LOGOUT, new LogoutCommand());
+        commands.put(TOP_UP_BALANCE, new TopUpBalanceCommand());
     }
 
     public static PageCommand getCommand(String commandName) {

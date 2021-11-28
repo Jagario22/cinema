@@ -11,4 +11,5 @@ public class CommandNames {
     public final static String SHOW_PROFILE = "showProfile";
     public final static String BUY_TICKET = "buyTicket";
     public static final String LOGOUT = "logout";
+    public static final String TOP_UP_BALANCE = "topUpBalance";
 }

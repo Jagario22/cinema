@@ -10,10 +10,13 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 
-public class TopUpBalance implements PageCommand {
-    private final static Logger log = LogManager.getLogger(TopUpBalance.class);
-    private final static UserProfileService USER_PROFILE_SERVICE = UserProfileService.getInstance();
+public class TopUpBalanceCommand implements PageCommand {
+    private final static Logger log = LogManager.getLogger(TopUpBalanceCommand.class);
+    private final static UserProfileService userProfileService = UserProfileService.getInstance();
+    private final static UserProfileService userService = UserProfileService.getInstance();
+
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException, BadRequestException {
         UserProfileInfo user = (UserProfileInfo) req.getSession().getAttribute("user");
@@ -21,8 +24,13 @@ public class TopUpBalance implements PageCommand {
             throw new BadRequestException("User wasn't found");
         }
 
-        /*USER_PROFILE_SERVICE.topUpBalanceByWalletId(user.getWallet().getId());*/
-
+        if (req.getParameter("amount") != null) {
+            userProfileService.topUpBalanceByUserId(user.getId(),
+                    BigDecimal.valueOf(Double.parseDouble(req.getParameter("amount"))));
+            user.getWallet().setBalance(userService.getWalletBalanceByUserId(user.getId()));
+            req.getSession().setAttribute("user", user);
+        }
+        log.debug("Updating balance was succeed");
         return new ShowUserProfile().execute(req, resp);
     }
 }

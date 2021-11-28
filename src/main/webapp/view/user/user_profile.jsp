@@ -32,7 +32,7 @@
                     <p>Your payment was successful and your order is complete</p>
                 </div>
             </c:if>
-            <div class="col-lg-4">
+            <div class="col-lg-4 vw-100-">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex flex-column align-items-center text-center">
@@ -40,8 +40,14 @@
                             <div class="mt-3">
                                 <h4>${user.login}</h4>
                                 <p class="text-secondary mb-1">${user.email}</p>
+                                <p class="text-secondary mb-1">${user.wallet.balance}</p>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 mt-3">
+                        <%@ include file="../include/form/top_up_balance.jspf" %>
                     </div>
                 </div>
             </div>
