@@ -77,6 +77,12 @@ public class SessionInfo {
         this.freePlacesCount = freePlacesCount;
     }
 
+    public boolean isEqualToSession(Session session) {
+        return this.id == session.getId() && this.date.equals(session.getLocaleDateTime().toLocalDate()) &&
+                this.time.equals(session.getLocaleDateTime().toLocalTime())
+                && this.film.getId() == session.getFilmId();
+    }
+
     @Override
     public String toString() {
         return "SessionInfo{" +

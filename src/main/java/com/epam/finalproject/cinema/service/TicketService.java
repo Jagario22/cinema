@@ -80,7 +80,7 @@ public class TicketService {
 
 
     public synchronized void processTicketPurchase(int ticketId, int sessionId, int userId) throws DBException, IllegalStateException,
-            InactiveFilmSessionException, InsufficientBalanceException {
+            InactiveFilmSessionException, InsufficientBalanceException, TicketPurchaseException {
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
@@ -106,7 +106,7 @@ public class TicketService {
                 throw new InactiveFilmSessionException(msg);
             }
 
-        } catch (SQLException | NamingException | TicketPurchaseException e) {
+        } catch (SQLException | NamingException e) {
             if (connection != null) {
                 try {
                     connection.rollback();

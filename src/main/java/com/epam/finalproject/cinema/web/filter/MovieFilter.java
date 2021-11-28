@@ -3,6 +3,8 @@ package com.epam.finalproject.cinema.web.filter;
 import com.epam.finalproject.cinema.domain.entity.Film;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.service.FilmService;
+import com.epam.finalproject.cinema.util.Pagination;
+import com.epam.finalproject.cinema.web.command.jsp.WelcomeCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,17 +21,12 @@ import static com.epam.finalproject.cinema.web.constants.SessionAttributes.MOVIE
 
 @WebFilter(filterName = "MovieFilter", urlPatterns = {WELCOME_PAGE_PATH})
 public class MovieFilter implements Filter {
-    private final static FilmService filmService = FilmService.getInstance();
     private final static Logger log = LogManager.getLogger(MovieFilter.class);
+
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest req = (HttpServletRequest) servletRequest;
-        HttpSession session = req.getSession();
         try {
-            List<Film> films = filmService.getAllCurrentFilms();
-            if (films.size() != 0) {
-                session.setAttribute(MOVIE_LIST, films);
-            }
+            new WelcomeCommand().execute((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse);
         } catch (DBException e) {
             HttpServletResponse resp = (HttpServletResponse) servletResponse;
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());

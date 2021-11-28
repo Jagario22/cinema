@@ -5,6 +5,8 @@ import com.epam.finalproject.cinema.service.TicketService;
 import com.epam.finalproject.cinema.web.constants.PagePath;
 import com.epam.finalproject.cinema.web.model.ticket.TicketInfo;
 import com.epam.finalproject.cinema.web.model.user.UserProfileInfo;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +17,7 @@ import java.util.List;
 public class ShowUserProfile implements PageCommand {
     private final static TicketService ticketService =
             TicketService.getInstance();
-
+    private final static Logger log = LogManager.getLogger(ShowUserProfile.class);
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException {
         HttpSession session = req.getSession();

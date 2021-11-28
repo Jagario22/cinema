@@ -3,8 +3,9 @@ package com.epam.finalproject.cinema.web.command.jsp;
 import com.epam.finalproject.cinema.domain.entity.Film;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.service.FilmService;
-import com.epam.finalproject.cinema.service.UserProfileService;
+import com.epam.finalproject.cinema.util.Pagination;
 import com.epam.finalproject.cinema.web.constants.CinemaConstants;
+import com.epam.finalproject.cinema.web.constants.Params;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,24 +20,29 @@ import static com.epam.finalproject.cinema.web.constants.SessionAttributes.MOVIE
 
 public class WelcomeCommand implements PageCommand {
     private final static FilmService filmService = FilmService.getInstance();
-    private final static UserProfileService USER_PROFILE_SERVICE = UserProfileService.getInstance();
     private final static Logger log = LogManager.getLogger(ShowMovieCommand.class);
 
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException {
         HttpSession session = req.getSession();
-        List<Film> films = filmService.getAllCurrentFilms();
+
+        int page = Pagination.extractPage(req);
+        int pageSize = Pagination.extractSize(req);
+
+        String sortField = Params.DATE_TIME_FIELD;
+        if (req.getParameter(Params.SORT_FIELD) != null)
+            sortField = req.getParameter(Params.SORT_FIELD);
+        int size = filmService.getCountOfCurrentFilms();
+        List<Film> films = filmService.getAllCurrentFilmsSortedBy(sortField,
+                pageSize * (page - 1), pageSize);
+
         if (films.size() != 0) {
             session.setAttribute(MOVIE_LIST, films);
         }
         req.getSession().setAttribute("countOfRows", CinemaConstants.COUNT_OF_ROWS);
         req.getSession().setAttribute("countOfRowSeats", CinemaConstants.COUNT_OF_ROW_SEAT);
-
-      /*  if (session.getAttribute("user") == null) {
-            UserProfileInfo userProfileInfo = userService.findUserByLoginAndPassword("user3",
-                    "Password1&");
-            session.setAttribute("user", userProfileInfo);
-        }*/
+        req.setAttribute(Params.SORT_FIELD, sortField);
+        Pagination.setUpAttributes(req, page, pageSize, size);
         return WELCOME_PAGE;
     }
 }

@@ -5,6 +5,8 @@ import com.epam.finalproject.cinema.exception.BadRequestException;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.exception.purchase.InactiveFilmSessionException;
 import com.epam.finalproject.cinema.exception.purchase.InsufficientBalanceException;
+import com.epam.finalproject.cinema.exception.purchase.TicketIsNotAvailableException;
+import com.epam.finalproject.cinema.exception.purchase.TicketPurchaseException;
 import com.epam.finalproject.cinema.service.TicketService;
 import com.epam.finalproject.cinema.service.UserProfileService;
 import com.epam.finalproject.cinema.web.constants.ErrorMessages;
@@ -42,7 +44,7 @@ public class BuyTicketCommand implements PageCommand {
             UserProfileInfo user = (UserProfileInfo) req.getSession().getAttribute("user");
             user.getWallet().setBalance(userService.getWalletBalanceByUserId(user.getId()));
             req.getSession().setAttribute("user", user);
-        } catch (InactiveFilmSessionException | InsufficientBalanceException e) {
+        } catch (InactiveFilmSessionException | InsufficientBalanceException | TicketPurchaseException e) {
             log.debug(e.getMessage());
             req.getSession().setAttribute(SessionAttributes.TICKET_PURCHASE_ERROR, e.getMessage());
         }

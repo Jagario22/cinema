@@ -75,8 +75,8 @@ create table tickets
 (
     id             serial primary key,
     number         smallint check (number > 0 AND number <= 75) not null,
-    ticket_type_id integer                                  not null,
-    session_id     integer                                  not null,
+    ticket_type_id integer                                      not null,
+    session_id     integer                                      not null,
     user_id        integer,
     foreign key (session_id) references sessions (id) on delete cascade,
     foreign key (user_id) references users (id) on delete set null,
@@ -107,13 +107,17 @@ values ('The French Dispatch', 168, '2021', 16,
         'Cast: Angelina Jolie ("the witch: mistress of darkness"), Richard Madden ("1917"), Salma Hayek ("the killer''s wife''s bodyguard"), Kumail Nanjiani ("doolittle", "teacher''s wave"), Gemma Chan ("captain marvel") , Keith Herrington (game of thrones series) and others. ' ||
         'Countries: USA. Director: Chloe Zhao',
         6.9, 'static/image/eternals.png', date '28-01-2022');
+
 insert into films (title, len, year_prod, category, descr, img, last_showing_date)
 values ('Ghostbusters: afterlife', 120, '2021', 18,
         'Plot: a new part of fantastic adventures from the original universe of ghostbusters! Having inherited an old abandoned house, the family moves to a small town. their appearance coincides in time with the extraordinary activity of paranormal forces, which turn the usual life upside down. the time has come! the new generation of ghost hunters needs to find out the nature of the mysterious legacy and eliminate the consequences on an unprecedented scale! ' ||
         'Cast: Paul Rudd, Bill Murray, Sigourney Weaver, Finn Woolford. ' ||
         'Countries: USA, Canada. Director: Jason Wsrightman', 'static/image/ghostbusters_afterlife.png',
         date '15-01-2022');
-
+insert into films (title, len, year_prod, category, descr, rating, img, last_showing_date)
+VALUES ('House of Gucci', 157, '2021', 16,
+        'Lady Gaga, Adam Driver, Jared Leto and Al Pacino in an epic film based on real events! The story of the murder of the grandson of the founder of the fashion house "Gucci" Maurizio Gucci, which shook the whole world! Intrigue, hatred and thirst for revenge will show the other side of dazzling luxury and glamor.',
+        7.1, 'static/image/house_of_gucci.png', date '22-01-2022');
 insert into genres_films
 values (1, 6),
        (1, 7),
@@ -123,7 +127,9 @@ values (1, 6),
        (2, 2),
        (3, 1),
        (3, 2),
-       (3, 3);
+       (3, 3),
+       (4, 5),
+       (4, 8);
 
 insert into users(email, password, login, role)
 VALUES ('user@gmail.com', 'Password1&', 'user1', 'user'),
@@ -201,7 +207,21 @@ values (1, timestamp '2021-12-22 9:00', 'ukrainian'),
        (1, timestamp '2021-11-28 14:00', 'ukrainian'),
        (2, timestamp '2021-11-28 16:05', 'ukrainian'),
        (1, timestamp '2021-11-28 19:00', 'ukrainian'),
-       (2, timestamp '2021-11-28 21:05', 'ukrainian');
+       (2, timestamp '2021-11-28 21:05', 'ukrainian'),
+
+       (4, timestamp '2021-11-29 9:00', 'ukrainian'),
+       (2, timestamp '2021-11-29 11:05', 'ukrainian'),
+       (4, timestamp '2021-11-29 14:00', 'ukrainian'),
+       (2, timestamp '2021-11-29 16:05', 'ukrainian'),
+       (1, timestamp '2021-11-29 19:00', 'ukrainian'),
+       (2, timestamp '2021-11-29 21:05', 'ukrainian'),
+
+       (4, timestamp '2021-11-30 9:00', 'ukrainian'),
+       (2, timestamp '2021-11-30 11:05', 'ukrainian'),
+       (4, timestamp '2021-11-30 14:00', 'ukrainian'),
+       (2, timestamp '2021-11-30 16:05', 'ukrainian'),
+       (4, timestamp '2021-11-30 19:00', 'ukrainian'),
+       (2, timestamp '2021-11-30 21:05', 'ukrainian');
 
 
 insert into ticket_types(name, price)
@@ -215,9 +235,38 @@ VALUES (1, 1, 1),
        (62, 2, 1),
        (61, 2, 1),
        (1, 1, 3),
-       (2, 1,3),
+       (2, 1, 3),
        (3, 1, 3),
-       (62, 2, 3);
-
+       (62, 2, 3),
+       (1, 1, 4),
+       (2, 1, 4),
+       (3, 1, 4),
+       (62, 2, 4),
+       (61, 2, 4),
+       (1, 1, 5),
+       (2, 1, 5),
+       (3, 1, 5),
+       (62, 2, 5),
+       (1, 1, 6),
+       (2, 1, 6),
+       (1, 1, 7),
+       (2, 1, 7),
+       (1, 1, 8),
+       (2, 1, 8),
+       (1, 1, 9),
+       (2, 1, 9),
+       (1, 1, 10),
+       (2, 1, 10),
+       (1, 1, 11),
+       (2, 1, 11),
+       (1, 1, 12),
+       (2, 1, 12),
+       (1, 1, 13),
+       (1, 1, 53),
+       (2, 1, 53),
+       (1, 1, 57),
+       (2, 1, 57),
+       (1, 1, 55),
+       (2, 1, 55);
 insert into tickets(number, ticket_type_id, session_id, user_id)
 VALUES (4, 1, 1, 3);

@@ -16,6 +16,7 @@ import javax.naming.NamingException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,14 +43,15 @@ public class SessionService {
 
 
     public List<SessionsInfoGroupByDate> getAllSessionsOfFilm(int filmId) throws DBException {
-        List<SessionsInfoGroupByDate> filmSessionInfoList = null;
+        List<SessionsInfoGroupByDate> filmSessionInfoList = new ArrayList<>();
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
             List<Session> sessions = sessionDao.findCurrentFilmSessionsByFilmId(filmId, connection);
             Map<Integer, Integer> freeTicketsOfSessions = sessionDao.
                     findTicketIdCountOfFilmGroupBySessionId(filmId, connection);
-            filmSessionInfoList = groupSessionsBySessionDate(sessions, freeTicketsOfSessions);
+            if (sessions.size() != 0)
+                filmSessionInfoList = groupSessionsBySessionDate(sessions, freeTicketsOfSessions);
             connection.commit();
         } catch (SQLException | NamingException e) {
             String msg = "Getting all sessions of film failed";
@@ -116,43 +118,59 @@ public class SessionService {
 
     private List<SessionsInfoGroupByDate> groupSessionsBySessionDate(List<Session> sessions,
                                                                      Map<Integer, Integer> freeTickets) {
-        int removeIndex = 0;
         List<SessionsInfoGroupByDate> filmSessionInfoList = new ArrayList<>();
-        for (int i = 0; i < sessions.size() - 1; i++) {
-            Session session = sessions.get(i);
-            SessionsInfoGroupByDate filmSessionInfo = getFilmSessionsInfo(session);
-            filmSessionInfo.getSessionsInfo().add(getSessionPlacesInfo(session, freeTickets));
-            for (int j = i + 1; j < sessions.size(); j++) {
-                Session innerSession = sessions.get(j);
-
-                if (isSessionsWithEqualDate(session, innerSession)) {
-                    filmSessionInfo.getSessionsInfo().add(getSessionPlacesInfo(innerSession, freeTickets));
-                    removeIndex = j;
-                }
-
-                if ((sessions.size() - 1) == j) {
-                    SessionsInfoGroupByDate innerFilmSessionInfo = getFilmSessionsInfo(innerSession);
-                    innerFilmSessionInfo.getSessionsInfo().add(getSessionPlacesInfo(innerSession, freeTickets));
-                    filmSessionInfoList.add(innerFilmSessionInfo);
-                }
-            }
-            if (removeIndex != 0)
-                sessions.remove(removeIndex);
-            filmSessionInfoList.add(filmSessionInfo);
+        addSessionToFilmSessionInfoList(filmSessionInfoList, sessions.get(0), freeTickets);
+        for (int i = 1; i < sessions.size(); i++) {
+            groupSession(filmSessionInfoList, sessions.get(i), freeTickets);
         }
 
         return filmSessionInfoList;
     }
 
-    private boolean isSessionsWithEqualDate(Session sessionA, Session sessionB) {
-        LocalDate dateA = sessionA.getLocaleDateTime().toLocalDate();
-        LocalDate dateB = sessionB.getLocaleDateTime().toLocalDate();
-        return dateA.compareTo(dateB) == 0;
+    private void addSessionToFilmSessionInfoList(List<SessionsInfoGroupByDate> filmSessionInfoList,
+                                                 Session session, Map<Integer, Integer> freeTickets) {
+        SessionsInfoGroupByDate filmSessionInfo = getFilmSessionsInfo(session);
+        filmSessionInfo.getSessionsInfo().add(getSessionPlacesInfo(session, freeTickets));
+        filmSessionInfoList.add(filmSessionInfo);
+    }
+
+
+    private void groupSession(List<SessionsInfoGroupByDate> filmSessionInfoList, Session session,
+                              Map<Integer, Integer> freeTickets) {
+        boolean containsDate = false;
+        for (SessionsInfoGroupByDate groupedSessionInfo : filmSessionInfoList) {
+            if (isEqualDates(groupedSessionInfo.getDate(), session.getLocaleDateTime().toLocalDate())) {
+                if (!isAlreadyContainSession(groupedSessionInfo.getSessionsInfo(), session)) {
+                    groupedSessionInfo.getSessionsInfo().add(getSessionPlacesInfo(session, freeTickets));
+                    containsDate = true;
+                    break;
+                }
+            }
+        }
+
+        if (!containsDate) {
+            addSessionToFilmSessionInfoList(filmSessionInfoList, session, freeTickets);
+        }
+    }
+
+    private boolean isAlreadyContainSession(List<SessionInfo> sessionInfoList, Session session) {
+        for (SessionInfo sessionInfo : sessionInfoList) {
+            if (sessionInfo.isEqualToSession(session))
+                return true;
+        }
+
+        return false;
+    }
+
+    private boolean isEqualDates(LocalDate A, LocalDate B) {
+        return A.compareTo(B) == 0;
     }
 
     private SessionInfo getSessionPlacesInfo(Session session, Map<Integer, Integer> freeTickets) {
         int sessionId = session.getId();
-        int freePlacesCount = freeTickets.get(sessionId);
+        int freePlacesCount = 0;
+        if (freeTickets.get(sessionId) != null)
+            freePlacesCount = freeTickets.get(sessionId);
         return new SessionInfo(sessionId, freePlacesCount,
                 session.getLocaleDateTime().toLocalTime());
     }
