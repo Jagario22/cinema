@@ -19,6 +19,13 @@ public class Ticket implements Serializable {
         this.userId = userId;
     }
 
+    public Ticket(Short number, Integer ticketTypeId, Integer sessionId, Integer userId) {
+        this.number = number;
+        this.ticketTypeId = ticketTypeId;
+        this.sessionId = sessionId;
+        this.userId = userId;
+    }
+
     public Integer getId() {
         return id;
     }

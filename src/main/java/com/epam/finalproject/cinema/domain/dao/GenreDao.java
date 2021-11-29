@@ -2,6 +2,7 @@ package com.epam.finalproject.cinema.domain.dao;
 
 import com.epam.finalproject.cinema.domain.connection.ConnectionPool;
 import com.epam.finalproject.cinema.domain.connection.PostgresConnectionPool;
+import com.epam.finalproject.cinema.domain.entity.Film;
 import com.epam.finalproject.cinema.domain.entity.Genre;
 import com.epam.finalproject.cinema.util.CloseUtil;
 import org.apache.logging.log4j.LogManager;
@@ -12,7 +13,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.epam.finalproject.cinema.domain.constants.PostgresQuery.SELECT_ALL_GENRES_OF_FILM;
+import static com.epam.finalproject.cinema.domain.constants.PostgresQuery.*;
 
 public class GenreDao {
     private final ConnectionPool connectionPool;
@@ -29,6 +30,31 @@ public class GenreDao {
             instance = new GenreDao();
         }
         return instance;
+    }
+
+    public void insert(Genre genre, Connection connection) throws SQLException {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps =  connection.prepareStatement(INSERT_INTO_GENRES_VALUES,  Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, genre.getName());
+            ps.execute();
+            rs = ps.getGeneratedKeys();
+
+            if (!rs.next()) {
+                throw new SQLException("Inserting genre " + genre + " failed");
+            }
+        } catch (SQLException e) {
+            log.error("Inserting genre " + genre + " failed");
+            throw e;
+        } finally {
+            try {
+                CloseUtil.close(ps,rs);
+            } catch (SQLException e) {
+                log.error("Inserting genre " + genre + " failed");
+            }
+        }
+
     }
 
     public  List<Genre> findGenresByFilmId(int filmId, Connection connection) throws SQLException, NamingException {

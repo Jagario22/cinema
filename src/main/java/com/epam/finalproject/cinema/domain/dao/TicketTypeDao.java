@@ -3,16 +3,17 @@ package com.epam.finalproject.cinema.domain.dao;
 import com.epam.finalproject.cinema.domain.connection.ConnectionPool;
 import com.epam.finalproject.cinema.domain.connection.PostgresConnectionPool;
 import com.epam.finalproject.cinema.domain.constants.PostgresQuery;
+import com.epam.finalproject.cinema.domain.entity.Genre;
 import com.epam.finalproject.cinema.domain.entity.TicketType;
 import com.epam.finalproject.cinema.util.CloseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+
+import static com.epam.finalproject.cinema.domain.constants.PostgresQuery.INSERT_INTO_GENRES_VALUES;
+import static com.epam.finalproject.cinema.domain.constants.PostgresQuery.INSERT_INTO_TICKET_TYPES_VALUES;
 
 public class TicketTypeDao {
     private final ConnectionPool connectionPool;
@@ -31,8 +32,34 @@ public class TicketTypeDao {
         return instance;
     }
 
+    public void insert(TicketType ticketType, Connection connection) throws SQLException {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = connection.prepareStatement(INSERT_INTO_TICKET_TYPES_VALUES, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, ticketType.getName());
+            ps.setInt(2, ticketType.getPrice().intValue());
+            ps.execute();
+            rs = ps.getGeneratedKeys();
+
+            if (!rs.next()) {
+                throw new SQLException("Inserting ticketType " + ticketType + " failed");
+            }
+        } catch (SQLException e) {
+            log.error("Inserting ticketType " + ticketType + " failed");
+            throw e;
+        } finally {
+            try {
+                CloseUtil.close(ps, rs);
+            } catch (SQLException e) {
+                log.error("Inserting ticketType " + ticketType + " failed");
+            }
+        }
+
+    }
+
     public TicketType findById(int id, Connection connection) throws SQLException {
-       TicketType ticketType;
+        TicketType ticketType;
         PreparedStatement ps = null;
         ResultSet resultSet = null;
         try {
@@ -51,7 +78,6 @@ public class TicketTypeDao {
         }
         return ticketType;
     }
-
 
 
     public TicketType readTicketType(ResultSet resultSet) throws SQLException {

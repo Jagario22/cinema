@@ -1,24 +1,100 @@
-<div class="nav-color d-flex flex-column flex-md-row align-items-center p-3 px-md-4 box-shadow">
-    <%@ include file="/view/include/head/nav.jspf" %>
-    <a class="btn btn-outline-light mr-md-3 ml-2"
-       href="${pageContext.request.contextPath}/view/login/user_login.jsp">
-        <fmt:message key="link.login"/>
-    </a>
-</div>
-<div class="album py-3 bg-light">
+<div class="album bg-light">
     <div class="px-1 py-1 pt-md-2 pb-md-2 mx-auto text-center">
         <div class="row">
-            <div class="col-6">
-                <h2 class="display-5 title-color">Current movies</h2>
-            </div>
-            <div class="col-4">
-                <%@ include file="../page_navigation.jspf"%>
+            <div class="container">
+                <c:if test="${sessionScope.movies != null}">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn sort-btn dropdown-toggle dropdown-toggle-split"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span
+                                            class="label-icon">Filter date time</span> <span class="caret">&nbsp;</span>
+                                    </button>
+                                    <div class="dropdown-menu scrollable-menu mt-2" role="menu">
+                                        <form action="${pageContext.request.contextPath}/" method="get">
+                                            <div class="card">
+                                                <div class="card-body pr-3 pl-3 pt-1 pb-0">
+                                                    <c:set var="now" value="<%=new java.util.Date()%>"/>
+                                                    <div class="form-group">
+                                                        <label class="mb-0"
+                                                               for="session-start-datetime">Start date time</label><br/>
+                                                        <input class="ml-2 border-dark"
+                                                               type="datetime-local" id="session-start-datetime"
+                                                               name="startDateTime"
+                                                               value="<fmt:formatDate type="both"
+                                                           pattern="yyyy-MM-dd'T'HH:mm" value="${now}" />"
+                                                               min="<fmt:formatDate
+                                                           pattern="yyyy-MM-dd'T'HH:mm"
+                                                           type="both" value="${now}" />"><br/>
+                                                        <label class="mb-0 mt-2"
+                                                               for="session-end-datetime">End date time</label><br/>
+                                                        <input class="ml-2 border-dark"
+                                                               type="datetime-local" id="session-end-datetime"
+                                                               name="endDateTime"
+                                                               value="<fmt:formatDate type="both"
+                                                           pattern="yyyy-MM-dd'T'HH:mm" value="${now}" />"
+                                                               min="<fmt:formatDate
+                                                           pattern="yyyy-MM-dd'T'HH:mm"
+                                                           type="both" value="${now}" />"><br/>
+                                                        <button class="mt-2" type="submit">Save</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn sort-btn dropdown-toggle dropdown-toggle-split"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span
+                                            class="label-icon">Sort by</span> <span class="caret">&nbsp;</span></button>
+                                    <div class="dropdown-menu scrollable-menu mt-2" role="menu">
+                                        <form action="${pageContext.request.contextPath}/" method="get">
+                                            <button class="dropdown-item sort-btn" type="submit" name="sortField"
+                                                    value="dateTime">
+                                                Date and time
+                                            </button>
+                                            <button class="dropdown-item sort-btn" type="submit" name="sortField"
+                                                    value="title">
+                                                Title
+                                            </button>
+                                            <button class="dropdown-item sort-btn" type="submit" name="sortField"
+                                                    value="places">
+                                                Free places
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <h2 class="display-5 title-color mt-3">Current movies</h2>
+                            </div>
+                            <div class="col-12 mt-3">
+                                <c:if test="${requestScope.maxPossiblePage != 0}">
+                                    <%@ include file="../page_navigation.jspf" %>
+                                </c:if>
+                            </div>
+                        </div>
+                    </div>
+                </c:if>
             </div>
         </div>
     </div>
     <div class="container">
         <div class="row">
-            <%@include file="../movie_list.jspf" %>
+            <c:choose>
+                <c:when test="${sessionScope.movies != null}">
+                    <%@include file="../movie_list.jspf" %>
+                </c:when>
+                <c:otherwise>
+                    <section class="jumbotron text-center vw-100 h-100">
+                        <div class="container">
+                            <h1 class="jumbotron-heading">Current films aren't found</h1>
+                        </div>
+                    </section>
+                </c:otherwise>
+            </c:choose>
         </div>
     </div>
 </div>

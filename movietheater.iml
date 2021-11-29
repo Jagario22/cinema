@@ -66,5 +66,7 @@
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.9" level="project" />
     <orderEntry type="library" name="popper.js" level="application" />
     <orderEntry type="library" name="jquery-3.4.1.slim" level="application" />
+    <orderEntry type="library" name="moment" level="application" />
+    <orderEntry type="library" name="daterangepicker" level="application" />
   </component>
 </module>

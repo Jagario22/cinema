@@ -95,6 +95,15 @@ public class Controller extends HttpServlet {
                 session.removeAttribute(SUCCESS_TICKET_PURCHASE);
             }
         }
+        if (!address.equals(WELCOME_PAGE)) {
+            if (session.getAttribute(START_DATE_TIME) != null) {
+                session.removeAttribute(START_DATE_TIME);
+            }
+
+            if (session.getAttribute(END_DATE_TIME) != null) {
+                session.removeAttribute(END_DATE_TIME);
+            }
+        }
     }
 
     public void destroy() {

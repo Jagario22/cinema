@@ -3,17 +3,18 @@ package com.epam.finalproject.cinema.domain.dao;
 import com.epam.finalproject.cinema.domain.connection.ConnectionPool;
 import com.epam.finalproject.cinema.domain.connection.PostgresConnectionPool;
 import com.epam.finalproject.cinema.domain.constants.PostgresQuery;
+import com.epam.finalproject.cinema.domain.entity.Genre;
 import com.epam.finalproject.cinema.domain.entity.Ticket;
 import com.epam.finalproject.cinema.util.CloseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.epam.finalproject.cinema.domain.constants.PostgresQuery.INSERT_INTO_GENRES_VALUES;
+import static com.epam.finalproject.cinema.domain.constants.PostgresQuery.INSERT_INTO_TICKETS_VALUES;
 
 public class TicketDao {
     private final ConnectionPool connectionPool;
@@ -30,6 +31,35 @@ public class TicketDao {
             instance = new TicketDao();
         }
         return instance;
+    }
+
+
+    public void insert(Ticket ticket, Connection connection) throws SQLException {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = connection.prepareStatement(INSERT_INTO_TICKETS_VALUES, Statement.RETURN_GENERATED_KEYS);
+            ps.setShort(1, ticket.getNumber());
+            ps.setInt(2, ticket.getTicketTypeId());
+            ps.setInt(3, ticket.getSessionId());
+            ps.setInt(4, ticket.getUserId());
+            ps.execute();
+            rs = ps.getGeneratedKeys();
+
+            if (!rs.next()) {
+                throw new SQLException("Inserting ticket " + ticket + " failed");
+            }
+        } catch (SQLException e) {
+            log.error("Inserting ticket " + ticket + " failed");
+            throw e;
+        } finally {
+            try {
+                CloseUtil.close(ps, rs);
+            } catch (SQLException e) {
+                log.error("Inserting ticket " + ticket + " failed");
+            }
+        }
+
     }
 
     public List<Ticket> findTicketsBySessionId(int sessionId, Connection connection) throws SQLException {
@@ -114,7 +144,6 @@ public class TicketDao {
 
         return tickets;
     }
-
 
 
     private Ticket readTicket(ResultSet resultSet) throws SQLException {

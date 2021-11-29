@@ -3,6 +3,7 @@ package com.epam.finalproject.cinema.domain.dao;
 import com.epam.finalproject.cinema.domain.connection.ConnectionPool;
 import com.epam.finalproject.cinema.domain.connection.PostgresConnectionPool;
 import com.epam.finalproject.cinema.domain.constants.PostgresQuery;
+import com.epam.finalproject.cinema.domain.entity.Genre;
 import com.epam.finalproject.cinema.domain.entity.Session;
 import com.epam.finalproject.cinema.domain.entity.Session.Lang;
 import com.epam.finalproject.cinema.util.CloseUtil;
@@ -17,8 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.epam.finalproject.cinema.domain.constants.PostgresQuery.SELECT_CURRENT_SESSIONS_OF_FILM;
-import static com.epam.finalproject.cinema.domain.constants.PostgresQuery.SELECT_TICKET_COUNT_OF_FILM_WHERE_USER_IS_NULL_GROUP_BY_SESSION_ID;
+import static com.epam.finalproject.cinema.domain.constants.PostgresQuery.*;
 
 public class SessionDao {
     private final ConnectionPool connectionPool;
@@ -37,8 +37,59 @@ public class SessionDao {
         return instance;
     }
 
+    public void deleteByFilmId(int filmId, Connection connection) throws SQLException {
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement(DELETE_FROM_SESSIONS_WHERE, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, filmId);
+            int index = ps.executeUpdate();
 
-    public  List<Session > findCurrentFilmSessionsByFilmId(int filmId, Connection connection) throws SQLException, NamingException {
+            if (index == 0) {
+                throw new SQLException("Deleting sessions by filmId " + filmId + " failed");
+            }
+        } catch (SQLException e) {
+            log.error("Deleting sessions by filmId " + filmId + " failed");
+            throw e;
+        } finally {
+            try {
+                if (ps != null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+                log.error("Deleting sessions by filmId " + filmId + " failed");
+            }
+        }
+    }
+
+    public void insert(Session session, Connection connection) throws SQLException {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = connection.prepareStatement(INSERT_INTO_SESSIONS, Statement.RETURN_GENERATED_KEYS);
+            ps.setTimestamp(1, Timestamp.valueOf(session.getLocaleDateTime()));
+            ps.setString(2, session.getLang().toString().toLowerCase());
+
+            ps.execute();
+            rs = ps.getGeneratedKeys();
+
+            if (!rs.next()) {
+                throw new SQLException("Inserting sessions " + session + " failed");
+            }
+        } catch (SQLException e) {
+            log.error("Inserting session " + session + " failed");
+            throw e;
+        } finally {
+            try {
+                CloseUtil.close(ps, rs);
+            } catch (SQLException e) {
+                log.error("Inserting session " + session + " failed");
+            }
+        }
+
+    }
+
+
+    public List<Session> findCurrentFilmSessionsByFilmId(int filmId, Connection connection) throws SQLException, NamingException {
         List<Session> currentSessions = new ArrayList<>();
         PreparedStatement ps = null;
         ResultSet resultSet = null;
@@ -120,7 +171,6 @@ public class SessionDao {
         Lang lang = Lang.valueOf(rs.getString(4).toUpperCase());
         return new Session(id, filmId, date, lang);
     }
-
 
 
 }

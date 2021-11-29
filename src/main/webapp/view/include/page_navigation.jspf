@@ -1,8 +1,9 @@
 <nav aria-label="page navigation">
-    <ul class="pagination justify-content-end">
+    <ul class="pagination justify-content-center">
+
         <c:choose>
             <c:when test="${requestScope.page - 1 > 0}">
-                <a class="page-link" tabindex="-1"
+                <a class="page-link cinema-color" tabindex="-1"
                    href="${pageContext.request.contextPath}?page=${requestScope.page-1}&pageSize=${
                                    requestScope.pageSize}&sortField=${requestScope.sortField}">
                     Previous
@@ -10,7 +11,7 @@
             </c:when>
             <c:otherwise>
                 <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1">Previous</a>
+                    <a class="page-link cinema-color" href="#" tabindex="-1">Previous</a>
                 </li>
             </c:otherwise>
         </c:choose>
@@ -21,12 +22,12 @@
             <c:choose>
                 <c:when test="${requestScope.page == p}">
                     <li class="page-item">
-                        <a class="page-link" href="#">${p}</a>
+                        <a class="page-link nav-color" href="#">${p}</a>
                     </li>
                 </c:when>
                 <c:otherwise>
                     <li class="page-item">
-                        <a class="page-link"
+                        <a class="page-link cinema-color"
                            href="${pageContext.request.contextPath}?page=${p}&pageSize=${requestScope
                                            .pageSize}&sortField=${requestScope.sortField}">${p}
                         </a>
@@ -38,7 +39,7 @@
         <c:choose>
             <c:when test="${requestScope.page + 1 <= requestScope.pageCount}">
                 <li class="page-item">
-                    <a class="page-link" href="${pageContext.request.contextPath}?page=${requestScope.
+                    <a class="page-link cinema-color" href="${pageContext.request.contextPath}?page=${requestScope.
                                     page+1}&pageSize=${requestScope.pageSize}&sortField=${requestScope.sortField}">
                         Next
                     </a>
@@ -46,7 +47,7 @@
             </c:when>
             <c:otherwise>
                 <li class="page-item disabled">
-                    <a class="page-link" href="#" tabindex="-1">Next</a>
+                    <a class="page-link cinema-color" href="#" tabindex="-1">Next</a>
                 </li>
             </c:otherwise>
         </c:choose>

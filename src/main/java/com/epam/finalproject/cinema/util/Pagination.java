@@ -32,9 +32,9 @@ public class Pagination {
             count -= pageSize;
         }
 
-        int minPagePossible = count == 0 ? 0 : 1;
-        int maxPagePossible = pageCount;
-        if (page > pageCount) {
+        int minPagePossible = size == 0 ? 0 : 1;
+        int maxPagePossible = size == 0 ? 0 : pageCount;
+        if (page > pageCount && pageCount != 0) {
             page = 1;
 
             minPagePossible = req.getParameter("minPagePossible") == null ? 1 :

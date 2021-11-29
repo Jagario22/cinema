@@ -10,4 +10,6 @@ public class SessionAttributes {
     public static final String USER_TICKETS = "userTickets";
     public static final String TICKET_PURCHASE_ERROR = "ticketPurchaseError";
     public static final String SUCCESS_TICKET_PURCHASE = "successTicketPurchase";
+    public static final String START_DATE_TIME = "startDateTime";
+    public static final String END_DATE_TIME = "endDateTime";
 }

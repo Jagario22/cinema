@@ -303,4 +303,5 @@ let selectedTicket = {}
 $(document).ready(function () {
     filmSessionsListSet('.dropdown .title')
     ticketListSet();
+
 });

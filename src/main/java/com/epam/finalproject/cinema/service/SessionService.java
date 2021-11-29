@@ -4,9 +4,12 @@ import com.epam.finalproject.cinema.domain.connection.ConnectionPool;
 import com.epam.finalproject.cinema.domain.connection.PostgresConnectionPool;
 import com.epam.finalproject.cinema.domain.dao.FilmDao;
 import com.epam.finalproject.cinema.domain.dao.SessionDao;
+import com.epam.finalproject.cinema.domain.dao.TicketDao;
 import com.epam.finalproject.cinema.domain.entity.Film;
 import com.epam.finalproject.cinema.domain.entity.Session;
+import com.epam.finalproject.cinema.domain.entity.Ticket;
 import com.epam.finalproject.cinema.exception.DBException;
+import com.epam.finalproject.cinema.web.constants.CinemaConstants;
 import com.epam.finalproject.cinema.web.model.film.session.SessionsInfoGroupByDate;
 import com.epam.finalproject.cinema.web.model.film.session.SessionInfo;
 import org.apache.logging.log4j.LogManager;
@@ -21,15 +24,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.epam.finalproject.cinema.web.constants.CinemaConstants.COUNT_OF_ROW_SEAT;
+
 public class SessionService {
     private static SessionService instance = null;
     private final SessionDao sessionDao;
     private final FilmDao filmDao;
+    private final TicketDao ticketDao;
     private final ConnectionPool connectionPool;
     private final static Logger log = LogManager.getLogger(FilmService.class);
 
     public SessionService() {
         sessionDao = SessionDao.getInstance();
+        ticketDao = TicketDao.getInstance();
         filmDao = FilmDao.getInstance();
         connectionPool = PostgresConnectionPool.getInstance();
     }
@@ -39,6 +46,65 @@ public class SessionService {
             instance = new SessionService();
         }
         return instance;
+    }
+
+    public void createSession(Session session) throws DBException {
+        Connection connection = null;
+        int preLastRow = CinemaConstants.COUNT_OF_ROWS;
+        try {
+            connection = connectionPool.getConnection();
+            sessionDao.insert(session, connection);
+            for (int i = 1; i <= COUNT_OF_ROW_SEAT * preLastRow; i++) {
+                Ticket ticket = new Ticket((short) i, 1, session.getId(), null);
+                ticketDao.insert(ticket, connection);
+            }
+
+            connection.commit();
+        } catch (SQLException | NamingException e) {
+            String msg = "Creating sessions failed";
+            log.error(msg + "\n" + e.getMessage());
+            throw new DBException(msg, e);
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                String msg = "Creating sessions failed";
+                log.error(msg + "\n" + e.getMessage());
+            }
+        }
+    }
+
+    public void cancelFilmById(int filmId) throws DBException {
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+            sessionDao.deleteByFilmId(filmId, connection);
+            connection.commit();
+        } catch (SQLException | NamingException e) {
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    String msg = "Canceling film failed";
+                    log.error(msg + "\n" + e.getMessage());
+                    throw new DBException(msg, e);
+                }
+            }
+            String msg = "Canceling film failed";
+            log.error(msg + "\n" + e.getMessage());
+            throw new DBException(msg, e);
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    log.error("closing connection failed" + "\n" + e.getMessage());
+                }
+            }
+
+        }
     }
 
 
