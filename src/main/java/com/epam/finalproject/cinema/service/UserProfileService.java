@@ -80,7 +80,11 @@ public class UserProfileService {
             User user = userDao.findUserByLoginAndPassword(login, password, connection);
             if (user == null)
                 return null;
-            Wallet wallet = walletDao.findWalletByUserId(user.getId(), connection);
+            Wallet wallet = null;
+            if (user.getRole().equals(User.ROLE.USER)) {
+                wallet = walletDao.findWalletByUserId(user.getId(), connection);
+
+            }
             userInfo = convertToUserProfileInfo(user, wallet);
             connection.commit();
         } catch (SQLException | NamingException e) {

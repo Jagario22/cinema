@@ -36,7 +36,6 @@ public class AccessFilter implements Filter {
         log.debug("AccessFilter doFilter");
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         UserProfileInfo sessionUser = (UserProfileInfo) req.getSession().getAttribute("user");
-        log.debug("sessionUser: " + sessionUser);
         if (sessionUser != null) {
             String url = req.getRequestURL().toString();
             if (isAdminPage(url)) {

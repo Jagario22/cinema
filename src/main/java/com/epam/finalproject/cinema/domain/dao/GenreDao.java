@@ -36,7 +36,7 @@ public class GenreDao {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            ps =  connection.prepareStatement(INSERT_INTO_GENRES_VALUES,  Statement.RETURN_GENERATED_KEYS);
+            ps = connection.prepareStatement(INSERT_INTO_GENRES_VALUES, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, genre.getName());
             ps.execute();
             rs = ps.getGeneratedKeys();
@@ -49,7 +49,7 @@ public class GenreDao {
             throw e;
         } finally {
             try {
-                CloseUtil.close(ps,rs);
+                CloseUtil.close(ps, rs);
             } catch (SQLException e) {
                 log.error("Inserting genre " + genre + " failed");
             }
@@ -57,7 +57,7 @@ public class GenreDao {
 
     }
 
-    public  List<Genre> findGenresByFilmId(int filmId, Connection connection) throws SQLException, NamingException {
+    public List<Genre> findGenresByFilmId(int filmId, Connection connection) throws SQLException, NamingException {
         List<Genre> genres = new ArrayList<>();
         PreparedStatement ps = null;
         ResultSet resultSet = null;
@@ -77,9 +77,32 @@ public class GenreDao {
         return genres;
     }
 
+    public List<Genre> findAll(Connection connection) throws SQLException, NamingException {
+        List<Genre> genres = new ArrayList<>();
+        Statement st = null;
+        ResultSet resultSet = null;
+
+        try {
+
+            st = connection.createStatement();
+            resultSet = st.executeQuery(SELECT_ALL_GENRES);
+            while (resultSet.next()) {
+                Genre genre = readGenre(resultSet);
+                genres.add(genre);
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
+
+        return genres;
+    }
+
     private Genre readGenre(ResultSet rs) throws SQLException {
         int id = rs.getInt(1);
         String name = rs.getString(2);
         return new Genre(id, name);
     }
+
+
 }

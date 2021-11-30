@@ -1,6 +1,6 @@
 package com.epam.finalproject.cinema.util;
 
-public class ValidationUtil {
+public class RegisterValidationUtil {
 
     public static boolean isValidLogin(String login) {
         if (login == null)

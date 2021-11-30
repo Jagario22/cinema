@@ -14,32 +14,6 @@ public class PostgresQuery {
     public final static String SELECT_TICKETS_BY_USER_ID = "select t.* from tickets as t inner join sessions s on s.id = t.session_id " +
             "where s.date_time > now() and t.user_id = ?";
     public final static String SELECT_USER_BY_LOGIN_AND_PASSWORD = "select * from users where login = ? AND password = ?";
-    public final static String SELECT_ALL_CURRENT_FILMS_WHERE_DATETIME_AFTER = "select distinct * from (select f.* from films as f " +
-                    " inner join sessions s on f.id = s.film_id " +
-                    " where (s.date_time > ?) order by (%s)) as d_films offset(?) limit(?);";
-    public final static String SELECT_ALL_CURRENT_FILMS_WHERE_DATETIME_BETWEEN = "select distinct * from (select f.* from films as f  " +
-                    " inner join sessions s on f.id = s.film_id  " +
-                    " where (s.date_time between ? and ?) order by (%s)) as d_films offset(?) limit(?);";
-    public final static String SELECT_CURRENT_FILM_ORDER_BY_PLACES_WHERE_DATETIME_AFTER =
-            "select f.*, count(t.id) as places_count from films as f inner join sessions s on f.id = s.film_id " +
-                    "inner join tickets t on s.id = t.session_id where (t.user_id is null and s.date_time > ?) group by f.id order by " +
-                    "places_count desc offset(?) limit(?)";
-    public final static String SELECT_CURRENT_FILM_ORDER_BY_PLACES_WHERE_DATETIME_BETWEEN =
-            "select f.*, count(t.id) as places_count from films as f inner join sessions s on f.id = s.film_id " +
-                    "inner join tickets t on s.id = t.session_id where (t.user_id is null and s.date_time between ? and ?) group by f.id order by " +
-                    "places_count desc offset(?) limit(?)";
-    public final static String SELECT_ALL_CURRENT_FILMS_COUNT_WHERE_DATETIME_AFTER = "select count (*) from (select distinct f.* from films as f " +
-            "inner join sessions s on f.id = s.film_id " +
-            "where s.date_time > ?) as f_count";
-    public final static String SELECT_ALL_CURRENT_FILMS_COUNT_WHERE_DATETIME_BETWEEN = "select count (*) from (select distinct f.* from films as f " +
-            "inner join sessions s on f.id = s.film_id " +
-            "where s.date_time between ? and ?) as f_count";
-    public final static String SELECT_CURRENT_FILM_COUNT_ORDER_BY_PLACES_WHERE_DATETIME_AFTER =
-            "select count (*) from (select f.* as places_count from films as f inner join sessions s on f.id = s.film_id " +
-                    "inner join tickets t on s.id = t.session_id where (t.user_id is null and s.date_time > ?) group by f.id) as f_count";
-    public final static String SELECT_CURRENT_FILM_COUNT_ORDER_BY_PLACES_WHERE_DATETIME_BETWEEN =
-            "select count (*) from(select f.* as places_count from films as f inner join sessions s on f.id = s.film_id " +
-                    "inner join tickets t on s.id = t.session_id where (t.user_id is null and s.date_time between ? and ?) group by f.id)  as f_count";
     public final static String SELECT_CURRENT_SESSIONS_OF_FILM = "select distinct s.* from sessions as s inner join films " +
             "f on f.id = s.film_id " +
             " where (date_time > now() and film_id=?) order by (s.date_time);";
@@ -47,6 +21,8 @@ public class PostgresQuery {
             "gf.genre_id inner join films f on f.id = gf.film_id where f.id = ?";
     public final static String SELECT_TICKETS_BY_SESSION_ID_WHERE_USER_ID_IS_NULL = "select t.* from sessions as s inner join tickets " +
             "t on s.id = t.session_id where (s.id = ? and t.user_id is null)";
+    public final static String SELECT_TICKETS_OF_SESSION = "select t.* from sessions as s inner join tickets " +
+            "t on s.id = t.session_id where (s.id = ?)";
     public final static String SELECT_TICKET_TYPE_BY_ID = "select * from ticket_types where id = ?";
     public final static String SELECT_SESSION_BY_ID = "select * from sessions where id = ?";
     public final static String SELECT_CURRENT_SESSION_BY_ID = "select * from sessions where (date_time > now() and id = ?)";
@@ -67,10 +43,38 @@ public class PostgresQuery {
     public final static String INSERT_INTO_TICKET_TYPES_VALUES = "insert into ticket_types (name, price) VALUES (?, ?)";
     public final static String INSERT_INTO_GENRES_FILMS = "insert into genres_films (film_id, genre_id) values (?, ?)";
     public final static String DELETE_FROM_SESSIONS_WHERE = "delete from sessions where film_id = ?";
-    /**
-     * Database fields
-     */
     public final static String SESSIONS_DATE_TIME_FIELD = "s.date_time";
     public static final String FILM_TITLE_FIELD = "f.title";
+    public static final String SELECT_TICKETS_BY_SESSION_ID_WHERE_USER_IS_NOT_NULL = "select count(*) from " +
+            " (select * from tickets where user_id is not null and session_id=?)";
+    public final static String SELECT_ALL_GENRES = "select * from genres";
+    public final static String SELECT_ALL_CURRENT_FILMS_WHERE_DATETIME_AFTER = "select distinct f.*, min(%s) as min_f " +
+            "from films as f inner join sessions s on f.id = s.film_id where s.date_time > ? " +
+            "group by f.id, title, len, year_prod, category, descr, rating, img, last_showing_date " +
+            "ORDER BY min_f offset(?) limit(?)";
+    public final static String SELECT_ALL_CURRENT_FILMS_WHERE_DATETIME_BETWEEN = "select distinct f.*, min(%s) as min_f " +
+            "from films as f inner join sessions s on f.id = s.film_id where s.date_time between ? and ? " +
+            "group by f.id, title, len, year_prod, category, descr, rating, img, last_showing_date " +
+            "ORDER BY min_f offset(?) limit(?)";
+    public final static String SELECT_CURRENT_FILM_ORDER_BY_PLACES_WHERE_DATETIME_AFTER =
+            "select f.*, count(t.id) as places_count from films as f inner join sessions s on f.id = s.film_id " +
+                    "inner join tickets t on s.id = t.session_id where (t.user_id is null and s.date_time > ?) group by f.id order by " +
+                    "places_count desc offset(?) limit(?)";
+    public final static String SELECT_CURRENT_FILM_ORDER_BY_PLACES_WHERE_DATETIME_BETWEEN =
+            "select f.*, count(t.id) as places_count from films as f inner join sessions s on f.id = s.film_id " +
+                    "inner join tickets t on s.id = t.session_id where (t.user_id is null and s.date_time between ? and ?) group by f.id order by " +
+                    "places_count desc offset(?) limit(?)";
+    public final static String SELECT_ALL_CURRENT_FILMS_COUNT_WHERE_DATETIME_AFTER = "select count (*) from (select distinct f.* from films as f " +
+            "inner join sessions s on f.id = s.film_id " +
+            "where s.date_time > ?) as f_count";
+    public final static String SELECT_ALL_CURRENT_FILMS_COUNT_WHERE_DATETIME_BETWEEN = "select count (*) from (select distinct f.* from films as f " +
+            "inner join sessions s on f.id = s.film_id " +
+            "where s.date_time between ? and ?) as f_count";
+    public final static String SELECT_CURRENT_FILM_COUNT_ORDER_BY_PLACES_WHERE_DATETIME_AFTER =
+            "select count (*) from (select f.* as places_count from films as f inner join sessions s on f.id = s.film_id " +
+                    "inner join tickets t on s.id = t.session_id where (t.user_id is null and s.date_time > ?) group by f.id) as f_count";
+    public final static String SELECT_CURRENT_FILM_COUNT_ORDER_BY_PLACES_WHERE_DATETIME_BETWEEN =
+            "select count (*) from(select f.* as places_count from films as f inner join sessions s on f.id = s.film_id " +
+                    "inner join tickets t on s.id = t.session_id where (t.user_id is null and s.date_time between ? and ?) group by f.id)  as f_count";
 }
 

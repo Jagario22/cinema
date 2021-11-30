@@ -20,7 +20,7 @@ public class ShowAvailableTickets implements Command {
     public void execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException {
         String sessionId = req.getParameter("sessionId");
         if (sessionId != null) {
-            List<TicketInfo> tickets = ticketService.getTicketsInfoBySessionId(Integer.parseInt(sessionId));
+            List<TicketInfo> tickets = ticketService.getTicketsInfoBySessionIdWhereUserIsNull(Integer.parseInt(sessionId));
             resp.getWriter().write(new Gson().toJson(tickets));
         }
 

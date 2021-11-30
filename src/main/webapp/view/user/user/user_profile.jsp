@@ -17,7 +17,7 @@
     .command}&lang=en">En</a>
     <a class="locale-btn btn btn-outline-light ml-2" href="?command=${param
     .command}&lang=ru">Ru</a>
-    <%@ include file="../include/form/logout.jspf" %>
+    <%@ include file="../../include/form/logout.jspf" %>
 </div>
 <div class="container mt-5">
     <div class="main-body">
@@ -47,7 +47,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12 mt-3">
-                        <%@ include file="../include/form/top_up_balance.jspf" %>
+                        <%@ include file="../../include/form/top_up_balance.jspf" %>
                     </div>
                 </div>
             </div>

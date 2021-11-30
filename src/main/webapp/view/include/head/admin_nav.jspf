@@ -1,0 +1,12 @@
+<c:set var="user" value="${sessionScope.user}"/>
+<div class="admin-nav d-flex flex-column flex-md-row align-items-center p-3 px-md-4
+            box-shadow border-bottom border-dark">
+    <a href="${pageContext.request.contextPath}" class="nav-title mr-md-auto font-weight-normal text-white h5">Administration
+        cinema</a>
+    <nav class="my-md-0 mr-md-3">
+    </nav>
+    <a class="locale-btn btn btn-outline-light ml-2" href="?lang=en">En</a>
+    <a class="locale-btn btn btn-outline-light ml-2" href="?lang=ru">Ru</a>
+    <%@ include file="../form/logout.jspf" %>
+    <p class="ml-3 pt-3 text-light">${sessionScope.user.login}</p>
+</div>

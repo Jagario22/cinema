@@ -298,6 +298,7 @@ function ticketListSet() {
     }
 }
 
+
 let sessions = []
 let selectedTicket = {}
 $(document).ready(function () {

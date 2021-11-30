@@ -1,9 +1,6 @@
 package com.epam.finalproject.cinema.web.model.user;
 import com.epam.finalproject.cinema.domain.entity.User.ROLE;
 import com.epam.finalproject.cinema.domain.entity.Wallet;
-
-import java.math.BigDecimal;
-
 public class UserProfileInfo {
     private int id = 1;
     private String login;

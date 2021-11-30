@@ -1,0 +1,31 @@
+<div class="col-2 h-100 pl-0 pr-0">
+    <div class="nav-side-bar h-100 d-flex flex-column flex-shrink-0 p-3 text-white bg-dark">
+        <hr>
+        <ul class="list-unstyled ps-0">
+            <li class="mb-3">
+                <button class="btn btn-toggle align-items-center collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+                    Home
+                </button>
+                <div class="collapse show" id="home-collapse">
+                    <ul class="btn-toggle-nav list-unstyled pb-1 small">
+                        <li><a href="${pageContext.request.contextPath}/index.jsp" class="rounded">Hall attendance</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li class="mb-1">
+                <button class="btn btn-toggle align-items-center collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+                    Movies
+                </button>
+                <div class="collapse" id="dashboard-collapse">
+
+                    <form action="${pageContext.request.contextPath}/" method="get">
+                        <input type="hidden" name="command" value="showAddMovie">
+                        <button type="submit" class="btn link-dark rounded btn-dark mt-2">Add Movie</button>
+                    </form>
+                    <br/>
+
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -4,7 +4,7 @@ import com.epam.finalproject.cinema.domain.entity.User;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.service.UserProfileService;
 import com.epam.finalproject.cinema.web.command.jsp.PageCommand;
-import com.epam.finalproject.cinema.util.ValidationUtil;
+import com.epam.finalproject.cinema.util.RegisterValidationUtil;
 import com.epam.finalproject.cinema.web.constants.PagePath;
 
 import org.apache.logging.log4j.LogManager;
@@ -55,8 +55,8 @@ public class RegisterCommand implements PageCommand {
     }
 
     private boolean isValidUserForm(String login, String password, String email) {
-        return ValidationUtil.isValidLogin(login) && ValidationUtil.isValidEmail(email)
-                && ValidationUtil.isValidPassword(password);
+        return RegisterValidationUtil.isValidLogin(login) && RegisterValidationUtil.isValidEmail(email)
+                && RegisterValidationUtil.isValidPassword(password);
     }
 
     private boolean validateUniqueData(String login, String email, HttpServletRequest req) throws DBException {

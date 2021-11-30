@@ -13,8 +13,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.epam.finalproject.cinema.domain.constants.PostgresQuery.INSERT_INTO_GENRES_VALUES;
-import static com.epam.finalproject.cinema.domain.constants.PostgresQuery.INSERT_INTO_TICKETS_VALUES;
+import static com.epam.finalproject.cinema.domain.constants.PostgresQuery.*;
 
 public class TicketDao {
     private final ConnectionPool connectionPool;
@@ -31,6 +30,32 @@ public class TicketDao {
             instance = new TicketDao();
         }
         return instance;
+    }
+
+    public int findCountOfBoughtTicketsBySessionId(int sessionId, Connection connection) throws SQLException {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int count = 0;
+        String errorMsg = "Getting bought tickets count by sessionId: " + sessionId + " failed";
+        try {
+            ps = connection.prepareStatement(SELECT_TICKETS_BY_SESSION_ID_WHERE_USER_IS_NOT_NULL);
+            ps.setInt(1, sessionId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            log.error(errorMsg);
+            throw e;
+        } finally {
+            try {
+                CloseUtil.close(ps, rs);
+            } catch (SQLException e) {
+                log.error(errorMsg);
+            }
+        }
+
+        return count;
     }
 
 
@@ -62,13 +87,17 @@ public class TicketDao {
 
     }
 
-    public List<Ticket> findTicketsBySessionId(int sessionId, Connection connection) throws SQLException {
+    public List<Ticket> findTicketsBySessionIdWhereUserIsNull(int sessionId, Connection connection) throws SQLException {
+        return findTicketsOfSession(PostgresQuery.SELECT_TICKETS_BY_SESSION_ID_WHERE_USER_ID_IS_NULL,
+                sessionId, connection);
+    }
+
+    public List<Ticket> findTicketsOfSession(String sql, int sessionId, Connection connection) throws SQLException {
         List<Ticket> tickets = new ArrayList<>();
         PreparedStatement ps = null;
         ResultSet resultSet = null;
         try {
-            ps = connection.prepareStatement(PostgresQuery.
-                    SELECT_TICKETS_BY_SESSION_ID_WHERE_USER_ID_IS_NULL);
+            ps = connection.prepareStatement(sql);
             ps.setInt(1, sessionId);
             resultSet = ps.executeQuery();
             if (resultSet.next()) {
@@ -83,6 +112,10 @@ public class TicketDao {
             CloseUtil.close(ps, resultSet);
         }
         return tickets;
+    }
+
+    public List<Ticket> findAllTicketsOfSession(int sessionId, Connection connection) throws SQLException {
+        return findTicketsOfSession(PostgresQuery.SELECT_TICKETS_OF_SESSION, sessionId, connection);
     }
 
     public Ticket findTicketByIdWhereUserIdIsNull(int id, Connection connection) throws SQLException {

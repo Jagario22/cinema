@@ -1,7 +1,7 @@
 package com.epam.finalproject.cinema.web.filter;
 
 import static com.epam.finalproject.cinema.web.constants.FilterPath.ALL_PAGES;
-import static com.epam.finalproject.cinema.web.constants.Locale.ATTRIBUTE_NAME;
+import static com.epam.finalproject.cinema.web.constants.Locale.LANG_ATTRIBUTE_NAME;
 
 import com.epam.finalproject.cinema.web.constants.Locale;
 import com.epam.finalproject.cinema.web.controller.Controller;
@@ -21,12 +21,12 @@ public class SessionLocaleFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         String language = Locale.RU;
-        if (req.getParameter(ATTRIBUTE_NAME) != null) {
-            language = req.getParameter(ATTRIBUTE_NAME);
-        } else if (req.getSession().getAttribute(ATTRIBUTE_NAME) != null) {
-            language = (String) req.getSession().getAttribute(ATTRIBUTE_NAME);
+        if (req.getParameter(LANG_ATTRIBUTE_NAME) != null) {
+            language = req.getParameter(LANG_ATTRIBUTE_NAME);
+        } else if (req.getSession().getAttribute(LANG_ATTRIBUTE_NAME) != null) {
+            language = (String) req.getSession().getAttribute(LANG_ATTRIBUTE_NAME);
         }
-        req.getSession().setAttribute(ATTRIBUTE_NAME, language);
+        req.getSession().setAttribute(LANG_ATTRIBUTE_NAME, language);
         filterChain.doFilter(servletRequest, servletResponse);
     }
 

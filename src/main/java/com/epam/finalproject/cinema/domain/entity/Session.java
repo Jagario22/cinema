@@ -33,7 +33,7 @@ public class Session implements Serializable {
         this.id = id;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 

@@ -121,12 +121,31 @@ public class TicketService {
         }
     }
 
-    public List<TicketInfo> getTicketsInfoBySessionId(int sessionId) throws DBException {
+    public int getBoughtTicketsCountOfFilm(int filmId, Connection connection) throws DBException {
+
+        int count = 0;
+        String errorMsg = "Getting tickets count of film failed";
+        try {
+            List<Session> sessions = sessionService.getAllCurrentSessionsOfFilm(filmId, connection);
+            for (Session session : sessions) {
+                count += ticketDao.findCountOfBoughtTicketsBySessionId(session.getId(), connection);
+            }
+        } catch (SQLException e) {
+            log.error(errorMsg + "\n" + e.getMessage());
+            connectionRollback(connection, errorMsg);
+            throw new DBException(errorMsg, e);
+        }
+
+        return count;
+    }
+
+
+    public List<TicketInfo> getTicketsInfoBySessionIdWhereUserIsNull(int sessionId) throws DBException {
         List<TicketInfo> ticketInfoList = new ArrayList<>();
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
-            List<Ticket> tickets = ticketDao.findTicketsBySessionId(sessionId, connection);
+            List<Ticket> tickets = ticketDao.findTicketsBySessionIdWhereUserIsNull(sessionId, connection);
             for (Ticket ticket : tickets) {
                 TicketInfo ticketInfo = getTicketInfo(connection, ticket);
                 ticketInfoList.add(ticketInfo);
@@ -151,6 +170,23 @@ public class TicketService {
             log.error(msgError + "\n" + e.getMessage());
         }
     }
+
+    public List<TicketInfo> getTicketsInfoBySessionId(int sessionId, Connection connection) throws DBException {
+        List<TicketInfo> ticketInfoList = new ArrayList<>();
+        try {
+            List<Ticket> tickets = ticketDao.findAllTicketsOfSession(sessionId, connection);
+            for (Ticket ticket : tickets) {
+                SessionInfo sessionInfo = sessionService.getCurrentSessionInfoById(ticket.getSessionId(), connection);
+                TicketInfo ticketInfo = getTicketInfo(connection, ticket, sessionInfo);
+                ticketInfoList.add(ticketInfo);
+            }
+        } catch (SQLException e) {
+            String msg = "Getting tickets failed";
+            processException(e, msg);
+        }
+        return ticketInfoList;
+    }
+
 
     private void updatingTicket(Connection connection, int ticketId, int userId) throws SQLException, TicketPurchaseException {
         ticketDao.updateTicketOnUserIdById(ticketId, userId, connection);
@@ -177,17 +213,39 @@ public class TicketService {
 
     private TicketInfo getTicketInfo(Connection connection, Ticket ticket) throws SQLException {
         TicketType ticketType = ticketTypeDao.findById(ticket.getTicketTypeId(), connection);
-        return new TicketInfo(ticket.getId(), ticket.getNumber(), ticketType);
+        return new TicketInfo(ticket.getId(), ticket.getNumber(), ticketType, ticket.getUserId());
     }
 
     private TicketInfo getTicketInfo(Connection connection, Ticket ticket, SessionInfo sessionInfo) throws SQLException {
         TicketType ticketType = ticketTypeDao.findById(ticket.getTicketTypeId(), connection);
-        return new TicketInfo(ticket.getId(), ticket.getNumber(), ticketType, sessionInfo);
+        return new TicketInfo(ticket.getId(), ticket.getNumber(), ticketType, sessionInfo, ticket.getUserId());
     }
 
     private void processException(Exception e, String msg) throws DBException {
         log.error(msg + "\n" + e.getMessage());
         throw new DBException(msg, e);
+    }
+
+    private void connectionClose(Connection connection, String errorMsg) throws DBException {
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage());
+            throw new DBException(errorMsg, e);
+        }
+    }
+
+    private void connectionRollback(Connection connection, String errorMsg) throws DBException {
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage());
+            throw new DBException(errorMsg, e);
+        }
     }
 
 }

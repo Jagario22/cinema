@@ -1,4 +1,5 @@
 package com.epam.finalproject.cinema.web.model.ticket;
+
 import com.epam.finalproject.cinema.domain.entity.TicketType;
 import com.epam.finalproject.cinema.web.constants.CinemaConstants;
 import com.epam.finalproject.cinema.web.model.film.session.SessionInfo;
@@ -11,7 +12,7 @@ public class TicketInfo {
     private Integer row;
     private int userId;
 
-    public TicketInfo(Integer id, Short placeNumber, TicketType ticketType) {
+    public TicketInfo(Integer id, Short placeNumber, TicketType ticketType, int userId) {
         this.id = id;
         this.placeNumber = placeNumber;
         this.ticketType = ticketType;
@@ -26,12 +27,13 @@ public class TicketInfo {
         return 1;
     }
 
-    public TicketInfo(Integer id, Short placeNumber, TicketType ticketType, SessionInfo sessionInfo) {
+    public TicketInfo(Integer id, Short placeNumber, TicketType ticketType, SessionInfo sessionInfo, int userId) {
         this.id = id;
         this.placeNumber = placeNumber;
         this.ticketType = ticketType;
         this.sessionInfo = sessionInfo;
         this.row = calculateRow(placeNumber);
+        this.userId = userId;
     }
 
     public void setRow(Integer row) {

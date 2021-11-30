@@ -26,6 +26,7 @@ public class PageCommandContainer {
         commands.put(BUY_TICKET, new BuyTicketCommand());
         commands.put(LOGOUT, new LogoutCommand());
         commands.put(TOP_UP_BALANCE, new TopUpBalanceCommand());
+        commands.put(SHOW_ADD_MOVIE_PAGE, new ShowAddMoviePage());
     }
 
     public static PageCommand getCommand(String commandName) {

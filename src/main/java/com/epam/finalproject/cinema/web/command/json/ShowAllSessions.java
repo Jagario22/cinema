@@ -22,7 +22,7 @@ public class ShowAllSessions implements Command {
         String filmIdParam = req.getParameter("id");
         if (filmIdParam != null) {
 
-            List<SessionsInfoGroupByDate> sessions = sessionService.getAllSessionsOfFilm(Integer.parseInt(filmIdParam));
+            List<SessionsInfoGroupByDate> sessions = sessionService.getAllSessionsOfFilmGroupByDate(Integer.parseInt(filmIdParam));
             resp.getWriter().write(new Gson().toJson(sessions));
         }
     }

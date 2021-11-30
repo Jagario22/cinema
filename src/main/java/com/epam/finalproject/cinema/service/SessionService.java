@@ -107,8 +107,22 @@ public class SessionService {
         }
     }
 
+    public List<Session> getAllCurrentSessionsOfFilm(int filmId, Connection connection) throws DBException {
+        List<Session> sessions;
+        String errorMsg = "Getting all sessions of film failed";
+        try {
+            sessions = sessionDao.findCurrentFilmSessionsByFilmId(filmId, connection);
+        } catch (SQLException | NamingException e) {
+            log.error(errorMsg + "\n" + e.getMessage());
+            connectionRollback(connection, errorMsg);
+            throw new DBException(errorMsg, e);
+        }
 
-    public List<SessionsInfoGroupByDate> getAllSessionsOfFilm(int filmId) throws DBException {
+        return sessions;
+    }
+
+
+    public List<SessionsInfoGroupByDate> getAllSessionsOfFilmGroupByDate(int filmId) throws DBException {
         List<SessionsInfoGroupByDate> filmSessionInfoList = new ArrayList<>();
         Connection connection = null;
         try {
@@ -244,6 +258,28 @@ public class SessionService {
     private SessionsInfoGroupByDate getFilmSessionsInfo(Session session) {
         return new SessionsInfoGroupByDate(session.getLocaleDateTime().toLocalDate(),
                 session.getLang());
+    }
+
+    private void connectionClose(Connection connection, String errorMsg) throws DBException {
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage());
+            throw new DBException(errorMsg, e);
+        }
+    }
+
+    private void connectionRollback(Connection connection, String errorMsg) throws DBException {
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage());
+            throw new DBException(errorMsg, e);
+        }
     }
 
 

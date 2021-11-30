@@ -39,6 +39,10 @@ body {
     .nav-title {
         margin-bottom: 1rem;
     }
+
+    .nav-side-bar {
+        display: none !important;
+    }
 }
 
 @media (min-width: 860px) {
@@ -275,10 +279,10 @@ h2.session-info.movie-title {
     justify-content: center;
 }
 
-@media screen and (-webkit-min-device-pixel-ratio:0) {
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
     option {
         padding: 10px;
-        line-height:30px;
+        line-height: 30px;
         width: 100%;
     }
 }
@@ -288,7 +292,7 @@ h2.session-info.movie-title {
 }
 
 i.far.fa-user {
-    font-family: FontAwesome,serif;
+    font-family: FontAwesome, serif;
     font-style: normal;
     font-size: xxx-large;
 }
@@ -300,13 +304,13 @@ a.nav-color:hover {
 }
 
 a.cinema-color:hover {
-    background-color:#998983;
+    background-color: #998983;
     color: white;
 }
 
 .sort-btn {
-    color:inherit;
-    font-family:inherit;
+    color: inherit;
+    font-family: inherit;
     font-size: inherit;
     background: white;
     padding: 0.3rem 3.4rem;
@@ -335,4 +339,180 @@ a.cinema-color:hover {
     height: auto;
     max-height: 200px;
     overflow-x: hidden;
+}
+
+.nav-side-bar {
+    border-right: 3px solid #3f3b3b;
+    width: 280px;
+}
+
+.admin-nav {
+    background-color: #212529;
+}
+
+.dropdown-toggle {
+    outline: 0;
+}
+
+
+.btn-toggle {
+    display: inline-flex;
+    align-items: center;
+    padding: .25rem .5rem;
+    font-weight: 600;
+    color: white;
+    background-color: transparent;
+    border: 0;
+}
+
+.btn-toggle:hover,
+.btn-toggle:focus {
+    color: rgba(0, 0, 0, .85);
+    background-color: white;
+}
+
+.btn-toggle::before {
+    width: 1.25em;
+    line-height: 0;
+    content: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='rgba%280,0,0,.5%29' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M5 14l6-6-6-6'/%3e%3c/svg%3e");
+    transition: transform .35s ease;
+    transform-origin: .5em 50%;
+    background: white;
+    margin-right: 10px;
+}
+
+.btn-toggle[aria-expanded="true"] {
+    color: white;
+    background: none;
+    border: none;
+}
+
+.btn-toggle[aria-expanded="true"]::before {
+    transform: rotate(90deg);
+}
+
+.btn-toggle-nav a {
+    display: inline-flex;
+    padding: .1875rem .5rem;
+    margin-top: .125rem;
+    margin-left: 1.25rem;
+    text-decoration: none;
+    font-size: 14px;
+    color: white;
+    font-weight: 400;
+}
+
+.btn-toggle-nav a:hover,
+.btn-toggle-nav a:focus {
+    background-color: white;
+    color: black;
+}
+
+.form__img {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    background-color: #141a2a;
+    margin-bottom: 20px;
+    border-radius: 16px;
+}
+
+.form__img label {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    cursor: pointer;
+    margin: 0;
+    font-weight: normal;
+    font-size: 14px;
+    color: #e0e0e0;
+    transition: 0.5s;
+}
+
+.form__img input {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+}
+
+.form__img img {
+    position: absolute;
+    z-index: 1;
+    top: -100px;
+    right: -100px;
+    bottom: -100px;
+    left: -100px;
+    margin: auto;
+    width: 100%;
+}
+
+
+.form__img img {
+    position: absolute;
+    z-index: 1;
+    top: -100px;
+    right: -100px;
+    bottom: -100px;
+    left: -100px;
+    margin: auto;
+    width: 100%;
+}
+img {
+    vertical-align: middle;
+    border-style: none;
+}
+
+.form__input {
+    background-color: #151f30;
+    border: 1px solid transparent;
+    border-radius: 16px;
+    height: 44px;
+    position: relative;
+    color: #fff;
+    font-size: 14px;
+    width: 100%;
+    padding: 0 20px;
+}
+
+.form__textarea {
+    background-color: #151f30;
+    border: 1px solid transparent;
+    border-radius: 16px;
+    height: 142px;
+    position: relative;
+    color: #fff;
+    font-size: 14px;
+    width: 100%;
+    padding: 15px 20px;
+    resize: none;
+}
+
+.multi-select {
+    list-style: none;
+    border: none;
+    height: 44px;
+    color: #fff;
+    padding: 0 40px 0 20px;
+    background-color: #151f30;
+    width: 100%;
+    font-size: 14px;
+    border-radius: 16px;
+    text-align: center;
+}
+
+.multi-select a {
+    color: white;
+    outline: none;
+}
+
+.form-check, input.form-check {
+    font-size: 20px;
 }

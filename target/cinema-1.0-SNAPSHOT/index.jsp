@@ -7,7 +7,7 @@
 <c:set var="movies" value="${sessionScope.movies}"/>
 <c:set var="value" value="Cinema"/>
 <%@ include file="view/include/head/head.jspf" %>
-<body>
+<body class="h-100" >
 <c:choose>
     <c:when test="${sessionScope.user != null}">
         <c:set var="userRole" value="${sessionScope.user.role.name()}"/>
@@ -31,6 +31,5 @@
         <%@ include file="view/include/main/main_page.jspf" %>
     </c:otherwise>
 </c:choose>
-
 </body>
 </html>

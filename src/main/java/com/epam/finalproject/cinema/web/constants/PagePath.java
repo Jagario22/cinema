@@ -6,5 +6,6 @@ public class PagePath {
     public final static String WELCOME_PAGE = "index.jsp";
     public final static String MOVIE_INFO_PAGE = "view/movie/movie_info.jsp";
     public final static String SESSION_INFO_PAGE = "view/movie/session_info.jsp";
-    public final static String USER_PROFILE_PAGE = "view/user/user_profile.jsp";
+    public final static String USER_PROFILE_PAGE = "view/user/user/user_profile.jsp";
+    public static final String ADD_MOVIE_PAGE = "view/user/admin/add_movie.jsp";
 }

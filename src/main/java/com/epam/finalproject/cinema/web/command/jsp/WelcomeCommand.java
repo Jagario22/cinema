@@ -1,11 +1,16 @@
 package com.epam.finalproject.cinema.web.command.jsp;
 
 import com.epam.finalproject.cinema.domain.entity.Film;
+import com.epam.finalproject.cinema.domain.entity.User;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.service.FilmService;
+import com.epam.finalproject.cinema.service.SessionService;
 import com.epam.finalproject.cinema.util.Pagination;
 import com.epam.finalproject.cinema.web.constants.CinemaConstants;
 import com.epam.finalproject.cinema.web.constants.Params;
+import com.epam.finalproject.cinema.web.model.film.FilmStatistic;
+import com.epam.finalproject.cinema.web.model.film.session.SessionsInfoGroupByDate;
+import com.epam.finalproject.cinema.web.model.user.UserProfileInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.epam.finalproject.cinema.web.constants.PagePath.WELCOME_PAGE;
@@ -27,8 +31,35 @@ public class WelcomeCommand implements PageCommand {
 
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException {
-        HttpSession session = req.getSession();
 
+        if (req.getSession().getAttribute("user") != null) {
+            UserProfileInfo user = (UserProfileInfo) req.getSession().getAttribute("user");
+            if (user.getRole().equals(User.ROLE.USER)) {
+                executeWelcomeToUser(req);
+            } else {
+                executeWelcomeToAdmin(req);
+            }
+        } else {
+            executeWelcomeToUser(req);
+        }
+
+        return WELCOME_PAGE;
+    }
+
+    private void executeWelcomeToAdmin(HttpServletRequest req) throws DBException {
+        int page = Pagination.extractPage(req);
+        int pageSize = Pagination.extractSize(req);
+        LocalDateTime now = LocalDateTime.now();
+        int size = filmService.getAllCurrentFilmsCount(Params.DATE_TIME_FIELD, now, null);
+        List<FilmStatistic> films;
+        if (size != 0) {
+            films = filmService.getCurrentFilmsStatistic(pageSize * (page - 1), pageSize);
+            req.getSession().setAttribute("filmsStatistic", films);
+        }
+    }
+
+    private void executeWelcomeToUser(HttpServletRequest req) throws DBException {
+        HttpSession session = req.getSession();
         int page = Pagination.extractPage(req);
         int pageSize = Pagination.extractSize(req);
 
@@ -58,7 +89,6 @@ public class WelcomeCommand implements PageCommand {
         req.setAttribute(Params.SORT_FIELD, sortField);
 
         Pagination.setUpAttributes(req, page, pageSize, size);
-        return WELCOME_PAGE;
     }
 
     private LocalDateTime getStartLocalTime(HttpServletRequest req) {
@@ -67,7 +97,7 @@ public class WelcomeCommand implements PageCommand {
             req.getSession().setAttribute(START_DATE_TIME, req.getParameter(START_DATE_TIME));
             return result;
         } else if (req.getSession().getAttribute(START_DATE_TIME) != null) {
-            return LocalDateTime.parse((String)req.getSession().getAttribute(START_DATE_TIME));
+            return LocalDateTime.parse((String) req.getSession().getAttribute(START_DATE_TIME));
         } else {
             return LocalDateTime.now();
         }
@@ -79,7 +109,7 @@ public class WelcomeCommand implements PageCommand {
             req.getSession().setAttribute(END_DATE_TIME, req.getParameter(END_DATE_TIME));
             return result;
         } else if (req.getSession().getAttribute(END_DATE_TIME) != null) {
-            return LocalDateTime.parse((String)req.getSession().getAttribute(END_DATE_TIME));
+            return LocalDateTime.parse((String) req.getSession().getAttribute(END_DATE_TIME));
         } else {
             return null;
         }

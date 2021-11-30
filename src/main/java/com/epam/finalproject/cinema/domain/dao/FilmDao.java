@@ -103,36 +103,38 @@ public class FilmDao {
         return size;
     }
 
-    public List<Film> getAllCurrentFilmsOrderBy(String field, LocalDateTime start, LocalDateTime end, int offset, int limit) throws SQLException, NamingException {
+    public List<Film> getAllCurrentFilmsOrderBy(String field, LocalDateTime start, LocalDateTime end,
+                                                int offset, int limit, Connection connection) throws SQLException, NamingException {
         if (end == null) {
             String sql = String.format(SELECT_ALL_CURRENT_FILMS_WHERE_DATETIME_AFTER, field);
-            return getAllCurrentFilmsWhereDateTimeAfter(sql, start, offset, limit);
+            return getAllCurrentFilmsWhereDateTimeAfter(sql, start, offset, limit, connection);
         } else {
             String sql = String.format(SELECT_ALL_CURRENT_FILMS_WHERE_DATETIME_BETWEEN, field);
             return getAllCurrentFilmsWhereDateTimeBetween(sql,
-                    start, end, offset, limit);
+                    start, end, offset, limit, connection);
         }
     }
 
-    public List<Film> getAllCurrentFilmsOrderByPlaces(LocalDateTime start, LocalDateTime end, int offset, int limit) throws SQLException, NamingException, IOException {
+    public List<Film> getAllCurrentFilmsOrderByPlaces(LocalDateTime start, LocalDateTime end,
+                                                      int offset, int limit, Connection connection) throws SQLException, NamingException, IOException {
         if (end == null) {
             return getAllCurrentFilmsWhereDateTimeAfter(SELECT_CURRENT_FILM_ORDER_BY_PLACES_WHERE_DATETIME_AFTER,
-                    start, offset, limit);
+                    start, offset, limit, connection);
         } else {
             return getAllCurrentFilmsWhereDateTimeBetween(SELECT_CURRENT_FILM_ORDER_BY_PLACES_WHERE_DATETIME_BETWEEN,
-                    start, end, offset, limit);
+                    start, end, offset, limit, connection);
         }
 
     }
 
 
-    private List<Film> getAllCurrentFilmsWhereDateTimeAfter(String sql, LocalDateTime start, int offset, int limit) throws SQLException, NamingException {
+    private List<Film> getAllCurrentFilmsWhereDateTimeAfter(String sql, LocalDateTime start,
+                                                            int offset, int limit, Connection connection) throws SQLException, NamingException {
         List<Film> currentFilms = new ArrayList<>();
-        Connection connection = null;
         PreparedStatement ps = null;
         ResultSet resultSet = null;
         try {
-            connection = connectionPool.getConnection();
+
             ps = connection.prepareStatement(sql);
             ps.setTimestamp(1, Timestamp.valueOf(start));
             ps.setInt(2, offset);
@@ -143,24 +145,24 @@ public class FilmDao {
                 Film film = readFilm(resultSet);
                 currentFilms.add(film);
             }
-            connection.commit();
-        } catch (SQLException | NamingException e) {
+
+        } catch (SQLException e) {
             log.error(e.getMessage());
             throw e;
         } finally {
-            CloseUtil.close(connection, ps, resultSet);
+            CloseUtil.close(ps, resultSet);
         }
 
         return currentFilms;
     }
 
-    private List<Film> getAllCurrentFilmsWhereDateTimeBetween(String sql, LocalDateTime start, LocalDateTime end, int offset, int limit) throws SQLException, NamingException {
+    private List<Film> getAllCurrentFilmsWhereDateTimeBetween(String sql, LocalDateTime start,
+                                                              LocalDateTime end, int offset, int limit,
+                                                              Connection connection) throws SQLException, NamingException {
         List<Film> currentFilms = new ArrayList<>();
-        Connection connection = null;
         PreparedStatement ps = null;
         ResultSet resultSet = null;
         try {
-            connection = connectionPool.getConnection();
             ps = connection.prepareStatement(sql);
             ps.setTimestamp(1, Timestamp.valueOf(start));
             ps.setTimestamp(2, Timestamp.valueOf(end));
@@ -172,12 +174,11 @@ public class FilmDao {
                 Film film = readFilm(resultSet);
                 currentFilms.add(film);
             }
-            connection.commit();
-        } catch (SQLException | NamingException e) {
+        } catch (SQLException e) {
             log.error(e.getMessage());
             throw e;
         } finally {
-            CloseUtil.close(connection, ps, resultSet);
+            CloseUtil.close(ps, resultSet);
         }
 
         return currentFilms;
