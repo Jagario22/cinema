@@ -1,5 +1,7 @@
 package com.epam.finalproject.cinema.util;
 
+import java.time.LocalDate;
+
 public class FilmInfoValidationUtil {
 
     public boolean isValidTitle(String title) {
@@ -18,5 +20,11 @@ public class FilmInfoValidationUtil {
         return descr.matches("^[A-Z]([A-Za-z\\s\\-.?!0-9)(,:\"']){1,3000}$");
     }
 
+    public boolean isValidRating(int rating) {
+        return rating >= 1 && rating <= 10;
+    }
 
+    public boolean isValidLastShowingDate(LocalDate lastShowingDate) {
+        return lastShowingDate.isAfter(LocalDate.now());
+    }
 }

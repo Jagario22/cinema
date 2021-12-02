@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.SkipPageException;

@@ -1,8 +1,9 @@
-package com.epam.finalproject.cinema.web.command.jsp;
+package com.epam.finalproject.cinema.web.command.jsp.user;
 
 import com.epam.finalproject.cinema.exception.BadRequestException;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.service.UserProfileService;
+import com.epam.finalproject.cinema.web.command.jsp.PageCommand;
 import com.epam.finalproject.cinema.web.model.user.UserProfileInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -109,7 +109,7 @@ public class UserProfileService {
 
     public BigDecimal getWalletBalanceByUserId(int userId) throws DBException {
         Connection connection = null;
-        BigDecimal balance = null;
+        BigDecimal balance;
         try {
             connection = connectionPool.getConnection();
             balance = walletDao.findBalanceByUserId(userId, connection);
@@ -134,16 +134,6 @@ public class UserProfileService {
     }
 
 
-    private void closeConnection(Connection connection, String errorMsg) {
-        try {
-            if (connection != null) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            log.error(errorMsg + "\n" + e.getMessage());
-        }
-    }
-
     public List<User> findUsersWithEqualLoginOrEmail(String login, String email) throws DBException {
         try {
             return userDao.findUsersWithEqualLoginOrEmail(login, email);
@@ -154,36 +144,60 @@ public class UserProfileService {
         }
     }
 
-
     private UserProfileInfo convertToUserProfileInfo(User user, Wallet wallet) {
         return new UserProfileInfo(user.getId(), user.getLogin(), user.getEmail(), wallet, user.getRole());
+    }
+
+    public void topUpBalanceByUserId(Integer userId, BigDecimal amount, Connection connection) throws SQLException {
+        try {
+            BigDecimal balance = walletDao.findBalanceByUserId(userId, connection);
+            BigDecimal newBalance = balance.add(amount);
+            walletDao.updateOnBalanceByUserId(userId, newBalance, connection);
+
+        } catch (SQLException e) {
+            log.error("Updating user: " + userId + " balance failed\n" +
+                    e.getMessage());
+            throw e;
+        }
     }
 
 
     public void topUpBalanceByUserId(Integer userId, BigDecimal amount) throws DBException {
         Connection connection = null;
-
         try {
             connection = connectionPool.getConnection();
-            BigDecimal balance = walletDao.findBalanceByUserId(userId, connection);
-            BigDecimal newBalance = balance.add(amount);
-            walletDao.updateOnBalanceByUserId(userId, newBalance, connection);
+            topUpBalanceByUserId(userId, amount, connection);
             connection.commit();
         } catch (SQLException | NamingException e) {
-            try {
-                if (connection != null) {
-                    connection.rollback();
-                }
-            } catch (SQLException ex) {
-                log.error("Updating user: " + userId + " balance failed\n" +
-                        e.getMessage());
-                throw new DBException("Updating user balance failed", e);
-            }
-            log.error("Updating user: " + userId + " balance failed\n" +
-                    e.getMessage());
+            String errorMsg = "Updating user: " + userId + " balance failed";
+            log.error(errorMsg);
+            connectionRollback(connection, errorMsg);
             throw new DBException("Updating user balance failed", e);
         } finally {
             closeConnection(connection, "Updating user balance failed");
         }
     }
+
+    private void connectionRollback(Connection connection, String errorMsg) throws DBException {
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage());
+            throw new DBException(errorMsg, e);
+        }
+    }
+
+    private void closeConnection(Connection connection, String errorMsg) {
+        try {
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            log.error(errorMsg + "\n" + e.getMessage());
+        }
+    }
+
+
 }

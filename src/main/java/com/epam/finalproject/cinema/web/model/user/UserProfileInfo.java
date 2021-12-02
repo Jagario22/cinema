@@ -1,7 +1,10 @@
 package com.epam.finalproject.cinema.web.model.user;
 import com.epam.finalproject.cinema.domain.entity.User.ROLE;
 import com.epam.finalproject.cinema.domain.entity.Wallet;
-public class UserProfileInfo {
+
+import java.io.Serializable;
+
+public class UserProfileInfo  implements Serializable {
     private int id = 1;
     private String login;
     private String email;

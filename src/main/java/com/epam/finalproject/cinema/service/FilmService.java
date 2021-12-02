@@ -54,14 +54,16 @@ public class FilmService {
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
-            filmDao.insert(filmInfo.getFilm(), connection);
+            int filmId = filmDao.insert(filmInfo.getFilm(), connection);
             for (Genre genre : filmInfo.getGenres()) {
-                filmDao.insertGenreOfFilm(genre.getId(), filmInfo.getFilm().getId(), connection);
+                filmDao.insertGenreOfFilm(genre.getId(), filmId, connection);
             }
             connection.commit();
         } catch (SQLException | NamingException e) {
             String msg = "Creating film failed";
             log.error(msg + "\n" + e.getMessage());
+            connectionRollback(connection, msg);
+            ;
             throw new DBException(msg, e);
         } finally {
             if (connection != null) {
@@ -170,7 +172,7 @@ public class FilmService {
                 filmStatistic.setFilmInfo(filmInfo);
                 for (Session session : sessions) {
                     List<TicketInfo> tickets = ticketService.getTicketsInfoBySessionId(session.getId(), connection);
-                    SessionInfo sessionInfo = new SessionInfo(session.getId(), film, session.getLocaleDateTime(),
+                    SessionInfo sessionInfo = new SessionInfo(session.getId(), film, session.getLocalDateTime(),
                             session.getLang());
                     sessionInfo.setBoughtTicketsCount((int)
                             tickets.stream().filter(t -> t.getUserId() != 0).count());
@@ -191,6 +193,29 @@ public class FilmService {
             connectionClose(connection, msg);
         }
         return filmsStatistic;
+    }
+
+    public List<FilmInfo> getAllFilms() throws DBException {
+        Connection connection = null;
+        List<FilmInfo> filmsInfo = new ArrayList<>();
+        try {
+            connection = connectionPool.getConnection();
+            List<Film> films = filmDao.findAll(connection);
+            for (Film film : films) {
+                FilmInfo filmInfo = getById(film.getId());
+                filmsInfo.add(filmInfo);
+            }
+            connection.commit();
+        } catch (SQLException | NamingException e) {
+            String msg = "Getting all films failed";
+            log.error(msg + "\n" + e.getMessage());
+            connectionRollback(connection, msg);
+            throw new DBException(msg, e);
+        } finally {
+            String msg = "Getting all films failed";
+            connectionClose(connection, msg);
+        }
+        return filmsInfo;
     }
 
 
@@ -215,5 +240,6 @@ public class FilmService {
             throw new DBException(errorMsg, e);
         }
     }
+
 
 }

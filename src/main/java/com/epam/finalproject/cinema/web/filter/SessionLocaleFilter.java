@@ -1,6 +1,6 @@
 package com.epam.finalproject.cinema.web.filter;
 
-import static com.epam.finalproject.cinema.web.constants.FilterPath.ALL_PAGES;
+import static com.epam.finalproject.cinema.web.constants.path.FilterPath.ALL_PAGES;
 import static com.epam.finalproject.cinema.web.constants.Locale.LANG_ATTRIBUTE_NAME;
 
 import com.epam.finalproject.cinema.web.constants.Locale;

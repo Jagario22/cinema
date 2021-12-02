@@ -13,6 +13,10 @@ public class Genre implements Serializable {
         this.name = name;
     }
 
+    public Genre(int id) {
+        this.id = id;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -1,20 +1,28 @@
 package com.epam.finalproject.cinema.domain.entity;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class Session implements Serializable {
     private static final long serialVersionUID = -9122858044519977795L;
     private int id;
     private int filmId;
-    private LocalDateTime date;
+    private LocalDateTime dateTime;
     private Lang lang;
 
-    public Session(int id, int filmId, LocalDateTime date, Lang lang) {
+    public Session(int id, int filmId, LocalDateTime dateTime, Lang lang) {
         this.id = id;
         this.filmId = filmId;
-        this.date = date;
+        this.dateTime = dateTime;
         this.lang = lang;
+    }
+
+    public Session(LocalDate date, LocalTime time, int filmId, Lang lang) {
+        this.dateTime = LocalDateTime.of(date, time);
+        this.lang = lang;
+        this.filmId = filmId;
     }
 
     public enum Lang {
@@ -22,10 +30,10 @@ public class Session implements Serializable {
         ORIGINAL
     }
 
-    public Session(Integer id, Integer filmId, LocalDateTime date, Lang lang) {
+    public Session(Integer id, Integer filmId, LocalDateTime dateTime, Lang lang) {
         this.id = id;
         this.filmId = filmId;
-        this.date = date;
+        this.dateTime = dateTime;
         this.lang = lang;
     }
 
@@ -45,12 +53,12 @@ public class Session implements Serializable {
         this.filmId = filmId;
     }
 
-    public LocalDateTime getLocaleDateTime() {
-        return date;
+    public LocalDateTime getLocalDateTime() {
+        return dateTime;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     public Lang getLang() {
@@ -66,7 +74,7 @@ public class Session implements Serializable {
         return "Session{" +
                 "id=" + id +
                 ", filmId=" + filmId +
-                ", date=" + date +
+                ", date=" + dateTime +
                 ", lang=" + lang +
                 '}';
     }

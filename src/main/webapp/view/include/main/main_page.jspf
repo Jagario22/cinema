@@ -72,7 +72,7 @@
                             </div>
                             <div class="col-12 mt-3">
                                 <c:if test="${requestScope.maxPossiblePage != 0}">
-                                    <%@ include file="../page_navigation.jspf" %>
+                                    <%@ include file="page_navigation.jspf" %>
                                 </c:if>
                             </div>
                         </div>
@@ -85,7 +85,7 @@
         <div class="row">
             <c:choose>
                 <c:when test="${sessionScope.movies != null}">
-                    <%@include file="../movie_list.jspf" %>
+                    <%@include file="movie_list.jspf" %>
                 </c:when>
                 <c:otherwise>
                     <section class="jumbotron text-center vw-100 h-100">

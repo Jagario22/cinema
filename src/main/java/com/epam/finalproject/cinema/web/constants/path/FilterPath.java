@@ -1,4 +1,4 @@
-package com.epam.finalproject.cinema.web.constants;
+package com.epam.finalproject.cinema.web.constants.path;
 
 public class FilterPath {
     public final static String ALL_PAGES = "/*";

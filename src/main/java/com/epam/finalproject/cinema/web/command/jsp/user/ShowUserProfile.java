@@ -1,8 +1,9 @@
-package com.epam.finalproject.cinema.web.command.jsp;
+package com.epam.finalproject.cinema.web.command.jsp.user;
 
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.service.TicketService;
-import com.epam.finalproject.cinema.web.constants.PagePath;
+import com.epam.finalproject.cinema.web.command.jsp.PageCommand;
+import com.epam.finalproject.cinema.web.constants.path.Path;
 import com.epam.finalproject.cinema.web.model.ticket.TicketInfo;
 import com.epam.finalproject.cinema.web.model.user.UserProfileInfo;
 import org.apache.logging.log4j.LogManager;
@@ -28,6 +29,6 @@ public class ShowUserProfile implements PageCommand {
             session.setAttribute("userTickets", userTickets);
         }
 
-        return PagePath.USER_PROFILE_PAGE;
+        return Path.USER_PROFILE_PAGE;
     }
 }

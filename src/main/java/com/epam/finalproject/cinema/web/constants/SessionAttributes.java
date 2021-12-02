@@ -13,4 +13,8 @@ public class SessionAttributes {
     public static final String START_DATE_TIME = "startDateTime";
     public static final String END_DATE_TIME = "endDateTime";
     public static final String GENRES = "genres";
+    public static final String SUCCESS_MSG = "successMsg";
+    public static final String ADD_MOVIE_ERROR = "addMovieError";
+    public static final String NOT_FULL_INPUT_DATA_ERROR = "notFullDataError";
+    public static final String INCORRECT_INPUT_DATA = "incorrectDataError";
 }

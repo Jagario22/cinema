@@ -14,7 +14,7 @@ public class CommandContainer {
 
     static {
         commands = new HashMap<>();
-        commands.put(SHOW_SESSIONS, new ShowAllSessions());
+        commands.put(SHOW_FILM_SESSIONS, new ShowAllSessions());
         commands.put(SHOW_AVAILABLE_TICKETS, new ShowAvailableTickets());
     }
 

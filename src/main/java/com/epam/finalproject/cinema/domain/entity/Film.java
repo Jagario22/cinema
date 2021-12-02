@@ -21,6 +21,16 @@ public class Film implements Serializable, Comparable<Film> {
         this.title = title;
     }
 
+    public Film(String title, String descr, String year, int category, Date lastShowingDate,
+                String img) {
+        this.title = title;
+        this.descr = descr;
+        this.year = year;
+        this.category = category;
+        this.lastShowingDate = lastShowingDate;
+        this.img = img;
+    }
+
     public Film(String title, String year, String descr, String img) {
         this.title = title;
         this.year = year;
@@ -57,32 +67,12 @@ public class Film implements Serializable, Comparable<Film> {
     }
 
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setLen(int len) {
-        this.len = len;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
-
-    public Date getLastShowingDate() {
-        return lastShowingDate;
-    }
-
-    public void setLastShowingDate(Date lastShowingDate) {
-        this.lastShowingDate = lastShowingDate;
-    }
-
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -97,7 +87,7 @@ public class Film implements Serializable, Comparable<Film> {
         return len;
     }
 
-    public void setLen(Integer len) {
+    public void setLen(int len) {
         this.len = len;
     }
 
@@ -131,6 +121,22 @@ public class Film implements Serializable, Comparable<Film> {
 
     public void setRating(float rating) {
         this.rating = rating;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public Date getLastShowingDate() {
+        return lastShowingDate;
+    }
+
+    public void setLastShowingDate(Date lastShowingDate) {
+        this.lastShowingDate = lastShowingDate;
     }
 
     @Override

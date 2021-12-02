@@ -1,38 +1,46 @@
-<%@include file="../../head/admin_nav.jspf"%>
-<div class="container m-0">
-    <div class="row h-100 vh-100 vw-100">
-        <%@include file="../../head/admin_menu.jspf" %>
-        <div class="col-10 bg-white pl-0">
-            <div class="container">
-                <h2>Current films schedule statistic</h2>
-
-                <table class="table table-dark table-hover">
-                    <thead>
+<%@include file="../../head/admin_nav.jspf" %>
+<div class="row h-100 vh-100 mr-0">
+    <%@include file="../../head/admin_menu.jspf" %>
+    <div class="admin-body col-8 bg-white ml-3 pl-0 mt-5">
+        <h2 class="text-center mb-3">Hall attendance</h2>
+        <table id="hall_sessions" class="table table-striped hover responsive
+        table-bordered table-sm" style="width:100%">
+            <thead>
+            <tr>
+                <th>FilmID</th>
+                <th>Film title</th>
+                <th>Session ID</th>
+                <th>Session DateTime</th>
+                <th>Bought tickets count</th>
+                <th>Tickets count</th>
+            </tr>
+            </thead>
+            <tbody class="overflow-auto">
+            <c:forEach var="statistic" items="${sessionScope.filmsStatistic}" varStatus="rowCount">
+                <c:forEach var="session" items="${statistic.sessions}" varStatus="rowCount">
                     <tr>
-                        <th>FilmID</th>
-                        <th>Film title</th>
-                        <th>Session ID</th>
-                        <th>Session DateTime</th>
-                        <th>Bought tickets count</th>
-                        <th>Tickets count</th>
+                        <td>${statistic.filmInfo.film.id}</td>
+                        <td>${statistic.filmInfo.film.title}</td>
+                        <td>${session.id}</td>
+                        <td>${session.date} ${session.time}</td>
+                        <td>${session.boughtTicketsCount}</td>
+                        <td>${session.countOfTickets}</td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach var="statistic" items="${sessionScope.filmsStatistic}" varStatus="rowCount">
-                        <c:forEach var="session" items="${statistic.sessions}" varStatus="rowCount">
-                            <tr>
-                                <td>${statistic.filmInfo.film.id}</td>
-                                <td>${statistic.filmInfo.film.title}</td>
-                                <td>${session.id}</td>
-                                <td>${session.date} ${session.time}</td>
-                                <td>${session.boughtTicketsCount}</td>
-                                <td>${session.countOfTickets}</td>
-                            </tr>
-                        </c:forEach>
-                    </c:forEach>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+                </c:forEach>
+            </c:forEach>
+            </tbody>
+        </table>
     </div>
 </div>
+
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#hall_sessions').DataTable();
+        $("#hall_sessions").DataTable({retrieve: true}).destroy();
+        $("#hall_sessions").DataTable({
+            scrollY: 400,
+            scrollCollapse: true
+        });
+    });
+</script>

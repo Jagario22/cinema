@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="utf-8" %>
 <%@ include file="/view/include/head/libs.jspf" %>
+<%@ include file="/view/include/head/cinema_constants.jspf" %>
 <%@ taglib prefix="localeDate" tagdir="/WEB-INF/tags" %>
 <%@ include file="/view/include/head/session_locale.jspf" %>
 <c:set var="sessionInfo" value="${sessionScope.sessionInfo}"/>
@@ -75,7 +76,7 @@
                                 <select name="rowSelect" id="rowSelect" class="ticket-select form-control"
                                         onfocus='this.size=5;' onblur='this.size=1;'
                                         onchange='this.size=1; this.blur();'>
-                                    <c:forEach var="index" begin="1" end="${sessionScope.countOfRows}">
+                                    <c:forEach var="index" begin="1" end="${countOfRows}">
                                         <option value="${index}">${index}</option>
                                     </c:forEach>
                                 </select>
@@ -86,7 +87,7 @@
                                         onfocus='this.size=5;' onblur='this.size=1;'
                                         onchange='this.size=1; this.blur();' required>
                                     <option value="">Select something</option>
-                                    <c:forEach var="index" begin="1" end="${sessionScope.countOfRowSeats}">
+                                    <c:forEach var="index" begin="1" end="${countOfRowSeats}">
                                         <option class="text-danger" value="${index}" disabled>${index}</option>
                                     </c:forEach>
                                 </select>

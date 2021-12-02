@@ -1,7 +1,8 @@
-package com.epam.finalproject.cinema.web.command.jsp;
+package com.epam.finalproject.cinema.web.command.jsp.user;
 
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.service.FilmService;
+import com.epam.finalproject.cinema.web.command.jsp.PageCommand;
 import com.epam.finalproject.cinema.web.model.film.FilmInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.finalproject.cinema.web.constants.PagePath.*;
+import static com.epam.finalproject.cinema.web.constants.path.Path.*;
 
 public class ShowMovieCommand implements PageCommand {
     private final static FilmService filmService = FilmService.getInstance();

@@ -4,12 +4,11 @@ import com.epam.finalproject.cinema.domain.entity.Film;
 import com.epam.finalproject.cinema.domain.entity.User;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.service.FilmService;
-import com.epam.finalproject.cinema.service.SessionService;
 import com.epam.finalproject.cinema.util.Pagination;
+import com.epam.finalproject.cinema.web.command.jsp.user.ShowMovieCommand;
 import com.epam.finalproject.cinema.web.constants.CinemaConstants;
 import com.epam.finalproject.cinema.web.constants.Params;
 import com.epam.finalproject.cinema.web.model.film.FilmStatistic;
-import com.epam.finalproject.cinema.web.model.film.session.SessionsInfoGroupByDate;
 import com.epam.finalproject.cinema.web.model.user.UserProfileInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,7 +20,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.epam.finalproject.cinema.web.constants.PagePath.WELCOME_PAGE;
+import static com.epam.finalproject.cinema.web.constants.path.Path.WELCOME_PAGE;
 import static com.epam.finalproject.cinema.web.constants.SessionAttributes.*;
 
 public class WelcomeCommand implements PageCommand {
@@ -83,9 +82,6 @@ public class WelcomeCommand implements PageCommand {
             session.removeAttribute(END_DATE_TIME);
             session.removeAttribute(MOVIE_LIST);
         }
-
-        req.getSession().setAttribute("countOfRows", CinemaConstants.COUNT_OF_ROWS);
-        req.getSession().setAttribute("countOfRowSeats", CinemaConstants.COUNT_OF_ROW_SEAT);
         req.setAttribute(Params.SORT_FIELD, sortField);
 
         Pagination.setUpAttributes(req, page, pageSize, size);

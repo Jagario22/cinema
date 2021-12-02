@@ -2,12 +2,13 @@ package com.epam.finalproject.cinema.web.model.film.session;
 
 import com.epam.finalproject.cinema.domain.entity.Session;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class SessionsInfoGroupByDate {
+public class SessionsInfoGroupByDate implements Serializable {
     private LocalDate date;
     private List<SessionInfo> sessionsInfo;
     private Session.Lang lang;

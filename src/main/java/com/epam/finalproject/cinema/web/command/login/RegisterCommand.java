@@ -5,7 +5,7 @@ import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.service.UserProfileService;
 import com.epam.finalproject.cinema.web.command.jsp.PageCommand;
 import com.epam.finalproject.cinema.util.RegisterValidationUtil;
-import com.epam.finalproject.cinema.web.constants.PagePath;
+import com.epam.finalproject.cinema.web.constants.path.Path;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,17 +32,17 @@ public class RegisterCommand implements PageCommand {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
         String email = req.getParameter("email");
-        String forward = PagePath.LOGIN_USER_PAGE;
+        String forward = Path.LOGIN_USER_PAGE;
 
         if (!isValidUserForm(login, password, email)) {
             req.getSession().setAttribute(VALIDATING_STATUS, false);
-            return PagePath.REGISTER_USER_PAGE;
+            return Path.REGISTER_USER_PAGE;
         }
 
         req.getSession().setAttribute(UNIQUE_EMAIL_VALIDATION_CLASS, "");
         req.getSession().setAttribute(UNIQUE_LOGIN_VALIDATION_CLASS, "");
         if (!validateUniqueData(login, email, req)) {
-            return PagePath.REGISTER_USER_PAGE;
+            return Path.REGISTER_USER_PAGE;
         }
 
         User user = new User(email, password, login, User.ROLE.USER);

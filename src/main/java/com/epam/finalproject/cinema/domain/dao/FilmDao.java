@@ -6,6 +6,7 @@ import com.epam.finalproject.cinema.domain.connection.PostgresConnectionPool;
 import com.epam.finalproject.cinema.domain.constants.PostgresQuery;
 import com.epam.finalproject.cinema.domain.entity.Film;
 import com.epam.finalproject.cinema.util.CloseUtil;
+import com.epam.finalproject.cinema.web.model.film.FilmInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -49,7 +50,7 @@ public class FilmDao {
             } else {
                 ps = connection.prepareStatement(SELECT_CURRENT_FILM_COUNT_ORDER_BY_PLACES_WHERE_DATETIME_BETWEEN);
                 ps.setTimestamp(1, Timestamp.valueOf(start));
-                ps.setTimestamp(2,  Timestamp.valueOf(end));
+                ps.setTimestamp(2, Timestamp.valueOf(end));
 
             }
             resultSet = ps.executeQuery();
@@ -83,7 +84,7 @@ public class FilmDao {
             } else {
                 ps = connection.prepareStatement(SELECT_ALL_CURRENT_FILMS_COUNT_WHERE_DATETIME_BETWEEN);
                 ps.setTimestamp(1, Timestamp.valueOf(start));
-                ps.setTimestamp(2,  Timestamp.valueOf(end));
+                ps.setTimestamp(2, Timestamp.valueOf(end));
 
             }
             resultSet = ps.executeQuery();
@@ -184,9 +185,10 @@ public class FilmDao {
         return currentFilms;
     }
 
-    public void insert(Film film, Connection connection) throws SQLException {
+    public int insert(Film film, Connection connection) throws SQLException {
         PreparedStatement ps = null;
         ResultSet rs = null;
+        int result = 0;
         try {
             ps = connection.prepareStatement(INSERT_INTO_FILMS_VALUES, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, film.getTitle());
@@ -202,7 +204,9 @@ public class FilmDao {
 
             rs = ps.getGeneratedKeys();
 
-            if (!rs.next()) {
+            if (rs.next()) {
+                result = rs.getInt(1);
+            } else {
                 throw new SQLException("Inserting film " + film + " failed");
             }
         } catch (SQLException e) {
@@ -215,7 +219,7 @@ public class FilmDao {
                 log.error("Inserting film " + film + " failed");
             }
         }
-
+        return result;
     }
 
 
@@ -283,7 +287,25 @@ public class FilmDao {
     }
 
 
+    public List<Film> findAll(Connection connection) throws SQLException {
+        List<Film> films = new ArrayList<>();
+        Statement st = null;
+        ResultSet resultSet = null;
+        try {
+            st = connection.createStatement();
+            resultSet = st.executeQuery(SELECT_ALL_FILMS);
 
+            while (resultSet.next()) {
+                Film film = readFilm(resultSet);
+                films.add(film);
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage());
+            throw e;
+        } finally {
+            CloseUtil.close(st, resultSet);
+        }
 
-
+        return films;
+    }
 }

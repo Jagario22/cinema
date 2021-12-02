@@ -67,7 +67,6 @@ public class TicketDao {
             ps.setShort(1, ticket.getNumber());
             ps.setInt(2, ticket.getTicketTypeId());
             ps.setInt(3, ticket.getSessionId());
-            ps.setInt(4, ticket.getUserId());
             ps.execute();
             rs = ps.getGeneratedKeys();
 
@@ -100,13 +99,9 @@ public class TicketDao {
             ps = connection.prepareStatement(sql);
             ps.setInt(1, sessionId);
             resultSet = ps.executeQuery();
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 Ticket ticket = readTicket(resultSet);
                 tickets.add(ticket);
-                while (resultSet.next()) {
-                    ticket = readTicket(resultSet);
-                    tickets.add(ticket);
-                }
             }
         } finally {
             CloseUtil.close(ps, resultSet);

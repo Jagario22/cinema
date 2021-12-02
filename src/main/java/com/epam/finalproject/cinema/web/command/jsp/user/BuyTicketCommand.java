@@ -1,16 +1,14 @@
-package com.epam.finalproject.cinema.web.command.jsp;
+package com.epam.finalproject.cinema.web.command.jsp.user;
 
-import com.epam.finalproject.cinema.domain.entity.Wallet;
 import com.epam.finalproject.cinema.exception.BadRequestException;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.exception.purchase.InactiveFilmSessionException;
 import com.epam.finalproject.cinema.exception.purchase.InsufficientBalanceException;
-import com.epam.finalproject.cinema.exception.purchase.TicketIsNotAvailableException;
 import com.epam.finalproject.cinema.exception.purchase.TicketPurchaseException;
 import com.epam.finalproject.cinema.service.TicketService;
 import com.epam.finalproject.cinema.service.UserProfileService;
+import com.epam.finalproject.cinema.web.command.jsp.PageCommand;
 import com.epam.finalproject.cinema.web.constants.ErrorMessages;
-import com.epam.finalproject.cinema.web.constants.PagePath;
 import com.epam.finalproject.cinema.web.constants.SessionAttributes;
 import com.epam.finalproject.cinema.web.model.user.UserProfileInfo;
 import org.apache.logging.log4j.LogManager;
@@ -50,16 +48,5 @@ public class BuyTicketCommand implements PageCommand {
         }
 
         return new ShowUserProfile().execute(req, resp);
-    }
-
-
-    private String getCurrentUrl(HttpServletRequest req) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(req.getRequestURL())
-                .append("?")
-                .append("command=").append(req.getParameter("command"))
-                .append("&filmId=").append(req.getParameter("filmId"));
-
-        return sb.toString();
     }
 }

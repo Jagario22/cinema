@@ -7,7 +7,7 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import java.io.IOException;
 
-import static com.epam.finalproject.cinema.web.constants.FilterPath.ALL_PAGES;
+import static com.epam.finalproject.cinema.web.constants.path.FilterPath.ALL_PAGES;
 
 @WebFilter(filterName = "EncodingFilter", urlPatterns = {ALL_PAGES})
 public class EncodingFilter implements Filter {

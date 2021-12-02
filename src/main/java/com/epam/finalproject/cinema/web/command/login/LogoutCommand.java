@@ -4,7 +4,6 @@ import com.epam.finalproject.cinema.exception.BadRequestException;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.web.command.jsp.PageCommand;
 import com.epam.finalproject.cinema.web.command.jsp.WelcomeCommand;
-import com.epam.finalproject.cinema.web.constants.PagePath;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

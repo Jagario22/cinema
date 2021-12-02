@@ -3,9 +3,9 @@ package com.epam.finalproject.cinema.domain.dao;
 import com.epam.finalproject.cinema.domain.connection.ConnectionPool;
 import com.epam.finalproject.cinema.domain.connection.PostgresConnectionPool;
 import com.epam.finalproject.cinema.domain.constants.PostgresQuery;
-import com.epam.finalproject.cinema.domain.entity.Genre;
 import com.epam.finalproject.cinema.domain.entity.Session;
 import com.epam.finalproject.cinema.domain.entity.Session.Lang;
+import com.epam.finalproject.cinema.domain.session.SessionQuery;
 import com.epam.finalproject.cinema.util.CloseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,18 +37,18 @@ public class SessionDao {
         return instance;
     }
 
-    public void deleteByFilmId(int filmId, Connection connection) throws SQLException {
+    public void deleteById(int id, Connection connection) throws SQLException {
         PreparedStatement ps = null;
         try {
-            ps = connection.prepareStatement(DELETE_FROM_SESSIONS_WHERE, Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, filmId);
+            ps = connection.prepareStatement(DELETE_FROM_SESSIONS_WHERE_ID_IS, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, id);
             int index = ps.executeUpdate();
 
             if (index == 0) {
-                throw new SQLException("Deleting sessions by filmId " + filmId + " failed");
+                throw new SQLException("Deleting session by Id " + id + " failed");
             }
         } catch (SQLException e) {
-            log.error("Deleting sessions by filmId " + filmId + " failed");
+            log.error("Deleting session by Id " + id + " failed");
             throw e;
         } finally {
             try {
@@ -56,36 +56,60 @@ public class SessionDao {
                     ps.close();
                 }
             } catch (SQLException e) {
-                log.error("Deleting sessions by filmId " + filmId + " failed");
+                log.error("Deleting session by id " + id + " failed");
             }
         }
     }
 
-    public void insert(Session session, Connection connection) throws SQLException {
+    public int insert(Session session, Connection connection) throws SQLException {
         PreparedStatement ps = null;
         ResultSet rs = null;
+        int resultId;
         try {
             ps = connection.prepareStatement(INSERT_INTO_SESSIONS, Statement.RETURN_GENERATED_KEYS);
-            ps.setTimestamp(1, Timestamp.valueOf(session.getLocaleDateTime()));
+            ps.setTimestamp(1, Timestamp.valueOf(session.getLocalDateTime()));
             ps.setString(2, session.getLang().toString().toLowerCase());
+            ps.setInt(3, session.getFilmId());
 
             ps.execute();
             rs = ps.getGeneratedKeys();
 
             if (!rs.next()) {
-                throw new SQLException("Inserting sessions " + session + " failed");
+                throw new SQLException("Inserting session " + session + " failed");
+            } else {
+                resultId = rs.getInt(1);
             }
         } catch (SQLException e) {
-            log.error("Inserting session " + session + " failed");
+            log.error(e.getMessage());
             throw e;
         } finally {
             try {
                 CloseUtil.close(ps, rs);
             } catch (SQLException e) {
-                log.error("Inserting session " + session + " failed");
+                log.error(e.getMessage());
             }
         }
+        return resultId;
+    }
 
+    public Session findNearestSessionWhereDatetimeBefore(LocalDateTime dateTime, Connection connection) throws SQLException {
+        Session session = null;
+        PreparedStatement ps = null;
+        ResultSet resultSet = null;
+        try {
+            ps = connection.prepareStatement(SessionQuery.SELECT_SESSION_WITH_MAX_DATETIME_BEFORE);
+            ps.setTimestamp(1, Timestamp.valueOf(dateTime));
+            resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                session = readSession(resultSet);
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage());
+            throw e;
+        } finally {
+            CloseUtil.close(ps, resultSet);
+        }
+        return session;
     }
 
 
@@ -173,4 +197,50 @@ public class SessionDao {
     }
 
 
+    public List<Session> findSessionsAfterDate(LocalDateTime localDateTime, Connection connection) throws SQLException {
+        List<Session> sessions = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            ps = connection.prepareStatement(SELECT_SESSIONS_AFTER_DATE);
+            ps.setTimestamp(1, Timestamp.valueOf(localDateTime));
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Session session = readSession(rs);
+                sessions.add(session);
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage());
+            throw e;
+        } finally {
+            CloseUtil.close(ps, rs);
+        }
+
+        return sessions;
+    }
+
+    public Session findSessionWhereDateTimeIs(LocalDateTime localDateTime, Connection connection) throws SQLException {
+        Session session = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            ps = connection.prepareStatement(SessionQuery.SELECT_FROM_SESSIONS_WHERE_DATETIME);
+            ps.setTimestamp(1, Timestamp.valueOf(localDateTime));
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                session = readSession(rs);
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage());
+            throw e;
+        } finally {
+            CloseUtil.close(ps, rs);
+        }
+
+        return session;
+    }
 }

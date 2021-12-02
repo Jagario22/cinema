@@ -4,8 +4,6 @@ import com.epam.finalproject.cinema.exception.BadRequestException;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.web.command.jsp.PageCommand;
 import com.epam.finalproject.cinema.web.command.jsp.PageCommandContainer;
-import com.epam.finalproject.cinema.web.constants.PagePath;
-import com.epam.finalproject.cinema.web.constants.SessionAttributes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,10 +13,13 @@ import javax.servlet.annotation.*;
 import java.io.IOException;
 
 import static com.epam.finalproject.cinema.web.constants.CommandNames.WELCOME_PAGE_COMMAND;
-import static com.epam.finalproject.cinema.web.constants.PagePath.*;
+import static com.epam.finalproject.cinema.web.constants.path.Path.*;
 import static com.epam.finalproject.cinema.web.constants.SessionAttributes.*;
 
 @WebServlet(name = "main-page", value = "")
+@MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
+        maxFileSize = 1024 * 1024 * 10,      // 10MB
+        maxRequestSize = 1024 * 1024 * 50)   // 50MB
 public class Controller extends HttpServlet {
     private final static Logger log = LogManager.getLogger(Controller.class);
 
@@ -36,7 +37,7 @@ public class Controller extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try {
             String address = getAddress(request, response);
             response.sendRedirect(address);
@@ -50,7 +51,7 @@ public class Controller extends HttpServlet {
     }
 
     private String getAddress(HttpServletRequest request, HttpServletResponse response) throws
-            IOException, DBException {
+            IOException, DBException, ServletException {
         String commandName = request.getParameter("command");
 
         if (commandName == null || commandName.isEmpty()) {

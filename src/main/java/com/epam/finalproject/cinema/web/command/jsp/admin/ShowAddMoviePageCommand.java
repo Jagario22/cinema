@@ -1,12 +1,13 @@
-package com.epam.finalproject.cinema.web.command.jsp;
+package com.epam.finalproject.cinema.web.command.jsp.admin;
 
 import com.epam.finalproject.cinema.domain.entity.Genre;
 import com.epam.finalproject.cinema.domain.entity.User;
 import com.epam.finalproject.cinema.exception.BadRequestException;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.service.GenreService;
-import com.epam.finalproject.cinema.web.command.login.LoginCommand;
-import com.epam.finalproject.cinema.web.constants.PagePath;
+import com.epam.finalproject.cinema.web.command.jsp.PageCommand;
+import com.epam.finalproject.cinema.web.command.jsp.WelcomeCommand;
+import com.epam.finalproject.cinema.web.constants.path.Path;
 import com.epam.finalproject.cinema.web.constants.SessionAttributes;
 import com.epam.finalproject.cinema.web.model.user.UserProfileInfo;
 import org.apache.logging.log4j.LogManager;
@@ -17,9 +18,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-public class ShowAddMoviePage implements PageCommand {
+public class ShowAddMoviePageCommand implements PageCommand {
     private final static GenreService genreService = GenreService.getInstance();
-    private final static Logger log = LogManager.getLogger(ShowAddMoviePage.class);
+    private final static Logger log = LogManager.getLogger(ShowAddMoviePageCommand.class);
 
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException, BadRequestException {
@@ -28,11 +29,10 @@ public class ShowAddMoviePage implements PageCommand {
             if (user.getRole().equals(User.ROLE.USER))
                 return new WelcomeCommand().execute(req, resp);
         } else {
-            return PagePath.LOGIN_USER_PAGE;
+            return Path.LOGIN_USER_PAGE;
         }
-        log.debug("show page");
         List<Genre> genres = genreService.getAllGenres();
         req.setAttribute(SessionAttributes.GENRES, genres);
-        return PagePath.ADD_MOVIE_PAGE;
+        return Path.ADD_MOVIE_PAGE;
     }
 }

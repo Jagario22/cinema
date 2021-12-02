@@ -1,0 +1,5 @@
+<c:set var="breakTime" value="5"/>
+<c:set var="countOfRows" value="5"/>
+<c:set var="countOfRowSeats" value="15"/>
+<c:set var="startTime" value="09:00"/>
+<c:set var="endTime" value="00:00"/>

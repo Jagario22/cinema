@@ -1,9 +1,10 @@
 package com.epam.finalproject.cinema.web.model.film;
 import com.epam.finalproject.cinema.web.model.film.session.SessionInfo;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class FilmStatistic {
+public class FilmStatistic implements Serializable {
     private FilmInfo film;
     private List<SessionInfo> sessions;
 

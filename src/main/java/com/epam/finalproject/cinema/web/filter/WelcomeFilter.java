@@ -1,7 +1,11 @@
 package com.epam.finalproject.cinema.web.filter;
 
+import com.epam.finalproject.cinema.domain.entity.User;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.web.command.jsp.WelcomeCommand;
+import com.epam.finalproject.cinema.web.constants.CommandNames;
+import com.epam.finalproject.cinema.web.constants.path.Path;
+import com.epam.finalproject.cinema.web.model.user.UserProfileInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,9 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.finalproject.cinema.web.constants.FilterPath.WELCOME_PAGE_PATH;
+import static com.epam.finalproject.cinema.web.constants.path.FilterPath.WELCOME_PAGE_PATH;
 
-@WebFilter(filterName = "MovieFilter", urlPatterns = {WELCOME_PAGE_PATH})
+@WebFilter(filterName = "WelcomeFilter", urlPatterns = {WELCOME_PAGE_PATH})
 public class WelcomeFilter implements Filter {
     private final static Logger log = LogManager.getLogger(WelcomeFilter.class);
 
@@ -29,4 +33,6 @@ public class WelcomeFilter implements Filter {
 
         filterChain.doFilter(servletRequest, servletResponse);
     }
+
+
 }

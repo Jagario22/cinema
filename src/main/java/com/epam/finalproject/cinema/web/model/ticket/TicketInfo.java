@@ -4,7 +4,9 @@ import com.epam.finalproject.cinema.domain.entity.TicketType;
 import com.epam.finalproject.cinema.web.constants.CinemaConstants;
 import com.epam.finalproject.cinema.web.model.film.session.SessionInfo;
 
-public class TicketInfo {
+import java.io.Serializable;
+
+public class TicketInfo implements Serializable {
     private Integer id;
     private Short placeNumber;
     private TicketType ticketType;

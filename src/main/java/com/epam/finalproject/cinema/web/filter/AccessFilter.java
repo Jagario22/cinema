@@ -1,9 +1,6 @@
 package com.epam.finalproject.cinema.web.filter;
 
-import com.epam.finalproject.cinema.web.constants.ErrorMessages;
-import com.epam.finalproject.cinema.web.constants.Locale;
-import com.epam.finalproject.cinema.web.constants.PagePath;
-import com.epam.finalproject.cinema.web.controller.Controller;
+import com.epam.finalproject.cinema.web.constants.path.Path;
 import com.epam.finalproject.cinema.web.model.user.UserProfileInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +13,7 @@ import java.io.IOException;
 
 import static com.epam.finalproject.cinema.domain.entity.User.ROLE.ADMIN;
 import static com.epam.finalproject.cinema.domain.entity.User.ROLE.USER;
-import static com.epam.finalproject.cinema.web.constants.FilterPath.USERS_PATH;
+import static com.epam.finalproject.cinema.web.constants.path.FilterPath.USERS_PATH;
 
 
 @WebFilter(filterName = "AccessFilter", urlPatterns = {USERS_PATH})
@@ -41,19 +38,19 @@ public class AccessFilter implements Filter {
             if (isAdminPage(url)) {
                 if (!sessionUser.getRole().equals(ADMIN)) {
                     HttpServletResponse res = (HttpServletResponse) servletResponse;
-                    res.sendRedirect(req.getContextPath() + "/" + PagePath.LOGIN_USER_PAGE);
+                    res.sendRedirect(req.getContextPath() + "/" + Path.LOGIN_USER_PAGE);
                     return;
                 }
             } else if (isUserPage(url)) {
                 if (!sessionUser.getRole().equals(USER)) {
                     HttpServletResponse res = (HttpServletResponse) servletResponse;
-                    res.sendRedirect(req.getContextPath() + "/" + PagePath.LOGIN_USER_PAGE);
+                    res.sendRedirect(req.getContextPath() + "/" + Path.LOGIN_USER_PAGE);
                     return;
                 }
             }
         } else {
             HttpServletResponse res = (HttpServletResponse) servletResponse;
-            res.sendRedirect(req.getContextPath() + "/" + PagePath.LOGIN_USER_PAGE);
+            res.sendRedirect(req.getContextPath() + "/" + Path.LOGIN_USER_PAGE);
             return;
         }
         filterChain.doFilter(servletRequest, servletResponse);

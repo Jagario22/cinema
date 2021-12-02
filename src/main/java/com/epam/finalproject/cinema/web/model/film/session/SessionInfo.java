@@ -3,12 +3,13 @@ package com.epam.finalproject.cinema.web.model.film.session;
 import com.epam.finalproject.cinema.domain.entity.Film;
 import com.epam.finalproject.cinema.domain.entity.Session;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
 
-public class SessionInfo {
+public class SessionInfo implements Serializable {
     private int id;
     private Film film;
     private LocalTime time;
@@ -91,8 +92,8 @@ public class SessionInfo {
     }
 
     public boolean isEqualToSession(Session session) {
-        return this.id == session.getId() && this.date.equals(session.getLocaleDateTime().toLocalDate()) &&
-                this.time.equals(session.getLocaleDateTime().toLocalTime())
+        return this.id == session.getId() && this.date.equals(session.getLocalDateTime().toLocalDate()) &&
+                this.time.equals(session.getLocalDateTime().toLocalTime())
                 && this.film.getId() == session.getFilmId();
     }
 

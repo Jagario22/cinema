@@ -1,7 +1,8 @@
-package com.epam.finalproject.cinema.web.command.jsp;
+package com.epam.finalproject.cinema.web.command.jsp.user;
 
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.service.SessionService;
+import com.epam.finalproject.cinema.web.command.jsp.PageCommand;
 import com.epam.finalproject.cinema.web.model.film.session.SessionInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,8 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.finalproject.cinema.web.constants.PagePath.LOGIN_USER_PAGE;
-import static com.epam.finalproject.cinema.web.constants.PagePath.SESSION_INFO_PAGE;
+import static com.epam.finalproject.cinema.web.constants.path.Path.LOGIN_USER_PAGE;
+import static com.epam.finalproject.cinema.web.constants.path.Path.SESSION_INFO_PAGE;
 
 public class ShowSessionInfo implements PageCommand {
     private final static SessionService sessionService = SessionService.getInstance();

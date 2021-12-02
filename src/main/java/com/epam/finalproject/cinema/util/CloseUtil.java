@@ -31,7 +31,17 @@ public class CloseUtil {
         }
     }
 
-    public static void close(PreparedStatement st, ResultSet rs) throws SQLException {
+    public static void close(PreparedStatement ps, ResultSet rs) throws SQLException {
+        if (rs != null) {
+            rs.close();
+        }
+
+        if (ps != null) {
+            ps.close();
+        }
+    }
+
+    public static void close(Statement st, ResultSet rs) throws SQLException {
         if (rs != null) {
             rs.close();
         }

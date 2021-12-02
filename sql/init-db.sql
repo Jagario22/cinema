@@ -56,7 +56,7 @@ create type lang as enum ('ukrainian', 'original');
 create table sessions
 (
     id        serial primary key,
-    film_id   integer,
+    film_id   integer not null,
     date_time timestamp not null unique check (date_time::time between '9:00' and '23:59'),
     lang      lang      not null,
     foreign key (film_id) references films (id) on delete cascade
