@@ -4,6 +4,7 @@ import com.epam.finalproject.cinema.exception.BadRequestException;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.web.command.jsp.PageCommand;
 import com.epam.finalproject.cinema.web.command.jsp.PageCommandContainer;
+import com.epam.finalproject.cinema.web.constants.path.Path;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,6 +16,7 @@ import java.io.IOException;
 import static com.epam.finalproject.cinema.web.constants.CommandNames.WELCOME_PAGE_COMMAND;
 import static com.epam.finalproject.cinema.web.constants.path.Path.*;
 import static com.epam.finalproject.cinema.web.constants.SessionAttributes.*;
+import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
 @WebServlet(name = "main-page", value = "")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
@@ -24,16 +26,18 @@ public class Controller extends HttpServlet {
     private final static Logger log = LogManager.getLogger(Controller.class);
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        request.getRequestDispatcher(Path.ERROR_PAGE).forward(request, response);
+        String address = null;
         try {
-            String address = getAddress(request, response);
-            request.getRequestDispatcher(address).forward(request, response);
+            address = getAddress(request, response);
         } catch (DBException e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
-        } catch (IOException e) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
-        } catch (BadRequestException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+            throw new IOException(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            processError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage(), request, response);
         }
+ 
+        request.getRequestDispatcher(address).forward(request, response);
     }
 
     @Override
@@ -42,11 +46,9 @@ public class Controller extends HttpServlet {
             String address = getAddress(request, response);
             response.sendRedirect(address);
         } catch (DBException e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
-        } catch (IOException e) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
-        } catch (BadRequestException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+            throw new IOException(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            processError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage(), request, response);
         }
     }
 
@@ -107,6 +109,16 @@ public class Controller extends HttpServlet {
                 session.removeAttribute(END_DATE_TIME);
             }
         }
+    }
+
+
+    private void processError(int statusCode, String massage, HttpServletRequest request,
+                              HttpServletResponse response) throws ServletException, IOException {
+        request.setAttribute("javax.servlet.error.status_code",
+                statusCode);
+        request.setAttribute("javax.servlet.error.message",
+                massage);
+        request.getRequestDispatcher(Path.ERROR_PAGE).forward(request, response);
     }
 
     public void destroy() {

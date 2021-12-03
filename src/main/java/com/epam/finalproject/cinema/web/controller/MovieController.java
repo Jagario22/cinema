@@ -3,9 +3,11 @@ package com.epam.finalproject.cinema.web.controller;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.web.command.json.Command;
 import com.epam.finalproject.cinema.web.command.json.CommandContainer;
+import com.epam.finalproject.cinema.web.constants.path.Path;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,13 +21,24 @@ import static com.epam.finalproject.cinema.web.constants.CommandNames.WELCOME_PA
 public class MovieController extends HttpServlet {
     private final static Logger log = LogManager.getLogger(MovieController.class);
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        log.debug("doGet#");
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         try {
             processCommand(req, resp);
         } catch (DBException e) {
-            resp.setContentType("text/html; charset=UTF-8");
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+            throw new IOException(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            processError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage(), req, resp);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        try {
+            processCommand(req, resp);
+        } catch (DBException e) {
+            throw new IOException(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            processError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage(), req, resp);
         }
     }
 
@@ -36,5 +49,14 @@ public class MovieController extends HttpServlet {
         }
         Command command = CommandContainer.getCommand(commandName);
         command.execute(req, resp);
+    }
+
+    private void processError(int statusCode, String massage, HttpServletRequest request,
+                              HttpServletResponse response) throws ServletException, IOException {
+        request.setAttribute("javax.servlet.error.status_code",
+                statusCode);
+        request.setAttribute("javax.servlet.error.message",
+                massage);
+        request.getRequestDispatcher(Path.ERROR_PAGE).forward(request, response);
     }
 }
