@@ -1,6 +1,6 @@
 package com.epam.finalproject.cinema.web.model.user;
-import com.epam.finalproject.cinema.domain.entity.User.ROLE;
-import com.epam.finalproject.cinema.domain.entity.Wallet;
+import com.epam.finalproject.cinema.domain.user.User.ROLE;
+import com.epam.finalproject.cinema.domain.wallet.Wallet;
 
 import java.io.Serializable;
 

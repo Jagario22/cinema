@@ -26,8 +26,6 @@ public class Controller extends HttpServlet {
     private final static Logger log = LogManager.getLogger(Controller.class);
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        request.getRequestDispatcher(Path.ERROR_PAGE).forward(request, response);
         String address = null;
         try {
             address = getAddress(request, response);
@@ -36,7 +34,7 @@ public class Controller extends HttpServlet {
         } catch (IllegalArgumentException e) {
             processError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage(), request, response);
         }
- 
+
         request.getRequestDispatcher(address).forward(request, response);
     }
 
@@ -59,6 +57,7 @@ public class Controller extends HttpServlet {
         if (commandName == null || commandName.isEmpty()) {
             commandName = WELCOME_PAGE_COMMAND;
         }
+
         PageCommand pageCommand = PageCommandContainer.getCommand(commandName);
         String address = pageCommand.execute(request, response);
         checkSessionAttributes(request.getSession(), address);

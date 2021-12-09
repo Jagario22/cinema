@@ -1,6 +1,6 @@
 package com.epam.finalproject.cinema.web.model.ticket;
 
-import com.epam.finalproject.cinema.domain.entity.TicketType;
+import com.epam.finalproject.cinema.domain.ticket.type.TicketType;
 import com.epam.finalproject.cinema.web.constants.CinemaConstants;
 import com.epam.finalproject.cinema.web.model.film.session.SessionInfo;
 

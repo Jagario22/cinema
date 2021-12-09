@@ -2,12 +2,12 @@ package com.epam.finalproject.cinema.service;
 
 import com.epam.finalproject.cinema.domain.connection.ConnectionPool;
 import com.epam.finalproject.cinema.domain.connection.PostgresConnectionPool;
-import com.epam.finalproject.cinema.domain.dao.TicketDao;
-import com.epam.finalproject.cinema.domain.dao.TicketTypeDao;
-import com.epam.finalproject.cinema.domain.dao.WalletDao;
-import com.epam.finalproject.cinema.domain.entity.Session;
-import com.epam.finalproject.cinema.domain.entity.Ticket;
-import com.epam.finalproject.cinema.domain.entity.TicketType;
+import com.epam.finalproject.cinema.domain.ticket.TicketDao;
+import com.epam.finalproject.cinema.domain.ticket.type.TicketTypeDao;
+import com.epam.finalproject.cinema.domain.wallet.WalletDao;
+import com.epam.finalproject.cinema.domain.session.Session;
+import com.epam.finalproject.cinema.domain.ticket.Ticket;
+import com.epam.finalproject.cinema.domain.ticket.type.TicketType;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.exception.purchase.InactiveFilmSessionException;
 import com.epam.finalproject.cinema.exception.purchase.InsufficientBalanceException;
@@ -27,19 +27,14 @@ import java.util.List;
 
 public class TicketService {
     private static TicketService instance = null;
-    private final TicketDao ticketDao;
-    private final SessionService sessionService;
-    private final WalletDao walletDao;
-    private final TicketTypeDao ticketTypeDao;
-    private final ConnectionPool connectionPool;
+    private final TicketDao ticketDao = TicketDao.getInstance();
+    private final SessionService sessionService = SessionService.getInstance();
+    private final WalletDao walletDao = WalletDao.getInstance();
+    private final TicketTypeDao ticketTypeDao = TicketTypeDao.getInstance();
+    private final ConnectionPool connectionPool = PostgresConnectionPool.getInstance();
     private final static Logger log = LogManager.getLogger(TicketService.class);
 
     public TicketService() {
-        ticketDao = TicketDao.getInstance();
-        sessionService = SessionService.getInstance();
-        ticketTypeDao = TicketTypeDao.getInstance();
-        walletDao = WalletDao.getInstance();
-        connectionPool = PostgresConnectionPool.getInstance();
     }
 
     public static synchronized TicketService getInstance() {
@@ -51,27 +46,24 @@ public class TicketService {
 
     public List<TicketInfo> getTicketsInfoByUserId(int userId) throws DBException {
         Connection connection = null;
-
         List<TicketInfo> ticketInfoList = new ArrayList<>();
+
         try {
             connection = connectionPool.getConnection();
             List<Ticket> tickets = ticketDao.findTicketsByUserId(userId, connection);
             for (Ticket ticket : tickets) {
                 SessionInfo sessionInfo = sessionService.getCurrentSessionInfoById(ticket.getSessionId(), connection);
-                TicketInfo ticketInfo = getTicketInfo(connection, ticket, sessionInfo);
+                TicketInfo ticketInfo = getTicketSessionInfo(connection, ticket, sessionInfo);
                 ticketInfoList.add(ticketInfo);
             }
+            connection.commit();
         } catch (SQLException | NamingException e) {
-            try {
-                if (connection != null) {
-                    connection.rollback();
-                }
-            } catch (SQLException ex) {
-                processException(e, "Getting ticket info of user failed.");
-            }
-            processException(e, "Getting ticket info of user failed.");
+            String msg = "Getting ticket info of user";
+            connectionRollback(connection, msg);
+            log.debug(msg + "userId: " + userId + " failed.");
+            throw new DBException(msg, e);
         } finally {
-            String errorMsg = "Ticket purchase failed.";
+            String errorMsg = "Getting ticket info of user failed.";
             closeConnection(connection, errorMsg);
         }
 
@@ -85,60 +77,44 @@ public class TicketService {
         try {
             connection = connectionPool.getConnection();
             Session session = sessionService.getCurrentSessionById(sessionId, connection);
-            if (session != null) {
-                Ticket ticket = ticketDao.findTicketByIdWhereUserIdIsNull(ticketId, connection);
-                if (ticket != null) {
-                    BigDecimal price = getTicketPrice(ticket, connection);
-                    BigDecimal userBalance = walletDao.findBalanceByUserId(userId, connection);
-                    moneyChargeOffByUserId(userId, price, userBalance, ticketId, connection);
-                    updatingTicket(connection, ticketId, userId);
-                    connection.commit();
-                } else {
-                    String msg = "Ticket purchase failed. Ticket is not available for purchase";
-                    log.debug(msg + ", ticketId: " + ticketId + " sessionId: " + sessionId);
-                    connection.rollback();
-                    throw new TicketIsNotAvailableException(msg);
-                }
-            } else {
-                String msg = "Ticket purchase failed. The film session is inactive";
-                log.debug(msg + ", ticketId: " + ticketId + " sessionId: " + sessionId);
-                connection.rollback();
-                throw new InactiveFilmSessionException(msg);
+            if (session == null) {
+                sessionIsInactive(ticketId, sessionId, connection);
+                return;
             }
-
+            Ticket ticket = ticketDao.findTicketByIdWhereUserIdIsNull(ticketId, connection);
+            if (ticket == null) {
+                ticketIsNotAvailable(ticketId, sessionId, connection);
+                return;
+            }
+            BigDecimal price = getTicketPrice(ticket, connection);
+            BigDecimal userBalance = walletDao.findBalanceByUserId(userId, connection);
+            moneyChargeOffByUserId(userId, price, userBalance, ticketId, connection);
+            updatingTicket(connection, ticketId, userId);
+            connection.commit();
         } catch (SQLException | NamingException e) {
-            if (connection != null) {
-                try {
-                    connection.rollback();
-                } catch (SQLException ex) {
-                    processException(e, "Ticket purchase failed.");
-                }
-            }
-            processException(e, "Ticket purchase failed.");
+            String msg = "Ticket purchase failed.";
+            connectionRollback(connection, msg);
+            log.error(msg + " ticketId: " + ticketId + " sessionId: " + sessionId + " userId: " + userId);
         } finally {
             String errorMsg = "Ticket purchase failed.";
+            log.error(errorMsg);
             closeConnection(connection, errorMsg);
         }
     }
 
-    public int getBoughtTicketsCountOfFilm(int filmId, Connection connection) throws DBException {
-
-        int count = 0;
-        String errorMsg = "Getting tickets count of film failed";
-        try {
-            List<Session> sessions = sessionService.getAllCurrentSessionsOfFilm(filmId, connection);
-            for (Session session : sessions) {
-                count += ticketDao.findCountOfBoughtTicketsBySessionId(session.getId(), connection);
-            }
-        } catch (SQLException e) {
-            log.error(errorMsg + "\n" + e.getMessage());
-            connectionRollback(connection, errorMsg);
-            throw new DBException(errorMsg, e);
-        }
-
-        return count;
+    private void ticketIsNotAvailable(int ticketId, int sessionId, Connection connection) throws SQLException, TicketIsNotAvailableException {
+        String msg = "Ticket purchase failed. Ticket is not available for purchase";
+        log.debug(msg + ", ticketId: " + ticketId + " sessionId: " + sessionId);
+        connection.rollback();
+        throw new TicketIsNotAvailableException(msg);
     }
 
+    private void sessionIsInactive(int ticketId, int sessionId, Connection connection) throws DBException, InactiveFilmSessionException {
+        String msg = "Ticket purchase failed. The film session is inactive";
+        connectionRollback(connection, msg);
+        log.debug(msg + ", ticketId: " + ticketId + " sessionId: " + sessionId);
+        throw new InactiveFilmSessionException(msg);
+    }
 
     public List<TicketInfo> getTicketsInfoBySessionIdWhereUserIsNull(int sessionId) throws DBException {
         List<TicketInfo> ticketInfoList = new ArrayList<>();
@@ -147,13 +123,14 @@ public class TicketService {
             connection = connectionPool.getConnection();
             List<Ticket> tickets = ticketDao.findTicketsBySessionIdWhereUserIsNull(sessionId, connection);
             for (Ticket ticket : tickets) {
-                TicketInfo ticketInfo = getTicketInfo(connection, ticket);
+                TicketInfo ticketInfo = getTicketSessionInfo(connection, ticket);
                 ticketInfoList.add(ticketInfo);
             }
             connection.commit();
         } catch (SQLException | NamingException e) {
             String msg = "Getting tickets failed";
-            processException(e, msg);
+            connectionRollback(connection, msg);
+            log.error(msg + " sessionId " + sessionId);
         } finally {
             String errorMsg = "Getting tickets failed";
             closeConnection(connection, errorMsg);
@@ -161,32 +138,22 @@ public class TicketService {
         return ticketInfoList;
     }
 
-    private void closeConnection(Connection connection, String msgError) {
-        try {
-            if (connection != null) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            log.error(msgError + "\n" + e.getMessage());
-        }
-    }
-
-    public List<TicketInfo> getTicketsInfoBySessionId(int sessionId, Connection connection) throws DBException {
+    public List<TicketInfo> getTicketsInfoBySessionId(int sessionId, Connection connection) throws DBException, SQLException {
         List<TicketInfo> ticketInfoList = new ArrayList<>();
         try {
             List<Ticket> tickets = ticketDao.findAllTicketsOfSession(sessionId, connection);
             for (Ticket ticket : tickets) {
                 SessionInfo sessionInfo = sessionService.getCurrentSessionInfoById(ticket.getSessionId(), connection);
-                TicketInfo ticketInfo = getTicketInfo(connection, ticket, sessionInfo);
+                TicketInfo ticketInfo = getTicketSessionInfo(connection, ticket, sessionInfo);
                 ticketInfoList.add(ticketInfo);
             }
         } catch (SQLException e) {
             String msg = "Getting tickets failed";
-            processException(e, msg);
+            log.error(msg + "sessionId" + sessionId);
+            throw e;
         }
         return ticketInfoList;
     }
-
 
     private void updatingTicket(Connection connection, int ticketId, int userId) throws SQLException, TicketPurchaseException {
         ticketDao.updateTicketOnUserIdById(ticketId, userId, connection);
@@ -198,7 +165,7 @@ public class TicketService {
     }
 
     private void moneyChargeOffByUserId(int userId, BigDecimal price,
-                                        BigDecimal userBalance, int ticketId, Connection connection) throws SQLException, InsufficientBalanceException {
+                                        BigDecimal userBalance, int ticketId, Connection connection) throws SQLException, InsufficientBalanceException, DBException {
         if (price.compareTo(userBalance) <= 0) {
             BigDecimal newBalance = userBalance.subtract(price);
             walletDao.updateOnBalanceByUserId(userId, newBalance, connection);
@@ -206,34 +173,27 @@ public class TicketService {
             String msg = "Ticket purchase failed. There are not enough funds on the balance sheet";
             log.debug(msg + ", ticketId: " + ticketId + " balance: " + userBalance +
                     ", price: " + price);
-            connection.rollback();
             throw new InsufficientBalanceException(msg);
         }
     }
 
-    private TicketInfo getTicketInfo(Connection connection, Ticket ticket) throws SQLException {
+    private TicketInfo getTicketSessionInfo(Connection connection, Ticket ticket) throws SQLException {
         TicketType ticketType = ticketTypeDao.findById(ticket.getTicketTypeId(), connection);
         return new TicketInfo(ticket.getId(), ticket.getNumber(), ticketType, ticket.getUserId());
     }
 
-    private TicketInfo getTicketInfo(Connection connection, Ticket ticket, SessionInfo sessionInfo) throws SQLException {
+    private TicketInfo getTicketSessionInfo(Connection connection, Ticket ticket, SessionInfo sessionInfo) throws SQLException {
         TicketType ticketType = ticketTypeDao.findById(ticket.getTicketTypeId(), connection);
         return new TicketInfo(ticket.getId(), ticket.getNumber(), ticketType, sessionInfo, ticket.getUserId());
     }
 
-    private void processException(Exception e, String msg) throws DBException {
-        log.error(msg + "\n" + e.getMessage());
-        throw new DBException(msg, e);
-    }
-
-    private void connectionClose(Connection connection, String errorMsg) throws DBException {
+    private void closeConnection(Connection connection, String msgError) {
         try {
             if (connection != null) {
                 connection.close();
             }
         } catch (SQLException e) {
-            log.error(e.getMessage());
-            throw new DBException(errorMsg, e);
+            log.error(msgError + "\n" + e.getMessage());
         }
     }
 

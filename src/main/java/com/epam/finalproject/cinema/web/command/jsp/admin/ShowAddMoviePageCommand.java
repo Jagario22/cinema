@@ -1,7 +1,7 @@
 package com.epam.finalproject.cinema.web.command.jsp.admin;
 
-import com.epam.finalproject.cinema.domain.entity.Genre;
-import com.epam.finalproject.cinema.domain.entity.User;
+import com.epam.finalproject.cinema.domain.Genre.Genre;
+import com.epam.finalproject.cinema.domain.user.User;
 import com.epam.finalproject.cinema.exception.BadRequestException;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.service.GenreService;

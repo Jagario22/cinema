@@ -23,7 +23,7 @@ public class PostgresConnectionPool implements ConnectionPool {
 
     public synchronized Connection getConnection() throws SQLException, NamingException {
         Context context;
-        Connection connection = null;
+        Connection connection;
         context = new InitialContext();
         Context envContext = (Context) context.lookup("java:/comp/env");
         DataSource ds = (DataSource) envContext.lookup("jdbc/cinema");

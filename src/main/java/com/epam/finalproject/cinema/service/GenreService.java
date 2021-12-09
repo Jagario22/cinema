@@ -2,8 +2,8 @@ package com.epam.finalproject.cinema.service;
 
 import com.epam.finalproject.cinema.domain.connection.ConnectionPool;
 import com.epam.finalproject.cinema.domain.connection.PostgresConnectionPool;
-import com.epam.finalproject.cinema.domain.dao.GenreDao;
-import com.epam.finalproject.cinema.domain.entity.Genre;
+import com.epam.finalproject.cinema.domain.Genre.GenreDao;
+import com.epam.finalproject.cinema.domain.Genre.Genre;
 import com.epam.finalproject.cinema.exception.DBException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,19 +11,13 @@ import org.apache.logging.log4j.Logger;
 import javax.naming.NamingException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GenreService {
     private static GenreService instance = null;
-    private final GenreDao genreDao;
-    private final ConnectionPool connectionPool;
+    private final GenreDao genreDao = GenreDao.getInstance();
+    private final ConnectionPool connectionPool = PostgresConnectionPool.getInstance();
     private final static Logger log = LogManager.getLogger(GenreService.class);
-
-    public GenreService() {
-        genreDao = GenreDao.getInstance();
-        connectionPool = PostgresConnectionPool.getInstance();
-    }
 
     public static synchronized GenreService getInstance() {
         if (instance == null) {
@@ -41,8 +35,8 @@ public class GenreService {
             connection.commit();
         } catch (SQLException | NamingException e) {
             String errorMsg = "Getting all genres failed";
-            log.debug("Getting all genres failed");
             connectionRollback(connection, errorMsg);
+            log.debug("Getting all genres failed");
             throw new DBException(errorMsg, e);
         } finally {
             connectionClose(connection, "Getting all genres failed");

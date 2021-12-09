@@ -1,6 +1,6 @@
 package com.epam.finalproject.cinema.web.model.film.session;
 
-import com.epam.finalproject.cinema.domain.entity.Session;
+import com.epam.finalproject.cinema.domain.session.Session;
 
 import java.io.Serializable;
 import java.time.LocalDate;

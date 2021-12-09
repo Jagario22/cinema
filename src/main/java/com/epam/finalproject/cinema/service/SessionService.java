@@ -2,14 +2,14 @@ package com.epam.finalproject.cinema.service;
 
 import com.epam.finalproject.cinema.domain.connection.ConnectionPool;
 import com.epam.finalproject.cinema.domain.connection.PostgresConnectionPool;
-import com.epam.finalproject.cinema.domain.dao.FilmDao;
-import com.epam.finalproject.cinema.domain.dao.SessionDao;
-import com.epam.finalproject.cinema.domain.dao.TicketDao;
-import com.epam.finalproject.cinema.domain.dao.TicketTypeDao;
-import com.epam.finalproject.cinema.domain.entity.Film;
-import com.epam.finalproject.cinema.domain.entity.Session;
-import com.epam.finalproject.cinema.domain.entity.Ticket;
-import com.epam.finalproject.cinema.domain.entity.TicketType;
+import com.epam.finalproject.cinema.domain.film.FilmDao;
+import com.epam.finalproject.cinema.domain.session.SessionDao;
+import com.epam.finalproject.cinema.domain.ticket.TicketDao;
+import com.epam.finalproject.cinema.domain.ticket.type.TicketTypeDao;
+import com.epam.finalproject.cinema.domain.film.Film;
+import com.epam.finalproject.cinema.domain.session.Session;
+import com.epam.finalproject.cinema.domain.ticket.Ticket;
+import com.epam.finalproject.cinema.domain.ticket.type.TicketType;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.exception.IncorrectInputDataException;
 import com.epam.finalproject.cinema.web.constants.CinemaConstants;
@@ -34,21 +34,15 @@ import static com.epam.finalproject.cinema.web.constants.CinemaConstants.COUNT_O
 
 public class SessionService {
     private static SessionService instance = null;
-    private final SessionDao sessionDao;
-    private final FilmDao filmDao;
-    private final UserProfileService userProfileService;
-    private final TicketDao ticketDao;
-    private final TicketTypeDao ticketTypeDao;
-    private final ConnectionPool connectionPool;
+    private final SessionDao sessionDao = SessionDao.getInstance();
+    private final FilmDao filmDao = FilmDao.getInstance();
+    private final UserProfileService userProfileService = UserProfileService.getInstance();
+    private final TicketDao ticketDao = TicketDao.getInstance();
+    private final TicketTypeDao ticketTypeDao = TicketTypeDao.getInstance();
+    private final ConnectionPool connectionPool = PostgresConnectionPool.getInstance();
     private final static Logger log = LogManager.getLogger(FilmService.class);
 
     public SessionService() {
-        sessionDao = SessionDao.getInstance();
-        ticketDao = TicketDao.getInstance();
-        filmDao = FilmDao.getInstance();
-        ticketTypeDao = TicketTypeDao.getInstance();
-        userProfileService = UserProfileService.getInstance();
-        connectionPool = PostgresConnectionPool.getInstance();
     }
 
     public static synchronized SessionService getInstance() {
@@ -76,12 +70,12 @@ public class SessionService {
             }
             connection.commit();
         } catch (SQLException | NamingException e) {
-            String msg = "Creating session failed";
+            String msg = "Creating session failed with session: " + session;
             log.error(msg + "\n" + e.getMessage());
             connectionRollback(connection, msg);
             throw new DBException(msg, e);
         } finally {
-            String msg = "Creating session failed";
+            String msg = "Creating session failed with session: " + session;
             connectionClose(connection, msg);
         }
     }
@@ -104,12 +98,12 @@ public class SessionService {
     }
 
     private boolean isFilmExist(Connection connection, int filmId) throws SQLException {
-        Film film = filmDao.findFilmById(filmId, connection);
+        Film film = filmDao.findById(filmId, connection);
         return film != null;
     }
 
     public boolean isUniqueSession(Connection connection, Session session) throws SQLException {
-        Session result = sessionDao.findSessionWhereDateTimeIs(session.getLocalDateTime(), connection);
+        Session result = sessionDao.findSessionByDatetime(session.getLocalDateTime(), connection);
         return result == null;
     }
 
@@ -127,7 +121,7 @@ public class SessionService {
         if (session == null)
             return;
 
-        Film film = filmDao.findFilmById(session.getFilmId(), connection);
+        Film film = filmDao.findById(session.getFilmId(), connection);
         LocalDateTime nearestTime = datetime.plusMinutes(film.getLen() + CinemaConstants.BREAK_MINS);
         if (!datetime.isAfter(nearestTime)) {
             connectionRollback(connection, msgError);
@@ -154,7 +148,7 @@ public class SessionService {
         } catch (SQLException | NamingException e) {
             String msg = "Canceling film failed";
             connectionRollback(connection, msg);
-            log.error(msg + "\n" + e.getMessage());
+            log.error(msg + " id: " + id);
             throw new DBException(msg, e);
         } finally {
             connectionClose(connection, "Canceling film failed");
@@ -169,14 +163,14 @@ public class SessionService {
             connection = connectionPool.getConnection();
             List<Session> sessions = sessionDao.findSessionsAfterDate(LocalDateTime.now(), connection);
             for (Session session : sessions) {
-                Film film = filmDao.findFilmById(session.getFilmId(), connection);
+                Film film = filmDao.findById(session.getFilmId(), connection);
                 SessionInfo sessionInfo = getSessionInfo(session.getId(), film, session);
                 sessionsInfo.add(sessionInfo);
             }
             connection.commit();
         } catch (SQLException | NamingException e) {
             String msg = "Getting all sessions failed";
-            log.error(msg + "\n" + e.getMessage());
+            log.error(msg);
             connectionRollback(connection, msg);
             throw new DBException(msg, e);
         } finally {
@@ -187,23 +181,9 @@ public class SessionService {
         return sessionsInfo;
     }
 
-    public List<Session> getAllCurrentSessionsOfFilm(int filmId, Connection connection) throws DBException {
-        List<Session> sessions;
-        String errorMsg = "Getting all sessions of film failed";
-        try {
-            sessions = sessionDao.findCurrentFilmSessionsByFilmId(filmId, connection);
-        } catch (SQLException | NamingException e) {
-            log.error(errorMsg + "\n" + e.getMessage());
-            connectionRollback(connection, errorMsg);
-            throw new DBException(errorMsg, e);
-        }
-
-        return sessions;
-    }
-
-
     public List<SessionsInfoGroupByDate> getAllSessionsOfFilmGroupByDate(int filmId) throws DBException {
-        List<SessionsInfoGroupByDate> filmSessionInfoList = new ArrayList<>();
+        List
+                <SessionsInfoGroupByDate> filmSessionInfoList = new ArrayList<>();
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
@@ -215,58 +195,56 @@ public class SessionService {
             connection.commit();
         } catch (SQLException | NamingException e) {
             String msg = "Getting all sessions of film failed";
-            log.error(msg + "\n" + e.getMessage());
+            log.error(msg + " filmId: " + filmId);
+            connectionRollback(connection, msg);
             throw new DBException(msg, e);
         } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                String msg = "Getting session of film failed";
-                log.error(msg + "\n" + e.getMessage());
-            }
+            connectionClose(connection, "Getting all sessions of film failed");
         }
         return filmSessionInfoList;
     }
 
-    public SessionInfo getCurrentSessionInfoById(int sessionId, Connection connection) throws DBException {
+    public SessionInfo getCurrentSessionInfoById(int sessionId, Connection connection) throws SQLException {
         SessionInfo sessionInfo;
         try {
             Session session = sessionDao.findCurrentSessionById(sessionId, connection);
-            Film film = filmDao.findFilmById(session.getFilmId(), connection);
+            Film film = filmDao.findById(session.getFilmId(), connection);
             sessionInfo = getSessionInfo(sessionId, film, session);
-            connection.commit();
         } catch (SQLException e) {
             String msg = "Getting session failed";
-            log.error(msg + "\n" + e.getMessage());
-            throw new DBException(msg, e);
+            log.error(msg + " sessionId: " + sessionId);
+            throw e;
         }
         return sessionInfo;
     }
 
     public SessionInfo getCurrentSessionInfoById(int sessionId) throws DBException {
         Connection connection = null;
+        SessionInfo sessionInfo;
         try {
             connection = connectionPool.getConnection();
-            return getCurrentSessionInfoById(sessionId, connection);
+            sessionInfo = getCurrentSessionInfoById(sessionId, connection);
+            connection.commit();
         } catch (NamingException | SQLException e) {
             String msg = "Getting session failed";
-            log.error(msg + "\n" + e.getMessage());
+            connectionRollback(connection, msg);
+            log.error(msg + "sessionId: " + sessionId);
             throw new DBException(msg, e);
         } finally {
             String msg = "Getting session failed";
             connectionClose(connection, msg);
         }
+
+        return sessionInfo;
     }
 
-    public Session getCurrentSessionById(int sessionId, Connection connection) throws DBException {
+    public Session getCurrentSessionById(int sessionId, Connection connection) throws SQLException {
         try {
             return sessionDao.findCurrentSessionById(sessionId, connection);
         } catch (SQLException e) {
             String msg = "Getting session failed";
-            log.error(msg + "\n" + e.getMessage());
-            throw new DBException(msg, e);
+            log.error(msg + " sessionId: " + sessionId);
+            throw e;
         }
     }
 

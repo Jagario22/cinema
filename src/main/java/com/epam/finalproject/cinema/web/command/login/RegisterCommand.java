@@ -1,6 +1,6 @@
 package com.epam.finalproject.cinema.web.command.login;
 
-import com.epam.finalproject.cinema.domain.entity.User;
+import com.epam.finalproject.cinema.domain.user.User;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.service.UserProfileService;
 import com.epam.finalproject.cinema.web.command.jsp.PageCommand;
@@ -60,7 +60,7 @@ public class RegisterCommand implements PageCommand {
     }
 
     private boolean validateUniqueData(String login, String email, HttpServletRequest req) throws DBException {
-        List<User> users = userProfileService.findUsersWithEqualLoginOrEmail(login, email);
+        List<User> users = userProfileService.getUsersWithEqualLoginOrEmail(login, email);
         if (users.size() == 0) {
             return true;
         }

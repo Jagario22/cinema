@@ -2,11 +2,11 @@ package com.epam.finalproject.cinema.service;
 
 import com.epam.finalproject.cinema.domain.connection.ConnectionPool;
 import com.epam.finalproject.cinema.domain.connection.PostgresConnectionPool;
-import com.epam.finalproject.cinema.domain.dao.*;
-import com.epam.finalproject.cinema.domain.entity.User;
-import com.epam.finalproject.cinema.domain.entity.Wallet;
+import com.epam.finalproject.cinema.domain.user.User;
+import com.epam.finalproject.cinema.domain.wallet.Wallet;
+import com.epam.finalproject.cinema.domain.user.UserDao;
+import com.epam.finalproject.cinema.domain.wallet.WalletDao;
 import com.epam.finalproject.cinema.exception.DBException;
-import com.epam.finalproject.cinema.web.constants.Params;
 import com.epam.finalproject.cinema.web.model.user.UserProfileInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,15 +19,12 @@ import java.util.List;
 
 public class UserProfileService {
     private static UserProfileService instance = null;
-    private final UserDao userDao;
-    private final WalletDao walletDao;
-    private final ConnectionPool connectionPool;
+    private final UserDao userDao = UserDao.getInstance();
+    private final WalletDao walletDao = WalletDao.getInstance();
+    private final ConnectionPool connectionPool = PostgresConnectionPool.getInstance();
     private final static Logger log = LogManager.getLogger(FilmService.class);
 
     public UserProfileService() {
-        userDao = UserDao.getInstance();
-        walletDao = WalletDao.getInstance();
-        connectionPool = PostgresConnectionPool.getInstance();
     }
 
     public static synchronized UserProfileService getInstance() {
@@ -43,31 +40,16 @@ public class UserProfileService {
         int userId;
         try {
             connection = connectionPool.getConnection();
-            userId = userDao.insertUser(user, connection);
+            userId = userDao.insert(user, connection);
             Wallet wallet = new Wallet(userId, BigDecimal.ZERO);
-            walletDao.insertWallet(wallet, connection);
+            walletDao.insert(wallet, connection);
             connection.commit();
         } catch (SQLException | NamingException e) {
-            try {
-                if (connection != null) {
-                    connection.rollback();
-                }
-            } catch (SQLException ex) {
-                String msg = "Creating the user failed";
-                log.debug(msg + "\n" + e.getMessage());
-                throw new DBException(msg, e);
-            }
-            String msg = "Creating the user failed";
-            log.debug(msg + "\n" + e.getMessage());
+            String msg = "Creating user failed";
+            connectionRollback(connection, msg);
             throw new DBException(msg, e);
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    log.error("closing connection was failed");
-                }
-            }
+            closeConnection(connection, "Creating user failed");
         }
         return userId;
     }
@@ -85,23 +67,16 @@ public class UserProfileService {
                 wallet = walletDao.findWalletByUserId(user.getId(), connection);
 
             }
-            userInfo = convertToUserProfileInfo(user, wallet);
+            userInfo = convertToUserProfileInfo(new User(user.getId(), user.getEmail(),
+                    user.getLogin(), user.getRole()), wallet);
             connection.commit();
         } catch (SQLException | NamingException e) {
-            try {
-                if (connection != null) {
-                    connection.rollback();
-                }
-            } catch (SQLException ex) {
-                log.error("Getting user with login:" + login + " and password: " + password + " failed"
-                        + "\n" + e.getMessage());
-                throw new DBException("Getting user failed.", e);
-            }
-            log.error("Getting user with login:" + login + " and password: " + password + " failed"
-                    + "\n" + e.getMessage());
-            throw new DBException("Getting user failed.", e);
+            String msg = "Getting user failed";
+            log.error(msg + "\n" + " login: " + login + " password: " + password);
+            connectionRollback(connection, msg);
+            throw new DBException(msg, e);
         } finally {
-            String errorMsg = "Getting user failed.";
+            String errorMsg = "Getting user failed. " + "\n" + " login: " + login + " password: " + password;
             closeConnection(connection, errorMsg);
         }
         return userInfo;
@@ -114,18 +89,10 @@ public class UserProfileService {
             connection = connectionPool.getConnection();
             balance = walletDao.findBalanceByUserId(userId, connection);
         } catch (SQLException | NamingException e) {
-            try {
-                if (connection != null) {
-                    connection.rollback();
-                }
-            } catch (SQLException ex) {
-                log.error("Getting user balance failed"
-                        + "\n" + e.getMessage());
-                throw new DBException("Getting user balance failed", e);
-            }
-            log.error("Getting user balance failed"
-                    + "\n" + e.getMessage());
-            throw new DBException("Getting user balance failed", e);
+            String msg = "Getting wallet user failed";
+            log.error(msg + "\nuserId:" + userId);
+            connectionRollback(connection, msg);
+            throw new DBException(msg, e);
         } finally {
             closeConnection(connection, "Getting user balance failed");
         }
@@ -134,18 +101,39 @@ public class UserProfileService {
     }
 
 
-    public List<User> findUsersWithEqualLoginOrEmail(String login, String email) throws DBException {
+    public List<User> getUsersWithEqualLoginOrEmail(String login, String email) throws DBException {
+        Connection connection = null;
+        List<User> users;
         try {
-            return userDao.findUsersWithEqualLoginOrEmail(login, email);
+            connection = connectionPool.getConnection();
+            users = userDao.findUsersWithEqualLoginOrEmail(login, email, connection);
+            connection.commit();
         } catch (SQLException | NamingException e) {
-            log.error("Getting user with login: " + login + " or email: " + email + "failed\n" +
-                    e.getMessage());
-            throw new DBException("Login and password validation failed", e);
+            String msg = "Getting user failed";
+            connectionRollback(connection, msg);
+            log.error(msg + " with login " + login + " and email " + email);
+            throw new DBException(msg, e);
+        } finally {
+            String msg = "Getting user failed";
+            closeConnection(connection, msg);
+
         }
+        return users;
     }
 
-    private UserProfileInfo convertToUserProfileInfo(User user, Wallet wallet) {
-        return new UserProfileInfo(user.getId(), user.getLogin(), user.getEmail(), wallet, user.getRole());
+    public void topUpBalanceByUserId(Integer userId, BigDecimal amount) throws DBException {
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+            topUpBalanceByUserId(userId, amount, connection);
+            connection.commit();
+        } catch (SQLException | NamingException e) {
+            String errorMsg = "Updating user: " + userId + " balance failed";
+            connectionRollback(connection, errorMsg);
+            throw new DBException("Updating user balance failed", e);
+        } finally {
+            closeConnection(connection, "Updating user balance failed");
+        }
     }
 
     public void topUpBalanceByUserId(Integer userId, BigDecimal amount, Connection connection) throws SQLException {
@@ -161,21 +149,8 @@ public class UserProfileService {
         }
     }
 
-
-    public void topUpBalanceByUserId(Integer userId, BigDecimal amount) throws DBException {
-        Connection connection = null;
-        try {
-            connection = connectionPool.getConnection();
-            topUpBalanceByUserId(userId, amount, connection);
-            connection.commit();
-        } catch (SQLException | NamingException e) {
-            String errorMsg = "Updating user: " + userId + " balance failed";
-            log.error(errorMsg);
-            connectionRollback(connection, errorMsg);
-            throw new DBException("Updating user balance failed", e);
-        } finally {
-            closeConnection(connection, "Updating user balance failed");
-        }
+    private UserProfileInfo convertToUserProfileInfo(User user, Wallet wallet) {
+        return new UserProfileInfo(user.getId(), user.getLogin(), user.getEmail(), wallet, user.getRole());
     }
 
     private void connectionRollback(Connection connection, String errorMsg) throws DBException {
@@ -198,6 +173,4 @@ public class UserProfileService {
             log.error(errorMsg + "\n" + e.getMessage());
         }
     }
-
-
 }

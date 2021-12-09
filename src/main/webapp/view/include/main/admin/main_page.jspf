@@ -16,7 +16,7 @@
             </tr>
             </thead>
             <tbody class="overflow-auto">
-            <c:forEach var="statistic" items="${sessionScope.filmsStatistic}" varStatus="rowCount">
+            <c:forEach var="statistic" items="${requestScope.filmsStatistic}" varStatus="rowCount">
                 <c:forEach var="session" items="${statistic.sessions}" varStatus="rowCount">
                     <tr>
                         <td>${statistic.filmInfo.film.id}</td>

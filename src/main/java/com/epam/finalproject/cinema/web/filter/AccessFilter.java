@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.epam.finalproject.cinema.domain.entity.User.ROLE.ADMIN;
-import static com.epam.finalproject.cinema.domain.entity.User.ROLE.USER;
+import static com.epam.finalproject.cinema.domain.user.User.ROLE.ADMIN;
+import static com.epam.finalproject.cinema.domain.user.User.ROLE.USER;
 import static com.epam.finalproject.cinema.web.constants.path.FilterPath.USERS_PATH;
 
 

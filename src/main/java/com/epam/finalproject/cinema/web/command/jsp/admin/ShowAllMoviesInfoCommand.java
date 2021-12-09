@@ -1,6 +1,5 @@
 package com.epam.finalproject.cinema.web.command.jsp.admin;
 
-import com.epam.finalproject.cinema.domain.entity.Film;
 import com.epam.finalproject.cinema.exception.BadRequestException;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.service.FilmService;

@@ -1,11 +1,7 @@
 package com.epam.finalproject.cinema.web.filter;
 
-import com.epam.finalproject.cinema.domain.entity.User;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.web.command.jsp.WelcomeCommand;
-import com.epam.finalproject.cinema.web.constants.CommandNames;
-import com.epam.finalproject.cinema.web.constants.path.Path;
-import com.epam.finalproject.cinema.web.model.user.UserProfileInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

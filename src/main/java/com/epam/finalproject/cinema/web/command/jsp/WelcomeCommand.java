@@ -1,12 +1,10 @@
 package com.epam.finalproject.cinema.web.command.jsp;
 
-import com.epam.finalproject.cinema.domain.entity.Film;
-import com.epam.finalproject.cinema.domain.entity.User;
+import com.epam.finalproject.cinema.domain.film.Film;
+import com.epam.finalproject.cinema.domain.user.User;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.service.FilmService;
 import com.epam.finalproject.cinema.util.Pagination;
-import com.epam.finalproject.cinema.web.command.jsp.user.ShowMovieCommand;
-import com.epam.finalproject.cinema.web.constants.CinemaConstants;
 import com.epam.finalproject.cinema.web.constants.Params;
 import com.epam.finalproject.cinema.web.model.film.FilmStatistic;
 import com.epam.finalproject.cinema.web.model.user.UserProfileInfo;
@@ -25,14 +23,14 @@ import static com.epam.finalproject.cinema.web.constants.SessionAttributes.*;
 
 public class WelcomeCommand implements PageCommand {
     private final static FilmService filmService = FilmService.getInstance();
-    private final static Logger log = LogManager.getLogger(ShowMovieCommand.class);
+    private final static Logger log = LogManager.getLogger(WelcomeCommand.class);
 
 
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException {
-
-        if (req.getSession().getAttribute("user") != null) {
-            UserProfileInfo user = (UserProfileInfo) req.getSession().getAttribute("user");
+        log.info("Welcome command started");
+        if (req.getSession().getAttribute(USER) != null) {
+            UserProfileInfo user = (UserProfileInfo) req.getSession().getAttribute(USER);
             if (user.getRole().equals(User.ROLE.USER)) {
                 executeWelcomeToUser(req);
             } else {
@@ -48,12 +46,11 @@ public class WelcomeCommand implements PageCommand {
     private void executeWelcomeToAdmin(HttpServletRequest req) throws DBException {
         int page = Pagination.extractPage(req);
         int pageSize = Pagination.extractSize(req);
-        LocalDateTime now = LocalDateTime.now();
-        int size = filmService.getAllCurrentFilmsCount(Params.DATE_TIME_FIELD, now, null);
+        int countOfFilms = filmService.getAllCurrentFilmsCount(Params.DATE_TIME_FIELD, LocalDateTime.now(), null);
         List<FilmStatistic> films;
-        if (size != 0) {
+        if (countOfFilms != 0) {
             films = filmService.getCurrentFilmsStatistic(pageSize * (page - 1), pageSize);
-            req.getSession().setAttribute("filmsStatistic", films);
+            req.setAttribute("filmsStatistic", films);
         }
     }
 
