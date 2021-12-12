@@ -1,4 +1,4 @@
-package com.epam.finalproject.cinema.web.command.login;
+package com.epam.finalproject.cinema.web.command.jsp.login;
 
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.service.FilmService;

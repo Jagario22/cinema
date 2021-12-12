@@ -2,10 +2,9 @@ package com.epam.finalproject.cinema.web.command.jsp;
 
 import com.epam.finalproject.cinema.web.command.jsp.admin.*;
 import com.epam.finalproject.cinema.web.command.jsp.user.*;
-import com.epam.finalproject.cinema.web.command.login.LoginCommand;
-import com.epam.finalproject.cinema.web.command.login.LogoutCommand;
-import com.epam.finalproject.cinema.web.command.login.RegisterCommand;
-import com.epam.finalproject.cinema.web.constants.CommandNames;
+import com.epam.finalproject.cinema.web.command.jsp.login.LoginCommand;
+import com.epam.finalproject.cinema.web.command.jsp.login.LogoutCommand;
+import com.epam.finalproject.cinema.web.command.jsp.login.RegisterCommand;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -1,4 +1,4 @@
-package com.epam.finalproject.cinema.web.command.login;
+package com.epam.finalproject.cinema.web.command.jsp.login;
 
 import com.epam.finalproject.cinema.domain.user.User;
 import com.epam.finalproject.cinema.exception.DBException;
@@ -20,7 +20,7 @@ import static com.epam.finalproject.cinema.web.constants.SessionAttributes.*;
 public class RegisterCommand implements PageCommand {
     private final static Logger log = LogManager.getLogger(PageCommand.class);
 
-    private final UserProfileService userProfileService;
+    private UserProfileService userProfileService;
 
     public RegisterCommand() {
         this.userProfileService = UserProfileService.getInstance();
@@ -39,11 +39,11 @@ public class RegisterCommand implements PageCommand {
             return Path.REGISTER_USER_PAGE;
         }
 
-        req.getSession().setAttribute(UNIQUE_EMAIL_VALIDATION_CLASS, "");
-        req.getSession().setAttribute(UNIQUE_LOGIN_VALIDATION_CLASS, "");
         if (!validateUniqueData(login, email, req)) {
             return Path.REGISTER_USER_PAGE;
         }
+        req.getSession().setAttribute(UNIQUE_EMAIL_VALIDATION_CLASS, "");
+        req.getSession().setAttribute(UNIQUE_LOGIN_VALIDATION_CLASS, "");
 
         User user = new User(email, password, login, User.ROLE.USER);
         int id;
@@ -87,5 +87,9 @@ public class RegisterCommand implements PageCommand {
         id = userProfileService.creatingUser(user);
         user.setId(id);
         return id;
+    }
+
+    public void setUserProfileService(UserProfileService userProfileService) {
+        this.userProfileService = userProfileService;
     }
 }

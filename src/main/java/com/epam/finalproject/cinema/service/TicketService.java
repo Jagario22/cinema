@@ -9,10 +9,6 @@ import com.epam.finalproject.cinema.domain.session.Session;
 import com.epam.finalproject.cinema.domain.ticket.Ticket;
 import com.epam.finalproject.cinema.domain.ticket.type.TicketType;
 import com.epam.finalproject.cinema.exception.DBException;
-import com.epam.finalproject.cinema.exception.purchase.InactiveFilmSessionException;
-import com.epam.finalproject.cinema.exception.purchase.InsufficientBalanceException;
-import com.epam.finalproject.cinema.exception.purchase.TicketIsNotAvailableException;
-import com.epam.finalproject.cinema.exception.purchase.TicketPurchaseException;
 import com.epam.finalproject.cinema.web.model.film.session.SessionInfo;
 import com.epam.finalproject.cinema.web.model.ticket.TicketInfo;
 import org.apache.logging.log4j.LogManager;
@@ -72,7 +68,7 @@ public class TicketService {
 
 
     public synchronized void processTicketPurchase(int ticketId, int sessionId, int userId) throws DBException, IllegalStateException,
-            InactiveFilmSessionException, InsufficientBalanceException, TicketPurchaseException {
+            IllegalArgumentException {
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
@@ -102,18 +98,18 @@ public class TicketService {
         }
     }
 
-    private void ticketIsNotAvailable(int ticketId, int sessionId, Connection connection) throws SQLException, TicketIsNotAvailableException {
+    private void ticketIsNotAvailable(int ticketId, int sessionId, Connection connection) throws SQLException, IllegalArgumentException {
         String msg = "Ticket purchase failed. Ticket is not available for purchase";
         log.debug(msg + ", ticketId: " + ticketId + " sessionId: " + sessionId);
         connection.rollback();
-        throw new TicketIsNotAvailableException(msg);
+        throw new IllegalArgumentException(msg);
     }
 
-    private void sessionIsInactive(int ticketId, int sessionId, Connection connection) throws DBException, InactiveFilmSessionException {
+    private void sessionIsInactive(int ticketId, int sessionId, Connection connection) throws DBException, IllegalArgumentException {
         String msg = "Ticket purchase failed. The film session is inactive";
         connectionRollback(connection, msg);
         log.debug(msg + ", ticketId: " + ticketId + " sessionId: " + sessionId);
-        throw new InactiveFilmSessionException(msg);
+        throw new IllegalArgumentException(msg);
     }
 
     public List<TicketInfo> getTicketsInfoBySessionIdWhereUserIsNull(int sessionId) throws DBException {
@@ -155,7 +151,7 @@ public class TicketService {
         return ticketInfoList;
     }
 
-    private void updatingTicket(Connection connection, int ticketId, int userId) throws SQLException, TicketPurchaseException {
+    private void updatingTicket(Connection connection, int ticketId, int userId) throws SQLException, IllegalArgumentException {
         ticketDao.updateTicketOnUserIdById(ticketId, userId, connection);
         log.debug("ticket updating was succeed, userId: " + userId + " ticketId" + ticketId);
     }
@@ -165,7 +161,7 @@ public class TicketService {
     }
 
     private void moneyChargeOffByUserId(int userId, BigDecimal price,
-                                        BigDecimal userBalance, int ticketId, Connection connection) throws SQLException, InsufficientBalanceException, DBException {
+                                        BigDecimal userBalance, int ticketId, Connection connection) throws SQLException, IllegalArgumentException, DBException {
         if (price.compareTo(userBalance) <= 0) {
             BigDecimal newBalance = userBalance.subtract(price);
             walletDao.updateOnBalanceByUserId(userId, newBalance, connection);
@@ -173,7 +169,7 @@ public class TicketService {
             String msg = "Ticket purchase failed. There are not enough funds on the balance sheet";
             log.debug(msg + ", ticketId: " + ticketId + " balance: " + userBalance +
                     ", price: " + price);
-            throw new InsufficientBalanceException(msg);
+            throw new IllegalArgumentException(msg);
         }
     }
 

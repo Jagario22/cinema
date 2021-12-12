@@ -14,7 +14,7 @@ import java.io.IOException;
 import static com.epam.finalproject.cinema.web.constants.path.Path.*;
 
 public class ShowMovieCommand implements PageCommand {
-    private final static FilmService filmService = FilmService.getInstance();
+    private FilmService filmService = FilmService.getInstance();
     private final static Logger log = LogManager.getLogger(ShowMovieCommand.class);
 
     @Override
@@ -28,5 +28,9 @@ public class ShowMovieCommand implements PageCommand {
         }
 
         return page;
+    }
+
+    public void setFilmService(FilmService filmService) {
+        this.filmService = filmService;
     }
 }

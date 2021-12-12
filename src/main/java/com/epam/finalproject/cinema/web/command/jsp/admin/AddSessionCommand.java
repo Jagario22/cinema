@@ -1,9 +1,7 @@
 package com.epam.finalproject.cinema.web.command.jsp.admin;
 
 import com.epam.finalproject.cinema.domain.session.Session;
-import com.epam.finalproject.cinema.exception.BadRequestException;
 import com.epam.finalproject.cinema.exception.DBException;
-import com.epam.finalproject.cinema.exception.IncorrectInputDataException;
 import com.epam.finalproject.cinema.service.SessionService;
 import com.epam.finalproject.cinema.web.command.jsp.PageCommand;
 import com.epam.finalproject.cinema.web.constants.SessionAttributes;
@@ -25,12 +23,12 @@ public class AddSessionCommand implements PageCommand {
     private final static Logger log = LogManager.getLogger(AddSessionCommand.class);
 
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException, BadRequestException, ServletException {
+    public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException, ServletException {
         Session session = readSession(req);
         if (sessionService != null) {
             try {
                 sessionService.createSession(session);
-            } catch (IncorrectInputDataException e) {
+            } catch (IllegalArgumentException e) {
                 log.debug(e.getMessage());
                 req.getSession().setAttribute(SessionAttributes.INCORRECT_INPUT_DATA, e.getMessage());
                 return new ShowAllSessionsInfoCommand().execute(req, resp);

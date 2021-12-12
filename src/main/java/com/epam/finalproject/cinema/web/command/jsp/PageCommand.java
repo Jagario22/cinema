@@ -1,6 +1,5 @@
 package com.epam.finalproject.cinema.web.command.jsp;
 
-import com.epam.finalproject.cinema.exception.BadRequestException;
 import com.epam.finalproject.cinema.exception.DBException;
 
 import javax.servlet.ServletException;
@@ -10,5 +9,5 @@ import java.io.IOException;
 
 public interface PageCommand {
     String execute(HttpServletRequest req,
-                   HttpServletResponse resp) throws IOException, DBException, BadRequestException, ServletException;
+                   HttpServletResponse resp) throws IOException, DBException, ServletException;
 }

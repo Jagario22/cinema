@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class ShowUserProfile implements PageCommand {
-    private final static TicketService ticketService =
+    private  TicketService ticketService =
             TicketService.getInstance();
     private final static Logger log = LogManager.getLogger(ShowUserProfile.class);
     @Override
@@ -30,5 +30,9 @@ public class ShowUserProfile implements PageCommand {
         }
 
         return Path.USER_PROFILE_PAGE;
+    }
+
+    public void setTicketService(TicketService ticketService) {
+        this.ticketService = ticketService;
     }
 }

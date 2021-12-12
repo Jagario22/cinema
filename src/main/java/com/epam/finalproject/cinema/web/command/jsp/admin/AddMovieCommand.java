@@ -2,7 +2,6 @@ package com.epam.finalproject.cinema.web.command.jsp.admin;
 
 import com.epam.finalproject.cinema.domain.film.Film;
 import com.epam.finalproject.cinema.domain.Genre.Genre;
-import com.epam.finalproject.cinema.exception.BadRequestException;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.service.FilmService;
 import com.epam.finalproject.cinema.web.command.jsp.PageCommand;
@@ -30,7 +29,7 @@ public class AddMovieCommand implements PageCommand {
 
 
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException, BadRequestException, ServletException {
+    public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException, ServletException {
         FilmInfo filmInfo = readFilmInfo(req);
         if (filmInfo != null) {
             filmService.create(filmInfo);

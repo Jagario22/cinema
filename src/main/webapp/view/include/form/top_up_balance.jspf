@@ -13,9 +13,10 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+                <c:set var="max" value="${5000-user.wallet.balance}"/>
                 <div class="modal-body">
                     <label for="amount">Enter the replenishment amount</label>
-                    <input id="amount" type="number" name="amount" required/>
+                    <input class="w-100" id="amount" type="number" max="${max}" min="1" name="amount" required/>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Save changes</button>

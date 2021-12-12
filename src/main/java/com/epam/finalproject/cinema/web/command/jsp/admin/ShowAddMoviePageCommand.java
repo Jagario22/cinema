@@ -2,7 +2,6 @@ package com.epam.finalproject.cinema.web.command.jsp.admin;
 
 import com.epam.finalproject.cinema.domain.Genre.Genre;
 import com.epam.finalproject.cinema.domain.user.User;
-import com.epam.finalproject.cinema.exception.BadRequestException;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.service.GenreService;
 import com.epam.finalproject.cinema.web.command.jsp.PageCommand;
@@ -23,7 +22,7 @@ public class ShowAddMoviePageCommand implements PageCommand {
     private final static Logger log = LogManager.getLogger(ShowAddMoviePageCommand.class);
 
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException, BadRequestException {
+    public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException {
         if (req.getSession().getAttribute("user") != null) {
             UserProfileInfo user = (UserProfileInfo) req.getSession().getAttribute("user");
             if (user.getRole().equals(User.ROLE.USER))

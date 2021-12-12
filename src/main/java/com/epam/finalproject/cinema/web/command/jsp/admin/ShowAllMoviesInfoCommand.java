@@ -1,6 +1,5 @@
 package com.epam.finalproject.cinema.web.command.jsp.admin;
 
-import com.epam.finalproject.cinema.exception.BadRequestException;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.service.FilmService;
 import com.epam.finalproject.cinema.web.command.jsp.PageCommand;
@@ -20,7 +19,7 @@ public class ShowAllMoviesInfoCommand implements PageCommand {
     private final static Logger log = LogManager.getLogger(ShowAllMoviesInfoCommand.class);
 
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException, BadRequestException, ServletException {
+    public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException, ServletException {
         List<FilmInfo> films = filmService.getAllFilms();
         req.getSession().setAttribute("films", films);
 

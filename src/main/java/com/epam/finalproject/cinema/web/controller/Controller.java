@@ -1,6 +1,5 @@
 package com.epam.finalproject.cinema.web.controller;
 
-import com.epam.finalproject.cinema.exception.BadRequestException;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.web.command.jsp.PageCommand;
 import com.epam.finalproject.cinema.web.command.jsp.PageCommandContainer;
@@ -16,7 +15,6 @@ import java.io.IOException;
 import static com.epam.finalproject.cinema.web.constants.CommandNames.WELCOME_PAGE_COMMAND;
 import static com.epam.finalproject.cinema.web.constants.path.Path.*;
 import static com.epam.finalproject.cinema.web.constants.SessionAttributes.*;
-import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 
 @WebServlet(name = "main-page", value = "")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
@@ -26,20 +24,24 @@ public class Controller extends HttpServlet {
     private final static Logger log = LogManager.getLogger(Controller.class);
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        log.debug("#doGet");
         String address = null;
         try {
             address = getAddress(request, response);
+            request.getRequestDispatcher(address).forward(request, response);
         } catch (DBException e) {
             throw new IOException(e.getMessage());
         } catch (IllegalArgumentException e) {
             processError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage(), request, response);
         }
 
-        request.getRequestDispatcher(address).forward(request, response);
+
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        log.debug("#doPost");
+
         try {
             String address = getAddress(request, response);
             response.sendRedirect(address);
@@ -61,6 +63,7 @@ public class Controller extends HttpServlet {
         PageCommand pageCommand = PageCommandContainer.getCommand(commandName);
         String address = pageCommand.execute(request, response);
         checkSessionAttributes(request.getSession(), address);
+        log.debug("#address: ");
         return address;
     }
 

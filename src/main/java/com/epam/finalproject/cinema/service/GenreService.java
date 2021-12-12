@@ -15,8 +15,8 @@ import java.util.List;
 
 public class GenreService {
     private static GenreService instance = null;
-    private final GenreDao genreDao = GenreDao.getInstance();
-    private final ConnectionPool connectionPool = PostgresConnectionPool.getInstance();
+    private GenreDao genreDao = GenreDao.getInstance();
+    private ConnectionPool connectionPool = PostgresConnectionPool.getInstance();
     private final static Logger log = LogManager.getLogger(GenreService.class);
 
     public static synchronized GenreService getInstance() {
@@ -65,5 +65,13 @@ public class GenreService {
             log.error(e.getMessage());
             throw new DBException(errorMsg, e);
         }
+    }
+
+    public void setGenreDao(GenreDao genreDao) {
+        this.genreDao = genreDao;
+    }
+
+    public void setConnectionPool(ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
     }
 }

@@ -11,7 +11,6 @@ import com.epam.finalproject.cinema.domain.session.Session;
 import com.epam.finalproject.cinema.domain.ticket.Ticket;
 import com.epam.finalproject.cinema.domain.ticket.type.TicketType;
 import com.epam.finalproject.cinema.exception.DBException;
-import com.epam.finalproject.cinema.exception.IncorrectInputDataException;
 import com.epam.finalproject.cinema.web.constants.CinemaConstants;
 import com.epam.finalproject.cinema.web.model.film.session.SessionsInfoGroupByDate;
 import com.epam.finalproject.cinema.web.model.film.session.SessionInfo;
@@ -52,7 +51,7 @@ public class SessionService {
         return instance;
     }
 
-    public void createSession(Session session) throws DBException, IncorrectInputDataException {
+    public void createSession(Session session) throws DBException, IllegalArgumentException {
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
@@ -84,15 +83,15 @@ public class SessionService {
         String msgError = "Creating session is failed";
         if (!isUniqueSession(connection, session)) {
             connectionRollback(connection, msgError);
-            throw new IncorrectInputDataException("Session is not unique");
+            throw new IllegalArgumentException("Session is not unique");
         }
         if (session.getFilmId() < 1) {
             connectionRollback(connection, msgError);
-            throw new IncorrectInputDataException("Film id is less than 1");
+            throw new IllegalArgumentException("Film id is less than 1");
         }
         if (!isFilmExist(connection, session.getFilmId())) {
             connectionRollback(connection, msgError);
-            throw new IncorrectInputDataException("Film with id " + session.getFilmId() + " doesn't exist");
+            throw new IllegalArgumentException("Film with id " + session.getFilmId() + " doesn't exist");
         }
         validateDateTime(session.getLocalDateTime(), connection, msgError);
     }
@@ -110,12 +109,12 @@ public class SessionService {
     public void validateDateTime(LocalDateTime datetime, Connection connection, String msgError) throws SQLException, DBException {
         if (datetime.isBefore(LocalDateTime.now())) {
             connectionRollback(connection, msgError);
-            throw new IncorrectInputDataException("Date time can't be before now");
+            throw new IllegalArgumentException("Date time can't be before now");
         }
         LocalTime time = datetime.toLocalTime();
         if (time.isBefore(CinemaConstants.START_TIME) && time.isAfter(CinemaConstants.END_TIME)) {
             connectionRollback(connection, msgError);
-            throw new IncorrectInputDataException("Date time can't be before now");
+            throw new IllegalArgumentException("Date time can't be before now");
         }
         Session session = sessionDao.findNearestSessionWhereDatetimeBefore(datetime, connection);
         if (session == null)
@@ -125,7 +124,7 @@ public class SessionService {
         LocalDateTime nearestTime = datetime.plusMinutes(film.getLen() + CinemaConstants.BREAK_MINS);
         if (!datetime.isAfter(nearestTime)) {
             connectionRollback(connection, msgError);
-            throw new IncorrectInputDataException("The previous session has not finished showing yet or break isn't" +
+            throw new IllegalArgumentException("The previous session has not finished showing yet or break isn't" +
                     " over yet");
         }
     }

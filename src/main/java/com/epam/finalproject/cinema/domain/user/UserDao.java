@@ -148,7 +148,7 @@ public class UserDao {
         String password = rs.getString(3);
         String login = rs.getString(4);
         User.ROLE role = User.ROLE.valueOf(rs.getString(5).toUpperCase());
-        user = new User(id, email, login, password, role);
+        user = new User(id, email, password, login, role);
 
         return user;
     }

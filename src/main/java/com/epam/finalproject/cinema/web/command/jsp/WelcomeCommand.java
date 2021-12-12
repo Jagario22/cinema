@@ -5,6 +5,7 @@ import com.epam.finalproject.cinema.domain.user.User;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.service.FilmService;
 import com.epam.finalproject.cinema.util.Pagination;
+import com.epam.finalproject.cinema.web.constants.ErrorMessages;
 import com.epam.finalproject.cinema.web.constants.Params;
 import com.epam.finalproject.cinema.web.model.film.FilmStatistic;
 import com.epam.finalproject.cinema.web.model.user.UserProfileInfo;
@@ -22,9 +23,8 @@ import static com.epam.finalproject.cinema.web.constants.path.Path.WELCOME_PAGE;
 import static com.epam.finalproject.cinema.web.constants.SessionAttributes.*;
 
 public class WelcomeCommand implements PageCommand {
-    private final static FilmService filmService = FilmService.getInstance();
+    private FilmService filmService = FilmService.getInstance();
     private final static Logger log = LogManager.getLogger(WelcomeCommand.class);
-
 
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException {
@@ -58,6 +58,8 @@ public class WelcomeCommand implements PageCommand {
         HttpSession session = req.getSession();
         int page = Pagination.extractPage(req);
         int pageSize = Pagination.extractSize(req);
+
+        validatePaginationParams(page, pageSize);
 
         String sortField = Params.DATE_TIME_FIELD;
         if (req.getParameter(Params.SORT_FIELD) != null)
@@ -106,5 +108,16 @@ public class WelcomeCommand implements PageCommand {
         } else {
             return null;
         }
+    }
+
+    private void validatePaginationParams(int page, int pageSize) {
+        if (page < 1 || pageSize < 1) {
+            log.debug("Bad request");
+            throw new IllegalArgumentException(ErrorMessages.BAD_REQUEST);
+        }
+    }
+
+    public void setFilmService(FilmService filmService) {
+        this.filmService = filmService;
     }
 }

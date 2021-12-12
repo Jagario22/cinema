@@ -1,6 +1,5 @@
 package com.epam.finalproject.cinema.web.command.jsp.admin;
 
-import com.epam.finalproject.cinema.exception.BadRequestException;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.service.SessionService;
 import com.epam.finalproject.cinema.web.command.jsp.PageCommand;
@@ -19,7 +18,7 @@ public class CancelSessionCommand implements PageCommand {
     private final static Logger log = LogManager.getLogger(CancelSessionCommand.class);
 
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException, BadRequestException, ServletException {
+    public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException, ServletException {
         String sessionId = req.getParameter(Params.SESSION_ID);
 
         try {

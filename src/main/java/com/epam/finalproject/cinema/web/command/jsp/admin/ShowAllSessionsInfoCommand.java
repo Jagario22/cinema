@@ -1,8 +1,6 @@
 package com.epam.finalproject.cinema.web.command.jsp.admin;
 
-import com.epam.finalproject.cinema.exception.BadRequestException;
 import com.epam.finalproject.cinema.exception.DBException;
-import com.epam.finalproject.cinema.service.FilmService;
 import com.epam.finalproject.cinema.service.SessionService;
 import com.epam.finalproject.cinema.web.command.jsp.PageCommand;
 import com.epam.finalproject.cinema.web.constants.path.Path;
@@ -21,7 +19,7 @@ public class ShowAllSessionsInfoCommand implements PageCommand {
     private final static Logger log = LogManager.getLogger(ShowAllSessionsInfoCommand.class);
 
     @Override
-    public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException, BadRequestException, ServletException {
+    public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException, ServletException {
         List<SessionInfo> sessions = sessionService.getAllCurrentSessionsInfo();
         req.getSession().setAttribute("sessions", sessions);
         return Path.ADMIN_FILM_SESSIONS_INFO_PAGE;

@@ -15,7 +15,7 @@ import static com.epam.finalproject.cinema.web.constants.path.Path.LOGIN_USER_PA
 import static com.epam.finalproject.cinema.web.constants.path.Path.SESSION_INFO_PAGE;
 
 public class ShowSessionInfo implements PageCommand {
-    private final static SessionService sessionService = SessionService.getInstance();
+    private SessionService sessionService = SessionService.getInstance();
     private final static Logger log = LogManager.getLogger(ShowSessionInfo.class);
     @Override
     public String execute(HttpServletRequest req, HttpServletResponse resp) throws IOException, DBException {
@@ -34,5 +34,9 @@ public class ShowSessionInfo implements PageCommand {
 
         }
         return forward;
+    }
+
+    public void setSessionService(SessionService sessionService) {
+        this.sessionService = sessionService;
     }
 }

@@ -1,10 +1,6 @@
 package com.epam.finalproject.cinema.web.command.jsp.user;
 
-import com.epam.finalproject.cinema.exception.BadRequestException;
 import com.epam.finalproject.cinema.exception.DBException;
-import com.epam.finalproject.cinema.exception.purchase.InactiveFilmSessionException;
-import com.epam.finalproject.cinema.exception.purchase.InsufficientBalanceException;
-import com.epam.finalproject.cinema.exception.purchase.TicketPurchaseException;
 import com.epam.finalproject.cinema.service.TicketService;
 import com.epam.finalproject.cinema.service.UserProfileService;
 import com.epam.finalproject.cinema.web.command.jsp.PageCommand;
@@ -31,7 +27,7 @@ public class BuyTicketCommand implements PageCommand {
 
         if (ticketId == null || sessionId == null || userId == null) {
             log.debug("params is null");
-            throw new BadRequestException(ErrorMessages.BAD_REQUEST);
+            throw new IllegalArgumentException(ErrorMessages.BAD_REQUEST);
         }
 
         try {
@@ -42,7 +38,7 @@ public class BuyTicketCommand implements PageCommand {
             UserProfileInfo user = (UserProfileInfo) req.getSession().getAttribute("user");
             user.getWallet().setBalance(userService.getWalletBalanceByUserId(user.getId()));
             req.getSession().setAttribute("user", user);
-        } catch (InactiveFilmSessionException | InsufficientBalanceException | TicketPurchaseException e) {
+        } catch (IllegalArgumentException e) {
             log.debug(e.getMessage());
             req.getSession().setAttribute(SessionAttributes.TICKET_PURCHASE_ERROR, e.getMessage());
         }

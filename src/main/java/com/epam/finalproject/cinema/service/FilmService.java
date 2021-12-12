@@ -29,11 +29,11 @@ import static com.epam.finalproject.cinema.domain.film.FilmQuery.FILM_TITLE_FIEL
 
 public class FilmService {
     private static FilmService instance = null;
-    private final FilmDao filmDao;
-    private final GenreDao genreDao;
-    private final TicketService ticketService;
-    private final SessionDao sessionDao;
-    private final ConnectionPool connectionPool;
+    private FilmDao filmDao;
+    private GenreDao genreDao;
+    private TicketService ticketService;
+    private SessionDao sessionDao;
+    private ConnectionPool connectionPool;
 
     private final static Logger log = LogManager.getLogger(FilmService.class);
 
@@ -235,5 +235,25 @@ public class FilmService {
             log.error(e.getMessage());
             throw new DBException(errorMsg, e);
         }
+    }
+
+    public void setFilmDao(FilmDao filmDao) {
+        this.filmDao = filmDao;
+    }
+
+    public void setGenreDao(GenreDao genreDao) {
+        this.genreDao = genreDao;
+    }
+
+    public void setTicketService(TicketService ticketService) {
+        this.ticketService = ticketService;
+    }
+
+    public void setSessionDao(SessionDao sessionDao) {
+        this.sessionDao = sessionDao;
+    }
+
+    public void setConnectionPool(ConnectionPool connectionPool) {
+        this.connectionPool = connectionPool;
     }
 }

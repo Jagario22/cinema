@@ -122,8 +122,8 @@ public class UserDaoTest {
     private void mockUser(User user) throws SQLException {
         when(rs.getInt(1)).thenReturn(user.getId());
         when(rs.getString(2)).thenReturn(user.getEmail());
-        when(rs.getString(3)).thenReturn(user.getLogin());
-        when(rs.getString(4)).thenReturn(user.getPassword());
+        when(rs.getString(3)).thenReturn(user.getPassword());
+        when(rs.getString(4)).thenReturn(user.getLogin());
         when(rs.getString(5)).thenReturn(user.getRole().name().toLowerCase());
     }
 

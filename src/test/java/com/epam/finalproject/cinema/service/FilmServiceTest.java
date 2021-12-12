@@ -6,6 +6,7 @@ import com.epam.finalproject.cinema.domain.connection.PostgresConnectionPool;
 import com.epam.finalproject.cinema.domain.film.Film;
 import com.epam.finalproject.cinema.domain.film.FilmDao;
 import com.epam.finalproject.cinema.domain.session.SessionDao;
+import com.epam.finalproject.cinema.domain.session.SessionQuery;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.web.model.film.FilmInfo;
 import org.junit.After;
@@ -19,9 +20,14 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.naming.NamingException;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.epam.finalproject.cinema.domain.film.FilmQuery.FILM_TITLE_FIELD;
+import static com.epam.finalproject.cinema.domain.session.SessionQuery.SESSIONS_DATE_TIME_FIELD;
+import static com.epam.finalproject.cinema.web.constants.Params.DATE_TIME_FIELD;
+import static com.epam.finalproject.cinema.web.constants.Params.TITLE_FIELD;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertEquals;
 
@@ -46,23 +52,84 @@ public class FilmServiceTest {
     @Before
     public void setUp() throws SQLException, NamingException {
         System.setProperty("logFile", "src\\test\\test_log.log");
-        when(connectionPool.getConnection()).thenReturn(connection);
 
+        when(connectionPool.getConnection()).thenReturn(connection);
+        try (MockedStatic<PostgresConnectionPool> theMock = Mockito.mockStatic(PostgresConnectionPool.class)) {
+            theMock.when(PostgresConnectionPool::getInstance).thenReturn(connectionPool);
+            filmService = FilmService.getInstance();
+        }
         filmDao = Mockito.mock(FilmDao.class);
         genreDao = Mockito.mock(GenreDao.class);
         ticketService = Mockito.mock(TicketService.class);
         sessionDao = Mockito.mock(SessionDao.class);
-        mockInit();
         connection = connectionPool.getConnection();
+
+        configFilmService();
+    }
+
+    private void configFilmService() {
+        filmService.setFilmDao(filmDao);
+        filmService.setTicketService(ticketService);
+        filmService.setGenreDao(genreDao);
+        filmService.setSessionDao(sessionDao);
+        filmService.setConnectionPool(connectionPool);
     }
 
     @Test
-    public void shouldReturnFilmInfoWhenGettingById() throws SQLException, DBException {
+    public void shouldReturnFilmInfoWhenGettingById() throws SQLException, DBException, NamingException {
         int id = 1;
         FilmInfo filmInfo = new FilmInfo(getFilmList().get(0), getGenreList());
-        when(filmDao.findById(id, connection)).thenReturn(filmInfo.getFilm());
-        when(genreDao.findGenresByFilmId(id, connection)).thenReturn(filmInfo.getGenres());
+        when(filmDao.findById(id, connectionPool.getConnection())).thenReturn(filmInfo.getFilm());
+        when(genreDao.findGenresByFilmId(id, connectionPool.getConnection())).thenReturn(filmInfo.getGenres());
         assertEquals(filmInfo, filmService.getById(id));
+    }
+
+    @Test
+    public void shouldReturnFilmInfoWhenGettingByDateTimeField() throws SQLException, DBException {
+        LocalDateTime start = LocalDateTime.now();
+        int offset = 0;
+        int limit = 3;
+        List<Film> films = getFilmList();
+        when(filmDao.findAllCurrentOrderByField(SESSIONS_DATE_TIME_FIELD, start, null, offset, limit,
+                connection)).thenReturn(films);
+        assertEquals(films, filmService.getAllCurrentFilmsSortedByAndBetween(DATE_TIME_FIELD, start,
+                null, offset, limit));
+    }
+
+    @Test
+    public void shouldReturnFilmInfoWhenGettingByIdTitleField() throws SQLException, DBException {
+        LocalDateTime start = LocalDateTime.now();
+        int offset = 0;
+        int limit = 3;
+        List<Film> films = getFilmList();
+        when(filmDao.findAllCurrentOrderByField(FILM_TITLE_FIELD, start, null, offset, limit,
+                connection)).thenReturn(films);
+        assertEquals(films, filmService.getAllCurrentFilmsSortedByAndBetween(TITLE_FIELD, start,
+                null, offset, limit));
+    }
+
+    @Test
+    public void shouldReturnFilmInfoWhenGettingByIdUnknownField() throws SQLException, DBException {
+        LocalDateTime start = LocalDateTime.now();
+        int offset = 0;
+        int limit = 3;
+        List<Film> films = getFilmList();
+        when(filmDao.findAllCurrentOrderByField(SESSIONS_DATE_TIME_FIELD, start, null, offset, limit,
+                connection)).thenReturn(films);
+        assertEquals(films, filmService.getAllCurrentFilmsSortedByAndBetween("unknownField", start,
+                null, offset, limit));
+    }
+
+    @Test(expected = DBException.class)
+    public void shouldThrowDBExceptionWhenCatchSQLException() throws SQLException, DBException {
+        LocalDateTime start = LocalDateTime.now();
+        int offset = 0;
+        int limit = 3;
+        List<Film> films = getFilmList();
+        when(filmDao.findAllCurrentOrderByField(FILM_TITLE_FIELD, start, null, offset, limit,
+                connection)).thenThrow(new SQLException("Error Massage"));
+        filmService.getAllCurrentFilmsSortedByAndBetween(TITLE_FIELD, start,
+                null, offset, limit);
     }
 
     private List<Film> getFilmList() {
@@ -85,29 +152,8 @@ public class FilmServiceTest {
         return genres;
     }
 
-
-    private void mockInit() {
-        try (MockedStatic<PostgresConnectionPool> theMock = Mockito.mockStatic(PostgresConnectionPool.class)) {
-            theMock.when(PostgresConnectionPool::getInstance).thenReturn(connectionPool);
-            try (MockedStatic<FilmDao> filmDaoMockedStatic = Mockito.mockStatic(FilmDao.class)) {
-                filmDaoMockedStatic.when(FilmDao::getInstance).thenReturn(filmDao);
-                try (MockedStatic<GenreDao> genreDaoMockedStatic = Mockito.mockStatic(GenreDao.class)) {
-                    genreDaoMockedStatic.when(GenreDao::getInstance).thenReturn(genreDao);
-                    try (MockedStatic<TicketService> ticketServiceMockedStatic = Mockito.mockStatic(TicketService.class)) {
-                        ticketServiceMockedStatic.when(TicketService::getInstance).thenReturn(ticketService);
-                        try (MockedStatic<SessionDao> sessionDaoMockedStatic = Mockito.mockStatic(SessionDao.class)) {
-                            sessionDaoMockedStatic.when(SessionDao::getInstance).thenReturn(sessionDao);
-                            filmService = FilmService.getInstance();
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     @After
-    public void afterEach() throws SQLException {
-        connection.close();
+    public void afterEach() {
         Mockito.reset(filmDao, genreDao, sessionDao);
     }
 }
