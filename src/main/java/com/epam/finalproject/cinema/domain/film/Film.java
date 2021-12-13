@@ -4,6 +4,13 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.util.Objects;
 
+/**
+ * Describes film entity
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class Film implements Serializable, Comparable<Film> {
     private static final long serialVersionUID = -5933752047457614880L;
     private int id;

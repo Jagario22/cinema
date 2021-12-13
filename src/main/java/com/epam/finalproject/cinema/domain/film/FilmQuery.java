@@ -1,5 +1,13 @@
 package com.epam.finalproject.cinema.domain.film;
 
+/**
+ * Constants with PostgresSQL queries of film entity.
+ * Works with PostgresSQL dialect
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class FilmQuery {
     public final static String SELECT_CURRENT_FILM_COUNT_ORDER_BY_PLACES_WHERE_DATETIME_AFTER =
             "select count (*) from (select f.* as places_count from films as f inner join sessions s on f.id = s.film_id " +

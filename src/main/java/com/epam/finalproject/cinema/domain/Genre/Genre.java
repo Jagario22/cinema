@@ -2,7 +2,13 @@ package com.epam.finalproject.cinema.domain.Genre;
 
 import java.io.Serializable;
 import java.util.Objects;
-
+/**
+ * Describes genre entity
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class Genre implements Serializable {
     private static final long serialVersionUID = -8546046102831652738L;
     private int id;

@@ -1,7 +1,13 @@
 package com.epam.finalproject.cinema.util;
 
 import java.time.LocalDate;
-
+/**
+ * Provides methods for validation fields of Film object
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class FilmInfoValidationUtil {
 
     public boolean isValidTitle(String title) {

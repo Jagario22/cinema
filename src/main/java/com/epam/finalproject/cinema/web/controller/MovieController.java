@@ -16,7 +16,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.epam.finalproject.cinema.web.constants.CommandNames.WELCOME_PAGE_COMMAND;
-
+/**
+ * Controller for app which is used for writing json as response
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 @WebServlet(name = "movie-page", value = "/movie")
 public class MovieController extends HttpServlet {
     private final static Logger log = LogManager.getLogger(MovieController.class);

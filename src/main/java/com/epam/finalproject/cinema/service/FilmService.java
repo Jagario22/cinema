@@ -17,6 +17,7 @@ import com.epam.finalproject.cinema.web.model.film.session.SessionInfo;
 import com.epam.finalproject.cinema.web.model.ticket.TicketInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import sun.print.ServiceDialog;
 
 import javax.naming.NamingException;
 import java.sql.Connection;
@@ -26,7 +27,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.epam.finalproject.cinema.domain.film.FilmQuery.FILM_TITLE_FIELD;
+/**
+ * Provides interactions between a client App and film database entity, that allows interaction between film,
+ * genre and ticket and session entities.
+ * Provides operations with Film DTO object.
 
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class FilmService {
     private static FilmService instance = null;
     private FilmDao filmDao;
@@ -44,6 +54,7 @@ public class FilmService {
         sessionDao = SessionDao.getInstance();
         connectionPool = PostgresConnectionPool.getInstance();
     }
+
 
     public static synchronized FilmService getInstance() {
         if (instance == null) {

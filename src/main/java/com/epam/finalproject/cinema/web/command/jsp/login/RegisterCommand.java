@@ -16,7 +16,14 @@ import java.io.IOException;
 import java.util.List;
 
 import static com.epam.finalproject.cinema.web.constants.SessionAttributes.*;
-
+/**
+ * Command for users when they want to register
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class RegisterCommand implements PageCommand {
     private final static Logger log = LogManager.getLogger(PageCommand.class);
 

@@ -15,7 +15,14 @@ import java.util.Map;
 
 import static com.epam.finalproject.cinema.domain.session.SessionQuery.*;
 import static com.epam.finalproject.cinema.domain.wallet.WalletQuery.SELECT_TICKET_COUNT_OF_FILM_WHERE_USER_IS_NULL_GROUP_BY_SESSION_ID;
-
+/**
+ * Manager which provides methods for operation with session entity in DB.
+ * Works with PostgresSQL dialect
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class SessionDao {
     private final static Logger log = LogManager.getLogger(SessionDao.class);
 

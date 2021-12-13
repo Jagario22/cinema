@@ -11,7 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
-
+/**
+ * Command for users when they want to top up their wallet balance
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class TopUpBalanceCommand implements PageCommand {
     private final static Logger log = LogManager.getLogger(TopUpBalanceCommand.class);
     private UserProfileService userProfileService = UserProfileService.getInstance();

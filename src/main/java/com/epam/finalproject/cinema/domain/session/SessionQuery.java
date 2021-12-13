@@ -1,5 +1,12 @@
 package com.epam.finalproject.cinema.domain.session;
-
+/**
+ * Constants with PostgresSQL queries of session entity.
+ * Works with PostgresSQL dialect
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class SessionQuery {
     public final static String SELECT_FROM_SESSIONS_WHERE_DATETIME = "select * from sessions where date_time = ?";
     public final static String SELECT_SESSION_WITH_MAX_DATETIME_BEFORE = "select * " +

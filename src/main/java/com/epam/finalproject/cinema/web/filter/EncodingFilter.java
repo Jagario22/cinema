@@ -8,7 +8,14 @@ import javax.servlet.annotation.WebFilter;
 import java.io.IOException;
 
 import static com.epam.finalproject.cinema.web.constants.path.FilterPath.ALL_PAGES;
-
+/**
+ * Filter for encoding pages
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 @WebFilter(filterName = "EncodingFilter", urlPatterns = {ALL_PAGES})
 public class EncodingFilter implements Filter {
     private final static Logger log = LogManager.getLogger(EncodingFilter.class);
@@ -25,7 +32,7 @@ public class EncodingFilter implements Filter {
      */
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain next)
             throws IOException, ServletException {
-
+        log.debug("encoding filter");
         if (null == request.getCharacterEncoding()) {
             request.setCharacterEncoding(encoding);
         }

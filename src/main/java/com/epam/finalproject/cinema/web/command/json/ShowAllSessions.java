@@ -12,7 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-
+/**
+ * This command is used for writing all sessions in response as a json
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class ShowAllSessions implements Command {
     private final static SessionService sessionService = SessionService.getInstance();
     private final static Logger log = LogManager.getLogger(ShowAllSessions.class);

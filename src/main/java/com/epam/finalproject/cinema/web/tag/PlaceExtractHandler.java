@@ -11,6 +11,15 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.SkipPageException;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
+import static com.epam.finalproject.cinema.web.constants.CinemaConstants.COUNT_OF_ROW_SEAT;
+
+/**
+ * TagSupport class for extracting place from number
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ */
 public class PlaceExtractHandler extends SimpleTagSupport {
     private final static Logger log = LogManager.getLogger(PlaceExtractHandler.class);
     private int number;
@@ -24,8 +33,9 @@ public class PlaceExtractHandler extends SimpleTagSupport {
         this.number = number;
     }
 
-    public void setRow(boolean row) {
-        this.isRowExtract = row;
+
+    public void setIsRowExtract(boolean rowExtract) {
+        isRowExtract = rowExtract;
     }
 
     @Override
@@ -33,15 +43,19 @@ public class PlaceExtractHandler extends SimpleTagSupport {
         try {
             int row = 1;
             if (number > 15) {
-                if (isRowExtract)
-                    getJspContext().getOut().write(extractRow());
-                else
-                    getJspContext().getOut().write(extractPlace());
+                if (isRowExtract) {
+                    int rowNum = extractRow();
+                    getJspContext().getOut().write(String.valueOf(rowNum));
+                } else {
+                    int place = extractPlace();
+                    getJspContext().getOut().write(String.valueOf(place));
+                }
             } else {
-                if (isRowExtract)
-                    getJspContext().getOut().write(row);
-                else
-                    getJspContext().getOut().write(number);
+                if (isRowExtract) {
+                    getJspContext().getOut().write(String.valueOf(row));
+                } else {
+                    getJspContext().getOut().write(String.valueOf(number));
+                }
             }
         } catch (Exception e) {
             log.debug(e.getMessage());
@@ -52,12 +66,23 @@ public class PlaceExtractHandler extends SimpleTagSupport {
     }
 
     private int extractRow() {
-        return number / CinemaConstants.COUNT_OF_ROW_SEAT;
+       int row = 1;
+       for (int i = 1; i <= CinemaConstants.COUNT_OF_ROWS; i++) {
+            if (i * COUNT_OF_ROW_SEAT > number) {
+                row = i;
+                break;
+            }
+       }
+       return row;
     }
 
     private int extractPlace() {
-        int row = extractRow();
-        return number / row;
+        int place = number;
+        while (place > COUNT_OF_ROW_SEAT) {
+            place -= COUNT_OF_ROW_SEAT;
+        }
+
+        return place;
     }
 
 }

@@ -13,7 +13,14 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
+/**
+ * Command for users when they want to buy ticket
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class BuyTicketCommand implements PageCommand {
     private final static TicketService ticketService = TicketService.getInstance();
     private final static Logger log = LogManager.getLogger(BuyTicketCommand.class);

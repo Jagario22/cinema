@@ -22,7 +22,14 @@ import static com.epam.finalproject.cinema.web.constants.SessionAttributes.ADD_M
 import static com.epam.finalproject.cinema.web.constants.SessionAttributes.SUCCESS_MSG;
 import static com.epam.finalproject.cinema.web.constants.path.Path.IMAGE_PACKAGE_PATH;
 import static com.epam.finalproject.cinema.web.constants.path.Path.IMG_UPLOAD_DIRECTORY;
-
+/**
+ * Command for admins when they want to add movie
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class AddMovieCommand implements PageCommand {
     private final static FilmService filmService = FilmService.getInstance();
     private final static Logger log = LogManager.getLogger(AddMovieCommand.class);

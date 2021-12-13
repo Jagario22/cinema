@@ -12,7 +12,14 @@ import javax.naming.NamingException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-
+/**
+ * Provides interactions between a client App and genre database entity.
+ * Provides operations with Genre DTO object.
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class GenreService {
     private static GenreService instance = null;
     private GenreDao genreDao = GenreDao.getInstance();

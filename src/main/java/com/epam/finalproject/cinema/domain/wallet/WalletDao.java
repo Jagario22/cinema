@@ -8,7 +8,14 @@ import java.math.BigDecimal;
 import java.sql.*;
 
 import static com.epam.finalproject.cinema.domain.wallet.WalletQuery.*;
-
+/**
+ * Manager which provides methods for operation with wallet entity in DB.
+ * Works with PostgresSQL dialect
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class WalletDao {
     private final static Logger log = LogManager.getLogger(WalletDao.class);
 

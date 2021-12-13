@@ -3,7 +3,13 @@ package com.epam.finalproject.cinema.domain.user;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
-
+/**
+ * Describes user entity
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class User implements Serializable {
     private static final long serialVersionUID = 3484788342620963892L;
     private Integer id;

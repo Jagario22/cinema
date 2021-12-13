@@ -21,7 +21,14 @@ import java.util.List;
 
 import static com.epam.finalproject.cinema.web.constants.path.Path.WELCOME_PAGE;
 import static com.epam.finalproject.cinema.web.constants.SessionAttributes.*;
-
+/**
+ * Command for users and admins when they want to get welcome page
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class WelcomeCommand implements PageCommand {
     private FilmService filmService = FilmService.getInstance();
     private final static Logger log = LogManager.getLogger(WelcomeCommand.class);
@@ -39,6 +46,7 @@ public class WelcomeCommand implements PageCommand {
         } else {
             executeWelcomeToUser(req);
         }
+
 
         return WELCOME_PAGE;
     }

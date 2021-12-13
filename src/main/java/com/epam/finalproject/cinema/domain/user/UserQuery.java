@@ -1,5 +1,12 @@
 package com.epam.finalproject.cinema.domain.user;
-
+/**
+ * Constants with PostgresSQL queries of user entity.
+ * Works with PostgresSQL dialect
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class UserQuery {
     public final static String INSERT_USER = "insert into users(email, password, login, role) values (?, ?, ?, ?::\"role_type\")";
     public static final String SELECT_CASE_EQUAL_LOGIN_OR_EMAIL = "SELECT  COUNT(CASE WHEN login = ?  and role='user' THEN 1 END)  login_count," +

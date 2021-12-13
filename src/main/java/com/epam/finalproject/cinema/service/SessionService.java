@@ -30,7 +30,15 @@ import java.util.stream.Collectors;
 
 import static com.epam.finalproject.cinema.web.constants.CinemaConstants.COUNT_OF_ROWS;
 import static com.epam.finalproject.cinema.web.constants.CinemaConstants.COUNT_OF_ROW_SEAT;
-
+/**
+ * Provides interactions between a client App and session database entity, that allows interaction between film,
+ * session, genre and ticket type entities.
+ * Provides operations with Session DTO object.
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class SessionService {
     private static SessionService instance = null;
     private final SessionDao sessionDao = SessionDao.getInstance();

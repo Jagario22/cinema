@@ -2,12 +2,8 @@ package com.epam.finalproject.cinema.command.jsp.login;
 
 import com.epam.finalproject.cinema.domain.user.User;
 import com.epam.finalproject.cinema.exception.DBException;
-import com.epam.finalproject.cinema.service.FilmService;
-import com.epam.finalproject.cinema.service.SessionService;
 import com.epam.finalproject.cinema.service.UserProfileService;
 import com.epam.finalproject.cinema.web.command.jsp.login.RegisterCommand;
-import com.epam.finalproject.cinema.web.command.jsp.user.ShowMovieCommand;
-import com.epam.finalproject.cinema.web.command.jsp.user.ShowSessionInfo;
 import com.epam.finalproject.cinema.web.constants.path.Path;
 import org.junit.After;
 import org.junit.Before;
@@ -27,9 +23,6 @@ import static com.epam.finalproject.cinema.web.constants.SessionAttributes.*;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.assertEquals;
 
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
-
 @RunWith(MockitoJUnitRunner.class)
 public class RegisterCommandTest {
     private RegisterCommand registerCommand;
@@ -45,7 +38,7 @@ public class RegisterCommandTest {
     @Mock
     private HttpSession session;
 
-    private Map<String, String> params;
+    private Map<String, String> sessionAttributes;
 
     @Before
     public void setUp() {
@@ -54,9 +47,9 @@ public class RegisterCommandTest {
         userProfileService = Mockito.mock(UserProfileService.class);
         registerCommand.setUserProfileService(userProfileService);
         when(request.getSession()).thenReturn(session);
-        params = new HashMap<>();
+        sessionAttributes = new HashMap<>();
         doAnswer(invocationOnMock -> {
-            params.put(invocationOnMock.getArgument(0), invocationOnMock.getArgument(1));
+            sessionAttributes.put(invocationOnMock.getArgument(0), invocationOnMock.getArgument(1));
             return null;
         }).when(session).setAttribute(anyString(), any(Object.class));
     }
@@ -69,9 +62,9 @@ public class RegisterCommandTest {
                 .thenReturn(new ArrayList<>());
 
         String page = registerCommand.execute(request, response);
-        assertEquals("", params.get(UNIQUE_EMAIL_VALIDATION_CLASS));
-        assertEquals("", params.get(UNIQUE_LOGIN_VALIDATION_CLASS));
-        assertEquals(true, params.get(SUCCESS_REGISTRATION));
+        assertEquals("", sessionAttributes.get(UNIQUE_EMAIL_VALIDATION_CLASS));
+        assertEquals("", sessionAttributes.get(UNIQUE_LOGIN_VALIDATION_CLASS));
+        assertEquals(true, sessionAttributes.get(SUCCESS_REGISTRATION));
         assertEquals(Path.LOGIN_USER_PAGE, page);
     }
 
@@ -81,9 +74,9 @@ public class RegisterCommandTest {
         mockUserParams(user.getLogin(), user.getEmail(), user.getPassword());
 
         String page = registerCommand.execute(request, response);
-        assertEquals(null, params.get(UNIQUE_EMAIL_VALIDATION_CLASS));
-        assertEquals(null, params.get(UNIQUE_LOGIN_VALIDATION_CLASS));
-        assertEquals(null, params.get(SUCCESS_REGISTRATION));
+        assertEquals(null, sessionAttributes.get(UNIQUE_EMAIL_VALIDATION_CLASS));
+        assertEquals(null, sessionAttributes.get(UNIQUE_LOGIN_VALIDATION_CLASS));
+        assertEquals(null, sessionAttributes.get(SUCCESS_REGISTRATION));
         assertEquals(Path.REGISTER_USER_PAGE, page);
     }
 
@@ -95,9 +88,9 @@ public class RegisterCommandTest {
                 .thenReturn(getUsersWithEqualLoginAndEmail(user.getLogin(), user.getEmail()));
 
         String page = registerCommand.execute(request, response);
-        assertEquals("is-invalid", params.get(UNIQUE_EMAIL_VALIDATION_CLASS));
-        assertEquals("is-invalid", params.get(UNIQUE_LOGIN_VALIDATION_CLASS));
-        assertEquals(null, params.get(SUCCESS_REGISTRATION));
+        assertEquals("is-invalid", sessionAttributes.get(UNIQUE_EMAIL_VALIDATION_CLASS));
+        assertEquals("is-invalid", sessionAttributes.get(UNIQUE_LOGIN_VALIDATION_CLASS));
+        assertEquals(null, sessionAttributes.get(SUCCESS_REGISTRATION));
         assertEquals(Path.REGISTER_USER_PAGE, page);
     }
 

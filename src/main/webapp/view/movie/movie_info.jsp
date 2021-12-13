@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="utf-8" %>
 <%@ include file="/view/include/head/libs.jspf" %>
-<%@ taglib prefix="localeDate" tagdir="/WEB-INF/tags" %>
 <%@ include file="/view/include/head/session_locale.jspf" %>
 <c:set var="filmInfo" value="${requestScope.filmInfo}"/>
 

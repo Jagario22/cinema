@@ -13,7 +13,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-
+/**
+ * Command for admins when they want to get movie info page
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class ShowAllMoviesInfoCommand implements PageCommand {
     private final static FilmService filmService = FilmService.getInstance();
     private final static Logger log = LogManager.getLogger(ShowAllMoviesInfoCommand.class);

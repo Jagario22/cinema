@@ -12,7 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.epam.finalproject.cinema.web.constants.path.FilterPath.WELCOME_PAGE_PATH;
-
+/**
+ * Filter for welcome page
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 @WebFilter(filterName = "WelcomeFilter", urlPatterns = {WELCOME_PAGE_PATH})
 public class WelcomeFilter implements Filter {
     private final static Logger log = LogManager.getLogger(WelcomeFilter.class);

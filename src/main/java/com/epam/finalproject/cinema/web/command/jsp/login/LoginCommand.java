@@ -16,7 +16,14 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 import static com.epam.finalproject.cinema.web.constants.path.Path.WELCOME_PAGE;
-
+/**
+ * Command for users when they want to log in
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class LoginCommand implements PageCommand {
     private final static Logger log = LogManager.getLogger(LoginCommand.class);
     private final UserProfileService userProfileService;

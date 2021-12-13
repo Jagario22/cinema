@@ -7,7 +7,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.epam.finalproject.cinema.web.constants.CommandNames.*;
-
+/**
+ * Class stores all commands that is used for writing json as response.
+ * Provides method for getting command from container
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class CommandContainer {
     private static final Map<String, Command> commands;
     private final static Logger log = LogManager.getLogger(CommandContainer.class);

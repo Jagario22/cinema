@@ -13,7 +13,14 @@ import java.io.IOException;
 
 import static com.epam.finalproject.cinema.web.constants.path.Path.LOGIN_USER_PAGE;
 import static com.epam.finalproject.cinema.web.constants.path.Path.SESSION_INFO_PAGE;
-
+/**
+ * Command for users when they want to get session info page
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class ShowSessionInfo implements PageCommand {
     private SessionService sessionService = SessionService.getInstance();
     private final static Logger log = LogManager.getLogger(ShowSessionInfo.class);

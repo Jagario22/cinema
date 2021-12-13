@@ -43,7 +43,7 @@
     <orderEntry type="library" name="Maven: jstl:jstl:1.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tomcat:catalina:6.0.53" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tomcat:coyote:6.0.53" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.tomcat:servlet-api:6.0.53" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.tomcat:servlet-api:6.0.53" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tomcat:juli:6.0.53" level="project" />
     <orderEntry type="library" name="Maven: org.apache.tomcat:annotations-api:6.0.53" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-api:5.8.1" level="project" />

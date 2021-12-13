@@ -11,7 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.epam.finalproject.cinema.domain.Genre.GenreQuery.*;
-
+/**
+ * Manager which provides methods for operation with genre entity in DB.
+ * Works with PostgresSQL dialect
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class GenreDao {
     private final static Logger log = LogManager.getLogger(FilmDao.class);
 

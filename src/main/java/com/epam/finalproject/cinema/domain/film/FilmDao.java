@@ -11,6 +11,14 @@ import java.util.List;
 
 import static com.epam.finalproject.cinema.domain.film.FilmQuery.*;
 
+/**
+ * Manager which provides methods for operation with film entity in DB.
+ * Works with PostgresSQL dialect
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class FilmDao {
     private final static Logger log = LogManager.getLogger(FilmDao.class);
 

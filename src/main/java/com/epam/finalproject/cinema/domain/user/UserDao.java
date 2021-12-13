@@ -4,13 +4,19 @@ import com.epam.finalproject.cinema.util.CloseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.naming.NamingException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.epam.finalproject.cinema.domain.user.UserQuery.*;
-
+/**
+ * Manager which provides methods for operation with user entity in DB.
+ * Works with PostgresSQL dialect
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class UserDao {
     private final static Logger log = LogManager.getLogger(UserDao.class);
 

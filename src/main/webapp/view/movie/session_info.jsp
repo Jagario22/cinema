@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="utf-8" %>
 <%@ include file="/view/include/head/libs.jspf" %>
 <%@ include file="/view/include/head/cinema_constants.jspf" %>
-<%@ taglib prefix="localeDate" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="localeDate" tagdir="/WEB-INF/tags/format" %>
 <%@ include file="/view/include/head/session_locale.jspf" %>
 <c:set var="sessionInfo" value="${sessionScope.sessionInfo}"/>
 

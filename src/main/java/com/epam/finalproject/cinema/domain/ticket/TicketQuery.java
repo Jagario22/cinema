@@ -1,5 +1,12 @@
 package com.epam.finalproject.cinema.domain.ticket;
-
+/**
+ * Constants with PostgresSQL queries of ticket entity.
+ * Works with PostgresSQL dialect
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class TicketQuery {
     public static final String SELECT_TICKETS_BY_SESSION_ID_WHERE_USER_IS_NOT_NULL = "select count(*) from " +
             " (select * from tickets where user_id is not null and session_id=?)";

@@ -15,7 +15,14 @@ import static com.epam.finalproject.cinema.domain.user.User.ROLE.ADMIN;
 import static com.epam.finalproject.cinema.domain.user.User.ROLE.USER;
 import static com.epam.finalproject.cinema.web.constants.path.FilterPath.USERS_PATH;
 
-
+/**
+ * Filtering access request for guests, users and admins
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 @WebFilter(filterName = "AccessFilter", urlPatterns = {USERS_PATH})
 public class AccessFilter implements Filter {
     private final static Logger log = LogManager.getLogger(AccessFilter.class);

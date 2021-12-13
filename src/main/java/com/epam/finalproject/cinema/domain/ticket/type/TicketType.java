@@ -3,7 +3,13 @@ package com.epam.finalproject.cinema.domain.ticket.type;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
-
+/**
+ * Describes ticket type entity
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class TicketType implements Serializable {
     private static final long serialVersionUID = 5608844385983949575L;
     private Integer id;

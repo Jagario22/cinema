@@ -20,7 +20,15 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Provides interactions between a client App and ticket database entity, that allows interaction between session,
+ * wallet and ticket type entities.
+ * Provides operations with Ticket DTO object.
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class TicketService {
     private static TicketService instance = null;
     private final TicketDao ticketDao = TicketDao.getInstance();

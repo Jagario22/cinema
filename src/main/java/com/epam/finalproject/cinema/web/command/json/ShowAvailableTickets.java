@@ -11,7 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-
+/**
+ * This command is used for writing all available tickets in response as a json
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class ShowAvailableTickets implements Command {
     private final static TicketService ticketService = TicketService.getInstance();
     private final static Logger log = LogManager.getLogger(ShowAllSessions.class);

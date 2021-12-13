@@ -3,7 +3,13 @@ package com.epam.finalproject.cinema.domain.wallet;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
-
+/**
+ * Describes wallet entity
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class Wallet implements Serializable {
     private static final long serialVersionUID = 7858222769964022177L;
     private Integer id;

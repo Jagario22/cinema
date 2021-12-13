@@ -16,7 +16,14 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-
+/**
+ * Provides interactions between a client App and user database entity, that allows interaction with wallet entity
+ * Provides operations with User DTO object.
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class UserProfileService {
     private static UserProfileService instance = null;
     private final UserDao userDao = UserDao.getInstance();

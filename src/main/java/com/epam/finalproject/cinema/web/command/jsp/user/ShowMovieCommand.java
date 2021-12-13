@@ -12,7 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.epam.finalproject.cinema.web.constants.path.Path.*;
-
+/**
+ * Command for users when they want to get movie info page
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class ShowMovieCommand implements PageCommand {
     private FilmService filmService = FilmService.getInstance();
     private final static Logger log = LogManager.getLogger(ShowMovieCommand.class);

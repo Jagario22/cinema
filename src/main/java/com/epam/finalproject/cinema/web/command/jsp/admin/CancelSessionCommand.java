@@ -12,7 +12,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
+/**
+ * Command for admins when they want to cancel session
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class CancelSessionCommand implements PageCommand {
     private final static SessionService sessionService = SessionService.getInstance();
     private final static Logger log = LogManager.getLogger(CancelSessionCommand.class);

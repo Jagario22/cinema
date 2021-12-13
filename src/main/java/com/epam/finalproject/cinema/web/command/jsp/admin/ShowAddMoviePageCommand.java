@@ -16,7 +16,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-
+/**
+ * Command for admins when they want to get add movie page
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class ShowAddMoviePageCommand implements PageCommand {
     private final static GenreService genreService = GenreService.getInstance();
     private final static Logger log = LogManager.getLogger(ShowAddMoviePageCommand.class);

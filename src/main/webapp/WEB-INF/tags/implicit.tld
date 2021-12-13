@@ -1,0 +1,25 @@
+<taglib xmlns="http://java.sun.com/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd"
+        version="2.1">
+
+    <tlib-version>2.1</tlib-version>
+    <short-name>lib</short-name>
+    <uri>http://com.epam.finalproject.cinema/tlds/tags</uri>
+    <tag>
+        <name>extractPlace</name>
+        <tag-class>com.epam.finalproject.cinema.web.tag.PlaceExtractHandler</tag-class>
+        <body-content>scriptless</body-content>
+        <attribute>
+            <name>number</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>isRowExtract</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+</taglib>

@@ -1,5 +1,12 @@
 package com.epam.finalproject.cinema.domain.wallet;
-
+/**
+ * Constants with PostgresSQL queries of wallet entity.
+ * Works with PostgresSQL dialect
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class WalletQuery {
 
     public final static String SELECT_WALLET_BALANCE_BY_USER_ID = "select balance from wallets where user_id=?";

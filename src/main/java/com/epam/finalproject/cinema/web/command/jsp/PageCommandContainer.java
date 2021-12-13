@@ -12,7 +12,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.epam.finalproject.cinema.web.constants.CommandNames.*;
-
+/**
+ * Class stores all commands that is used for getting page address to forward or redirect
+ * Provides method for getting command from container
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class PageCommandContainer {
     private static final Map<String, PageCommand> commands;
     private final static Logger log = LogManager.getLogger(PageCommandContainer.class);

@@ -2,7 +2,13 @@ package com.epam.finalproject.cinema.domain.ticket;
 
 import java.io.Serializable;
 import java.util.Objects;
-
+/**
+ * Describes ticket entity
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class Ticket implements Serializable {
     private static final long serialVersionUID = 5492383796645561523L;
     private Integer id;

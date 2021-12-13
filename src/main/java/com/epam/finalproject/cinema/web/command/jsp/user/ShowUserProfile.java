@@ -14,7 +14,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
-
+/**
+ * Command for users when they want to get user profile page
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class ShowUserProfile implements PageCommand {
     private  TicketService ticketService =
             TicketService.getInstance();

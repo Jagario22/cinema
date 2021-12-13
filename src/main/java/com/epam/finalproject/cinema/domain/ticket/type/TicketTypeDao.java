@@ -9,7 +9,14 @@ import java.sql.*;
 
 import static com.epam.finalproject.cinema.domain.ticket.type.TicketTypeQuery.*;
 
-
+/**
+ * Manager which provides methods for operation with ticket type entity in DB.
+ * Works with PostgresSQL dialect
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class TicketTypeDao {
     private final static Logger log = LogManager.getLogger(TicketTypeDao.class);
 

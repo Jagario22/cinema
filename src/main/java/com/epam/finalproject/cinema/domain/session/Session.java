@@ -6,6 +6,13 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
 
+/**
+ * Describes session entity
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class Session implements Serializable {
     private static final long serialVersionUID = -9122858044519977795L;
     private int id;

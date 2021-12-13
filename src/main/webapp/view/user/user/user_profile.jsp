@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="utf-8" %>
 <%@ include file="/view/include/head/libs.jspf" %>
-<%@ taglib prefix="localeDate" tagdir="/WEB-INF/tags" %>
+<%@ taglib prefix="tag" uri="/WEB-INF/tags/implicit.tld" %>
 <%@ include file="/view/include/head/session_locale.jspf" %>
 <c:set var="user" value="${sessionScope.user}"/>
 
@@ -72,10 +72,13 @@
                                                 </span>
                                             </p>
                                             <p>
-                                                Row: ${ticket.row}
+                                                Row: <tag:extractPlace
+                                                    number="${ticket.placeNumber}" isRowExtract="${true}"/>
                                             </p>
                                             <p>
-                                                Place: ${ticket.placeNumber}
+                                                <c:set var="number" value="${ticket.placeNumber}"/>
+                                                Place: <tag:extractPlace
+                                                    number="${number}"/>
                                             </p>
                                         </div>
                                     </div>

@@ -15,7 +15,15 @@ import java.io.IOException;
 import static com.epam.finalproject.cinema.web.constants.CommandNames.WELCOME_PAGE_COMMAND;
 import static com.epam.finalproject.cinema.web.constants.path.Path.*;
 import static com.epam.finalproject.cinema.web.constants.SessionAttributes.*;
-
+import static com.epam.finalproject.cinema.web.constants.SessionAttributes.*;
+/**
+ * The main controller for app
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 @WebServlet(name = "main-page", value = "")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
         maxFileSize = 1024 * 1024 * 10,      // 10MB

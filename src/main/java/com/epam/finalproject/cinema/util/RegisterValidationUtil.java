@@ -1,5 +1,11 @@
 package com.epam.finalproject.cinema.util;
-
+/**
+ * Provides methods for validation fields of User object
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class RegisterValidationUtil {
 
     public static boolean isValidLogin(String login) {

@@ -1,7 +1,13 @@
 package com.epam.finalproject.cinema.util;
 
 import javax.servlet.http.HttpServletRequest;
-
+/**
+ * Class that implements pagination functionality
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class Pagination {
     private Pagination() {
     }

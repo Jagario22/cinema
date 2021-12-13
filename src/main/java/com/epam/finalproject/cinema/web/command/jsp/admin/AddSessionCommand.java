@@ -17,7 +17,14 @@ import java.time.LocalTime;
 
 import static com.epam.finalproject.cinema.web.constants.Params.*;
 import static com.epam.finalproject.cinema.web.constants.SessionAttributes.SUCCESS_MSG;
-
+/**
+ * Command for admins when they want to add session
+ *
+ * @author Vlada Volska
+ * @version 1.0
+ * @since 2021.12.05
+ *
+ */
 public class AddSessionCommand implements PageCommand {
     private final static SessionService sessionService = SessionService.getInstance();
     private final static Logger log = LogManager.getLogger(AddSessionCommand.class);
