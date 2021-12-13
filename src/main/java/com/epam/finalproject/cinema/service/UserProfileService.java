@@ -15,6 +15,7 @@ import javax.naming.NamingException;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 /**
  * Provides interactions between a client App and user database entity, that allows interaction with wallet entity
@@ -160,6 +161,39 @@ public class UserProfileService {
         return new UserProfileInfo(user.getId(), user.getLogin(), user.getEmail(), wallet, user.getRole());
     }
 
+    public List<User> getAllUsers() throws DBException {
+        Connection connection = null;
+        List<User> users = new ArrayList<>();
+        try {
+            connection = connectionPool.getConnection();
+            users = userDao.findAll(connection);
+            connection.commit();
+        } catch (SQLException | NamingException e) {
+            String errorMsg = "Getting all users failed";
+            connectionRollback(connection, errorMsg);
+            throw new DBException("Getting all users failed", e);
+        } finally {
+            closeConnection(connection, "Getting all users failed");
+        }
+        return users;
+    }
+    public void updateUserRole(int id, String role) throws DBException {
+        Connection connection = null;
+        try {
+            connection = connectionPool.getConnection();
+            userDao.updateUserRole(id, role, connection);
+            connection.commit();
+        } catch (SQLException | NamingException e) {
+            String errorMsg = "Updating user role failed";
+            connectionRollback(connection, errorMsg);
+            throw new DBException("Updating user role failed", e);
+        } finally {
+            closeConnection(connection, "Updating user role failed");
+        }
+    }
+
+
+
     private void connectionRollback(Connection connection, String errorMsg) throws DBException {
         try {
             if (connection != null) {
@@ -180,4 +214,7 @@ public class UserProfileService {
             log.error(errorMsg + "\n" + e.getMessage());
         }
     }
+
+
+
 }

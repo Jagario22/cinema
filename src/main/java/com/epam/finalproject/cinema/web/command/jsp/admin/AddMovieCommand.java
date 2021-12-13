@@ -4,6 +4,7 @@ import com.epam.finalproject.cinema.domain.film.Film;
 import com.epam.finalproject.cinema.domain.Genre.Genre;
 import com.epam.finalproject.cinema.exception.DBException;
 import com.epam.finalproject.cinema.service.FilmService;
+import com.epam.finalproject.cinema.util.FilmInfoValidationUtil;
 import com.epam.finalproject.cinema.web.command.jsp.PageCommand;
 import com.epam.finalproject.cinema.web.model.film.FilmInfo;
 import org.apache.logging.log4j.LogManager;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.IOException;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +64,9 @@ public class AddMovieCommand implements PageCommand {
             req.getSession().setAttribute(ADD_MOVIE_ERROR, "Data is incomplete");
             return null;
         }
+
+
+
         FilmInfo filmInfo = new FilmInfo(new Film(title, description, yearProd, Integer.parseInt(category),
                 Date.valueOf(lastShowingDate), IMAGE_PACKAGE_PATH + "/" + fileName),
                 getGenres(genresId));
@@ -71,6 +76,10 @@ public class AddMovieCommand implements PageCommand {
         }
         if (rating != null) {
             filmInfo.getFilm().setRating(Float.parseFloat(rating));
+        }
+
+        if (!validateFilm(filmInfo)) {
+            throw new IllegalArgumentException("Not valid data");
         }
         return filmInfo;
     }
@@ -93,5 +102,37 @@ public class AddMovieCommand implements PageCommand {
         }
 
         return genres;
+    }
+
+
+    public boolean validateFilm(FilmInfo filmInfo) {
+        boolean isValid = true;
+
+        if (filmInfo.getFilm().getLen() != 0 && !FilmInfoValidationUtil.isValidLen(filmInfo.getFilm().getLen())) {
+            isValid = false;
+        }
+
+        if (filmInfo.getFilm().getRating() != 0 && !FilmInfoValidationUtil.isValidRating(filmInfo.getFilm().getRating())) {
+            isValid = false;
+        }
+
+        if (!FilmInfoValidationUtil.isValidYear(filmInfo.getFilm().getYear())) {
+            isValid = false;
+        }
+
+        if (!FilmInfoValidationUtil.isValidDescr(filmInfo.getFilm().getDescr())) {
+            isValid = false;
+        }
+
+        if (!FilmInfoValidationUtil.isValidTitle(filmInfo.getFilm().getTitle())) {
+            isValid = false;
+        }
+
+        if (!FilmInfoValidationUtil.isValidLastShowingDate(LocalDate.parse(filmInfo.getFilm().
+                getLastShowingDate().toString()))) {
+            isValid = false;
+        }
+
+       return isValid;
     }
 }

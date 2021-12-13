@@ -4,18 +4,21 @@ import com.epam.finalproject.cinema.util.CloseUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.epam.finalproject.cinema.domain.user.UserQuery.*;
+import static com.epam.finalproject.cinema.domain.wallet.WalletQuery.UPDATE_WALLET_ON_BALANCE_BY_USER_ID;
+
 /**
  * Manager which provides methods for operation with user entity in DB.
  * Works with PostgresSQL dialect
+ *
  * @author Vlada Volska
  * @version 1.0
  * @since 2021.12.05
- *
  */
 public class UserDao {
     private final static Logger log = LogManager.getLogger(UserDao.class);
@@ -159,4 +162,52 @@ public class UserDao {
         return user;
     }
 
+    public List<User> findAll(Connection connection) throws SQLException {
+        ResultSet resultSet = null;
+        Statement st = null;
+        List<User> users = new ArrayList<>();
+        try {
+            st = connection.createStatement();
+
+            resultSet = st.executeQuery(SELECT_ALL_USERS);
+
+            while (resultSet.next()) {
+                User user = readUser(resultSet);
+                users.add(user);
+            }
+
+        } catch (SQLException e) {
+            log.error(e.getMessage());
+            throw e;
+        } finally {
+            try {
+                CloseUtil.close(st, resultSet);
+            } catch (SQLException e) {
+                log.error(e.getMessage());
+            }
+        }
+        return users;
+    }
+
+    public void updateUserRole(int id, String role, Connection connection) throws SQLException {
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement(UPDATE_USER_ROLE);
+            ps.setString(1,role);
+            ps.setInt(2, id);
+
+            int result = ps.executeUpdate();
+            if (result != 1) {
+                throw new SQLException("Updating user  by user id: " +
+                        id + " was failed");
+            }
+        } catch (SQLException e) {
+            log.error(e.getMessage());
+            throw e;
+        } finally {
+            if (ps != null) {
+                ps.close();
+            }
+        }
+    }
 }

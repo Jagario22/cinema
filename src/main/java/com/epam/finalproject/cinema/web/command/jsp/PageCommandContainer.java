@@ -42,6 +42,8 @@ public class PageCommandContainer {
         commands.put(ADMIN_SHOW_SCHEDULE, new ShowAllSessionsInfoCommand());
         commands.put(ADMIN_ADD_SESSION, new AddSessionCommand());
         commands.put(ADMIN_CANCEL_SESSION, new CancelSessionCommand());
+        commands.put(ADMIN_SHOW_ALL_USERS, new ShowUsersCommand());
+        commands.put(ADMIN_CHANGE_ROLE, new ChangeUserRoleCommand());
     }
 
     public static PageCommand getCommand(String commandName) {

@@ -13,4 +13,5 @@ public class Path {
     public static final String ADMIN_MOVIES_INFO_PAGE = "view/user/admin/all_movies_info.jsp";
     public static final String ADMIN_FILM_SESSIONS_INFO_PAGE = "view/user/admin/manage_schedule.jsp";
     public static final String ERROR_PAGE = "view/error_page.jsp";
+    public static final String ADMIN_MANAGE_USERS_PAGE = "view/user/admin/manage_user.jsp";
 }

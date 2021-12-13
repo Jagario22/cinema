@@ -36,6 +36,12 @@
                     <button type="submit" class="btn link-dark rounded btn-dark mt-2">Schedule</button>
                 </form>
             </li>
+            <li class="mb-1 border-bottom border-secondary p-4">
+                <form action="${pageContext.request.contextPath}/" method="get">
+                    <input type="hidden" name="command" value="adminShowUsers">
+                    <button type="submit" class="btn link-dark rounded btn-dark mt-2">Manage user</button>
+                </form>
+            </li>
         </ul>
     </div>
 </div>

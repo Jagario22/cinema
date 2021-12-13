@@ -18,4 +18,6 @@ public class CommandNames {
     public static final String ADMIN_CANCEL_SESSION = "cancelSession";
     public static final String ADMIN_SHOW_SCHEDULE = "adminShowSchedule";
     public static final String ADMIN_SHOW_ALL_MOVIES_INFO = "showAllMoviesInfo";
+    public static final String ADMIN_SHOW_ALL_USERS = "adminShowUsers";
+    public static final String ADMIN_CHANGE_ROLE = "changeRole";
 }
